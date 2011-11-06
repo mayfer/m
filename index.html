@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' type='text/css' href='intro.css' media='screen' />
+		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
+		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
+		<script type='text/javascript'>
+		
+			function getdistance(elem, mouseX, mouseY) {
+		    	var offset = elem.offset();
+		        return Math.floor(Math.sqrt(Math.pow(mouseX - (offset.left+(elem.width()/2)), 2) + Math.pow(mouseY - (offset.top+(elem.height()/2)), 2)));
+	    	}
+	    	
+	    	function multiplier(dist) {
+	    		var minpoint = 60;
+	    		var maxpoint = 400;
+	    		dist = Math.min(maxpoint, Math.max(0, dist - minpoint));
+	    		return 1 + dist/(maxpoint-minpoint);
+	    	}
+	    	
+			$(document).ready(function(){
+				var mX, mY, distance,
+				seconds = 1.2,
+		        $element  = $('#murat');
+		        $animate  = $('#murat');
+		        
+		   		$(document).mousemove(function(e) {
+		    	    mX = e.pageX;
+		    	    mY = e.pageY;
+		    	    seconds = multiplier(getdistance($element, mX, mY)) * 0.6;
+		    	    $animate.bind('webkitAnimationIteration', function(e){
+			        	$animate.css('-webkit-animation-duration', seconds+'s');
+			        });
+		    	});
+		    	
+		    	$('#murat').click(function(e){
+		    		e.preventDefault();
+		    		$('#intro').fadeOut(100).hide();
+		    		$('#nav').fadeIn(300);
+		    	});
+		    });
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td>
+					<div id='wrapper'>
+						<div id='intro-container'>
+							<div id='intro'>
+								<div id='murat'>murat</div>
+							</div>
+							<div id='nav'>
+								<a id='work' href='work.html'>work</a>
+								<a id='play' href='play.html'>play</a>
+								<a id='pretend' href='pretend.html'>pretend</a>
+							</div>
+						</div>
+						<a id='ayfer' href='http://ayfer.net/'>ayfer family.</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div id='preload'></div>
+	</body>
+</html>
