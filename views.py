@@ -13,3 +13,7 @@ def work(request):
 def play(request):
 	response = {}
 	return template_response('play.html', response, request)
+
+def pretend(request):
+	response = {}
+	return template_response('pretend.html', response, request)
