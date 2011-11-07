@@ -1,7 +1,7 @@
 # Django settings for m project.
 import os
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -74,7 +74,9 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/usr/share/pyshared/django/contrib/admin/templates/'
+    '/usr/share/pyshared/django/contrib/admin/templates/',
+	os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates/')
+
 )
 
 INSTALLED_APPS = (

@@ -5,3 +5,11 @@ from m.mlog.models import Entry
 def home(request):
 	response = {}
 	return template_response('home.html', response, request)
+
+def work(request):
+	response = {}
+	return template_response('work.html', response, request)
+
+def play(request):
+	response = {}
+	return template_response('play.html', response, request)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel='stylesheet' type='text/css' href='style.css' media='screen' />
+		<link rel='stylesheet' type='text/css' href='{{ MEDIA_URL }}style.css' media='screen' />
 		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Amatic+SC:700' rel='stylesheet' type='text/css'>
 		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
@@ -14,7 +14,7 @@
 	<body>
 		<div class='wrapper'>
 			<div id='crumbs'>
-				<div><a href='index.html' class='home'></a></div>
+				<div><a href='{% url home %}' class='home'></a></div>
 				<div>play with me &laquo;</div>
 			</div>
 		</div>
