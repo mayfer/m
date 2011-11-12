@@ -63,10 +63,10 @@ td { vertical-align: center; text-align: center; }
 #work, #play, #pretend { color: #577e97; float: left; margin-right: 10px; line-height: 10px; display: block; width: 100px; text-aign: center; text-shadow: #000 0 0 15px; font-weight: bold; opacity: 0.5;
 -webkit-transition-property: text-shadow, color, opacity; -webkit-transition-duration: 0.2s, 0.2s; -webkit-transition-timing-function: linear, linear;
  }
-#work:hover, #play:hover, #pretend:hover { color: #fff; opacity: 1; }
-#work:hover { text-shadow: #0f0 0 0 15px; }
-#play:hover { text-shadow: #f0f 0 0 15px; }
-#pretend:hover { text-shadow: #f00 0 0 15px; }
+#work.hover, #play.hover, #pretend.hover { color: #fff; opacity: 1; }
+#work.hover { text-shadow: #0f0 0 0 15px; }
+#play.hover { text-shadow: #f0f 0 0 15px; }
+#pretend.hover { text-shadow: #f00 0 0 15px; }
 
 
 #intro {
