@@ -38,6 +38,34 @@
 		    		$('#intro').fadeOut(100).hide();
 		    		$('#nav').fadeIn(300);
 		    	});
+		    	
+		    	$('#work').hover(function(e){
+		    		$('#intro-container').addClass('work');
+		    		$(this).find('.icon .default').fadeOut(200);
+		    		$(this).find('.icon .hover').fadeIn(200);
+		    	}, function(e){
+		    		$('#intro-container').removeClass('work');
+		    		$(this).find('.icon .default').fadeIn(200);
+		    		$(this).find('.icon .hover').fadeOut(200);
+		    	});
+		    	$('#play').hover(function(e){
+		    		$('#intro-container').addClass('play');
+		    		$(this).find('.icon .default').fadeOut(200);
+		    		$(this).find('.icon .hover').fadeIn(200);
+		    	}, function(e){
+		    		$('#intro-container').removeClass('play');
+		    		$(this).find('.icon .default').fadeIn(200);
+		    		$(this).find('.icon .hover').fadeOut(200);
+		    	});
+		    	$('#pretend').hover(function(e){
+		    		$('#intro-container').addClass('pretend');
+		    		$(this).find('.icon .default').fadeOut(200);
+		    		$(this).find('.icon .hover').fadeIn(200);
+		    	}, function(e){
+		    		$('#intro-container').removeClass('pretend');
+		    		$(this).find('.icon .default').fadeIn(200);
+		    		$(this).find('.icon .hover').fadeOut(200);
+		    	});
 		    });
 		</script>
 	</head>
@@ -51,12 +79,30 @@
 								<div id='murat'>murat</div>
 							</div>
 							<div id='nav'>
-								<a id='work' href='{% url work %}'>work</a>
-								<a id='play' href='{% url play %}'>play</a>
-								<a id='pretend' href='{% url pretend %}'>pretend</a>
+								<a id='work' href='{% url work %}'>
+									<div class='icon'>
+										<img class='default' src='{{ MEDIA_URL }}work.png' />
+										<img class='hover' src='{{ MEDIA_URL }}work_hover.png' />
+									</div>
+									work
+								</a>
+								<a id='play' href='{% url play %}'>
+									<div class='icon'>
+										<img class='default' src='{{ MEDIA_URL }}play.png' />
+										<img class='hover' src='{{ MEDIA_URL }}play_hover.png' />
+									</div>
+									play
+								</a>
+								<a id='pretend' href='{% url pretend %}'>
+									<div class='icon'>
+										<img class='default' src='{{ MEDIA_URL }}pretend.png' />
+										<img class='hover' src='{{ MEDIA_URL }}pretend_hover.png' />
+									</div>
+									pretend
+								</a>
 							</div>
 						</div>
-						<a id='ayfer' href='http://ayfer.net/'>ayfer family.</a>
+						<a id='ayfer' href='http://ayfer.net/'>i am ayfer</a>
 					</div>
 				</td>
 			</tr>

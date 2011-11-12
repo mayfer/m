@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' type='text/css' href='{{ MEDIA_URL }}style.css' media='screen' />
+		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Amatic+SC:700' rel='stylesheet' type='text/css'>
+		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
+		{% block head_tags %}{% endblock %}
+	</head>
+	<body>
+		<div class='wrapper'>
+			<div id='crumbs'>
+				<div><a href='{% url home %}' class='home'></a></div>
+				<div>{% block navtitle %}{% endblock %} &laquo;</div>
+			</div>
+		</div>
+		{% block content %}{% endblock %}
+		<div id='preload'></div>
+	</body>
+</html>

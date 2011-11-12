@@ -24,6 +24,7 @@ h2 { color: #fff; font-family: 'Comfortaa', cursive; margin: 0; padding: 0; font
 	.contact a{ text-shadow: #faf 0 0 45px; }
 	.contact a:hover { color: #f5f; }
 .spam { text-shadow: #0aa -1px -1px 1px; font-size: 12px; line-height: 25px; }
+.rain { text-shadow: #a0a -1px -1px 7px; }
 
 #crumbs { height: 50px; line-height: 50px; font-size: 25px; font-family: 'Amatic SC', cursive; }
 #crumbs div { float: right; }
