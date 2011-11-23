@@ -7,7 +7,7 @@
 		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
 		{% block head_tags %}{% endblock %}
 	</head>
-	<body>
+	<body class='{% block page %}{% endblock %}'>
 		<div class='wrapper'>
 			<div id='crumbs'>
 				<div><a href='{% url home %}' class='home'></a></div>

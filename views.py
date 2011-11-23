@@ -12,8 +12,13 @@ def work(request):
 
 def play(request):
 	response = {}
+	response['entries'] = Entry.objects.filter(visible=True).order_by('-date')
 	return template_response('play.html', response, request)
 
 def pretend(request):
 	response = {}
 	return template_response('pretend.html', response, request)
+
+def morphin(request):
+	response = {}
+	return template_response('morphin.html', response, request)

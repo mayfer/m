@@ -4,17 +4,31 @@
 	<title>is murat</title>
 {% endblock %}
 
+{% block page %}play{% endblock %}
 {% block navtitle %}play with me{% endblock %}
 
 {% block content %}
 	<div id='intro'>
 		<div class='wrapper'>
-			<h2 class='rain'>rain content rain</h2>
+			<h2 class='rain'>contentrain</h2>
 		</div>
 	</div>
 	
 	<div class='wrapper'>
 		<div id='play-content'>
+			{% autoescape off %}
+			{% for entry in entries %}
+				<div class='entry'>
+					<h3>{{ entry.title }}</h3>
+					<div class='date'>
+						{% firstof entry.date_label entry.date %}
+					</div>
+					<div class='preview'>
+						{{ entry.preview }}
+					</div>
+				</div>
+			{% endfor %}
+			{% endautoescape %}
 		</div>
 	</div>
 {% endblock %}
