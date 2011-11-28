@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<title>morphin</title>
-		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
+		<script type='text/javascript' src='{{ MEDIA_URL }}jquery.min.js'></script>
+		<script type='text/javascript' src='{{ MEDIA_URL }}json2.js'></script>
 		<style type='text/css'>
 			html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; }
 			#wrapper { width: 950px; margin: 50px auto; }
@@ -13,7 +14,7 @@
 			#pictures img { display: block; }
 			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; }
 			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: crosshair; }
-			#done { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
+			button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
 		</style>
 		<script type='text/javascript'>
 			(function($) {
@@ -30,6 +31,9 @@
 		
 		
 			marker = function() { return $("<div>").addClass('marker'); }
+			master_points = function() { return $("<input type='text' name='master' >"); }
+			slave_points = function() { return $("<input type='text' name='slave' >"); }
+			
 			count = 0;
 			frames = 10;
 			captureClick = function(e) {
@@ -54,8 +58,8 @@
 					$('#imagick').append("cp manuel.jpg frame0.jpg<br />");
 					$('#imagick').append("cp squirrel.jpg frame11.jpg<br />");
 					for(var frame=1; frame <= frames; frame++) {
-						var command1 = "convert manuel.jpg -virtual-pixel Black -distort Shepards '";
-						var command2 = "convert squirrel.jpg -virtual-pixel Black -distort Shepards '";
+						var command1 = "convert manuel.jpg -virtual-pixel Mirror -distort Shepards '";
+						var command2 = "convert squirrel.jpg -virtual-pixel Mirror -distort Shepards '";
 						for(var i=1; i<=count; i++) {
 							command1 += generate_stage(frame, i, master, slave);
 							command2 += generate_stage(frames-frame, i, slave, master);
@@ -65,6 +69,29 @@
 						var dissolve = "composite -dissolve "+frame*10+"x"+(frames-frame)*10+"  -gravity center squirrel_manuel_"+frame+".jpg  manuel_squirrel_"+frame+".jpg -alpha Set frame"+frame+".jpg<br />";
 						$('#imagick').append(command1).append(command2).append(dissolve);
 					};
+				});
+				
+				$('#json').click(function(e){
+					var postdata = {'markers': []};
+					
+					var master = $('.picture.master'), slave = $('.picture.slave');
+					for(var i=1; i<=count; i++) {
+						var marker_master = master.find('.marker.m-'+i);
+						var marker_slave = slave.find('.marker.m-'+i);
+						var top_m = parseInt(marker_master.css('top')), left_m = parseInt(marker_master.css('left'));
+						var top_s = parseInt(marker_slave.css('top')), left_s = parseInt(marker_slave.css('left'));
+						postdata['markers'].push({
+							'master': {'x': left_m, 'y': top_m },
+							'slave': {'x': left_s, 'y': top_s }
+						});
+					}
+					$.post(
+						'{% url morphin_generate %}',
+						{ 'data': JSON.stringify(postdata) },
+						function(response) {
+							alert(JSON.stringify(response));
+						}, 'json'
+					);
 				});
 				
 				$('body').keyup(function(e) { 
@@ -94,7 +121,8 @@
 				var top = parseInt(top_m + (top_diff * (frame/frames)));
 				var left = parseInt(left_m + (left_diff * (frame/frames)));
 				
-				return top_m+","+left_m+" "+top+","+left+"  ";
+				//return top_m+","+left_m+" "+top+","+left+"  ";
+				return left_m+","+top_m+" "+left+","+top+"  ";
 			}
 			
 			
@@ -112,7 +140,8 @@
 						<td class='picture slave'><img src='{{ MEDIA_URL }}morphin/squirrel.jpg' /></td>
 					</tr>
 				</table>
-				<button id='done'>Done</button>
+				<button id='done'>Shell</button> 
+				<button id='json'>JSON</button>
 				<div id='imagick'></div>
 			</div>
 		</div>
