@@ -1,0 +1,29 @@
+{% extends "morphin/base.html" %}
+{% block head %}
+	<script type='text/javascript'>
+		$(document).ready(function(){
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+	<div id='wrapper'>
+		<h1>morphin</h1>
+		<div id='pictures'>
+			<div id='hint'>give me two photos</div>
+			<table>
+				<tr>
+					<td class='picture master'>
+						<input type='file' />
+					</td>
+					<td class='picture slave'>
+						<input type='file' />
+					</td>
+				</tr>
+			</table>
+			<button id='done'>Shell</button> 
+			<button id='json'>JSON</button>
+			<div id='imagick'></div>
+		</div>
+	</div>
+{% endblock %}

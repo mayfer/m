@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>morphin</title>
+		<script type='text/javascript' src='{{ MEDIA_URL }}jquery.min.js'></script>
+		<script type='text/javascript' src='{{ MEDIA_URL }}json2.js'></script>
+		<style type='text/css'>
+			html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; }
+			#wrapper { width: 950px; margin: 50px auto; }
+			#pictures { position: relative; text-align: center; }
+			#pictures table { border-collapse:separate; border-spacing: 10px; border: none; margin: 0 auto; }
+			#pictures table td.picture { border: 3px solid #555; padding: 5px; position: relative; }
+			#pictures table td.picture.current { border-color: #fff; }
+			#pictures img { display: block; }
+			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; }
+			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: crosshair; }
+			button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
+		</style>
+		{% block head %}{% endblock %}
+	</head>
+	<body>
+		{% block content %}{% endblock %}
+	</body>
+</html>

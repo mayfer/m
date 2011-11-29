@@ -24,7 +24,11 @@ def pretend(request):
 
 def morphin(request):
 	response = {}
-	return template_response('morphin.html', response, request)
+	return template_response('morphin/morphin.html', response, request)
+	
+def morphin_upload(request):
+	response = {}
+	return template_response('morphin/upload.html', response, request)
 	
 def morphin_generate(request):
 	response = {}

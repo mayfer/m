@@ -24,7 +24,8 @@ urlpatterns = patterns('',
     url(r'^play/?$', 'views.play', name='play'),
     url(r'^pretend/?$', 'views.pretend', name='pretend'),
     url(r'^morphin/?$', 'views.morphin', name='morphin'),
-    url(r'^morphin_generate/?$', 'views.morphin_generate', name='morphin_generate'),
+    url(r'^morphin/generate/?$', 'views.morphin_generate', name='morphin_generate'),
+    url(r'^morphin/upload/?$', 'views.morphin_upload', name='morphin_upload'),
 )
 
 # to serve static files on development servers
