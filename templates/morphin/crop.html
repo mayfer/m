@@ -1,8 +1,18 @@
 {% extends "morphin/base.html" %}
 {% block head %}
+	<script type='text/javascript' src='{{ MEDIA_URL }}jquery.jcrop.js'></script>
+	<link rel='stylesheet' type='text/css' href='{{ MEDIA_URL }}jquery.jcrop.css' media='screen' />
 	<script type='text/javascript'>
 		$(document).ready(function(){
-			
+			$('#master').Jcrop({
+				onChange: updateCrop,
+				onSelect: updateCrop,
+			},function() {
+			});
+				
+			function updateCrop(c) {
+				$('#info').html("x: "+c.x+", y: "+c.y+", h: "+c.h+", w: "+c.w);
+			}
 		});
 	</script>
 {% endblock %}
@@ -16,7 +26,7 @@
 				<table>
 					<tr>
 						<td class='picture master'>
-							<img src='{{ MEDIA_URL }}{{ morph.master_image }}' />
+							<img id='master' src='{{ MEDIA_URL }}{{ morph.master_image }}' />
 						</td>
 						<td class='picture slave'>
 							<img src='{{ MEDIA_URL }}{{ morph.slave_image }}' />
@@ -25,6 +35,7 @@
 				</table>
 				<button type='submit'>Upload</button>
 			</form>
+			<div id='info'></div>
 		</div>
 	</div>
 {% endblock %}
