@@ -1,6 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 import simplejson as json
 
 def template_response(template, data, request):
@@ -11,3 +12,9 @@ def json_response(data):
 	
 def html_response(response):
 	return HttpResponse(response, mimetype='text/html')
+	
+def redirect(url=None, label=None, args=None, kwargs=None):
+	if url:
+		return HttpResponseRedirect(url)
+	if reverse:
+		return HttpResponseRedirect(reverse(label, args=args))

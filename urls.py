@@ -1,13 +1,9 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 import m.settings as settings
-import views
+import views, m.morphin.views as morphin
 
 admin.autodiscover()
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
@@ -19,13 +15,14 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'views.home', name='home'),
-    url(r'^work/?$', 'views.work', name='work'),
-    url(r'^play/?$', 'views.play', name='play'),
-    url(r'^pretend/?$', 'views.pretend', name='pretend'),
-    url(r'^morphin/?$', 'views.morphin', name='morphin'),
-    url(r'^morphin/generate/?$', 'views.morphin_generate', name='morphin_generate'),
-    url(r'^morphin/upload/?$', 'views.morphin_upload', name='morphin_upload'),
+    url(r'^$', views.home, name='home'),
+    url(r'^work/?$', views.work, name='work'),
+    url(r'^play/?$', views.play, name='play'),
+    url(r'^pretend/?$', views.pretend, name='pretend'),
+    url(r'^morphin/?$', morphin.index, name='morphin'),
+    url(r'^morphin/generate/?$', morphin.generate, name='morphin_generate'),
+    url(r'^morphin/upload/?$', morphin.upload, name='morphin_upload'),
+    url(r'^morphin/crop/(\d*)/?$', morphin.crop, name='morphin_crop'),
 )
 
 # to serve static files on development servers

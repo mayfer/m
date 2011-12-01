@@ -11,15 +11,15 @@
 	<div id='wrapper'>
 		<h1>morphin</h1>
 		<div id='pictures'>
-			<div id='hint'>give me two photos</div>
+			<div id='hint'>okay so you gave me two photos now let's crop</div>
 			<form method='post' enctype="multipart/form-data" action='{% url morphin_upload %}'>
 				<table>
 					<tr>
 						<td class='picture master'>
-							<input type='file' name='master' />
+							<img src='{{ MEDIA_URL }}{{ morph.master_image }}' />
 						</td>
 						<td class='picture slave'>
-							<input type='file' name='slave' />
+							<img src='{{ MEDIA_URL }}{{ morph.slave_image }}' />
 						</td>
 					</tr>
 				</table>
