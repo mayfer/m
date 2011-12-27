@@ -1,17 +1,34 @@
 {% extends "morphin/base.html" %}
 {% block head %}
 	<script type='text/javascript' src='{{ MEDIA_URL }}jquery.jcrop.js'></script>
+	<script type='text/javascript' src='{{ MEDIA_URL }}json2.js'></script>
 	<link rel='stylesheet' type='text/css' href='{{ MEDIA_URL }}jquery.jcrop.css' media='screen' />
 	<script type='text/javascript'>
 		$(document).ready(function(){
 			$('#master').Jcrop({
-				onChange: updateCrop,
-				onSelect: updateCrop,
+				onChange: updateCropMaster,
+				onSelect: updateCropMaster,
+			},function() {
+			});
+			
+			$('#slave').Jcrop({
+				onChange: updateCropSlave,
+				onSelect: updateCropSlave,
 			},function() {
 			});
 				
-			function updateCrop(c) {
-				$('#info').html("x: "+c.x+", y: "+c.y+", h: "+c.h+", w: "+c.w);
+			function updateCropMaster(c) {
+				$('#master-data').val(JSON.stringify(c));
+				
+				$('#slave').Jcrop({
+					onChange: updateCropSlave,
+					onSelect: updateCropSlave,
+					aspectRatio: c.w/c.h,
+				},function() {
+				});
+			}	
+			function updateCropSlave(c) {
+				$('#slave-data').val(JSON.stringify(c));
 			}
 		});
 	</script>
@@ -22,14 +39,16 @@
 		<h1>morphin</h1>
 		<div id='pictures'>
 			<div id='hint'>okay so you gave me two photos now let's crop</div>
-			<form method='post' enctype="multipart/form-data" action='{% url morphin_upload %}'>
+			<form method='post' action='{% url morphin:crop morph.id %}'>
 				<table>
 					<tr>
 						<td class='picture master'>
 							<img id='master' src='{{ MEDIA_URL }}{{ morph.master_image }}' />
+							<input type='hidden' name='master' id='master-data' value='{}' />
 						</td>
 						<td class='picture slave'>
-							<img src='{{ MEDIA_URL }}{{ morph.slave_image }}' />
+							<img id='slave' src='{{ MEDIA_URL }}{{ morph.slave_image }}' />
+							<input type='hidden' name='slave' id='slave-data' value='{}' />
 						</td>
 					</tr>
 				</table>

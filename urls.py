@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 import m.settings as settings
-import views, m.morphin.views as morphin
+import views, m.morphin as morphin
 
 admin.autodiscover()
 
@@ -15,14 +15,13 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.home, name='home'),
-    url(r'^work/?$', views.work, name='work'),
-    url(r'^play/?$', views.play, name='play'),
-    url(r'^pretend/?$', views.pretend, name='pretend'),
-    url(r'^morphin/?$', morphin.index, name='morphin'),
-    url(r'^morphin/generate/?$', morphin.generate, name='morphin_generate'),
-    url(r'^morphin/upload/?$', morphin.upload, name='morphin_upload'),
-    url(r'^morphin/crop/(\d*)/?$', morphin.crop, name='morphin_crop'),
+    
+    url(r'^$', 'views.home', name='home'),
+    url(r'^work/?$', 'views.work', name='work'),
+    url(r'^play/?$', 'views.play', name='play'),
+    url(r'^pretend/?$', 'views.pretend', name='pretend'),
+    
+    url(r'^morphin/', include('morphin.urls', namespace='morphin')),
 )
 
 # to serve static files on development servers
