@@ -16,7 +16,10 @@
 				onSelect: updateCropSlave,
 			},function() {
 			});
-				
+			
+			var submit = $('#submit');
+			var master_touched = false, slave_touched = false;
+			
 			function updateCropMaster(c) {
 				$('#master-data').val(JSON.stringify(c));
 				
@@ -26,9 +29,15 @@
 					aspectRatio: c.w/c.h,
 				},function() {
 				});
+				
+				if(master_touched && slave_touched) submit.prop('disabled', false);
+				else master_touched = true;
 			}	
 			function updateCropSlave(c) {
 				$('#slave-data').val(JSON.stringify(c));
+				
+				if(master_touched && slave_touched) submit.prop('disabled', false);
+				else slave_touched = true;
 			}
 		});
 	</script>
@@ -45,11 +54,11 @@
 				<table>
 					<tr>
 						<td class='picture master'>
-							<img id='master' src='{{ morph.master_image.url }}' />
+							<img id='master' src='{{ morph.master_image.url }}?crop' /><!-- anticache -->
 							<input type='hidden' name='master' id='master-data' value='{}' />
 						</td>
 						<td class='picture slave'>
-							<img id='slave' src='{{ morph.slave_image.url }}' />
+							<img id='slave' src='{{ morph.slave_image.url }}?crop' /><!-- anticache -->
 							<input type='hidden' name='slave' id='slave-data' value='{}' />
 						</td>
 					</tr>
@@ -57,7 +66,7 @@
 				<div class='tip'>
 					the aspect ratio of the second image will adapt to the first
 				</div>
-				<button type='submit'>Upload</button>
+				<button type='submit' disabled='disabled' id='submit'>Next</button>
 			</form>
 			<div id='info'></div>
 		</div>

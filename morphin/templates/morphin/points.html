@@ -29,53 +29,38 @@
 			
 			marker().appendTo(box).addClass('m-'+count).css( { "top": top, "left": left } );
 			
-			box.removeClass('current').nextWrap().addClass('current');
+			box.removeClass('current').addClass('inactive').nextWrap().addClass('current').removeClass('inactive');
+			
+			$('#done').prop('disabled', false);
 		}
 		
 		$(document).ready(function(){
 			$('.picture.current img').live('click', captureClick);
+		
 			
 			$('#done').click(function(e){
-				$('#imagick').html('');
-				var master = $('.picture.master'), slave = $('.picture.slave');
-	
-				$('#imagick').append("cp manuel.jpg frame0.jpg<br />");
-				$('#imagick').append("cp squirrel.jpg frame11.jpg<br />");
-				for(var frame=1; frame <= frames; frame++) {
-					var command1 = "convert manuel.jpg -virtual-pixel Mirror -distort Shepards '";
-					var command2 = "convert squirrel.jpg -virtual-pixel Mirror -distort Shepards '";
+				if($(this).prop('disabled') == false) {
+					var postdata = {'markers': []};
+					
+					var master = $('.picture.master'), slave = $('.picture.slave');
 					for(var i=1; i<=count; i++) {
-						command1 += generate_stage(frame, i, master, slave);
-						command2 += generate_stage(frames-frame, i, slave, master);
+						var marker_master = master.find('.marker.m-'+i);
+						var marker_slave = slave.find('.marker.m-'+i);
+						var top_m = parseInt(marker_master.css('top')), left_m = parseInt(marker_master.css('left'));
+						var top_s = parseInt(marker_slave.css('top')), left_s = parseInt(marker_slave.css('left'));
+						postdata['markers'].push({
+							'master': {'x': left_m, 'y': top_m },
+							'slave': {'x': left_s, 'y': top_s }
+						});
 					}
-					command1 += "' manuel_squirrel_"+frame+".jpg<br />";
-					command2 += "' squirrel_manuel_"+frame+".jpg<br />";
-					var dissolve = "composite -dissolve "+frame*10+"x"+(frames-frame)*10+"  -gravity center squirrel_manuel_"+frame+".jpg  manuel_squirrel_"+frame+".jpg -alpha Set frame"+frame+".jpg<br />";
-					$('#imagick').append(command1).append(command2).append(dissolve);
-				};
-			});
-			
-			$('#json').click(function(e){
-				var postdata = {'markers': []};
-				
-				var master = $('.picture.master'), slave = $('.picture.slave');
-				for(var i=1; i<=count; i++) {
-					var marker_master = master.find('.marker.m-'+i);
-					var marker_slave = slave.find('.marker.m-'+i);
-					var top_m = parseInt(marker_master.css('top')), left_m = parseInt(marker_master.css('left'));
-					var top_s = parseInt(marker_slave.css('top')), left_s = parseInt(marker_slave.css('left'));
-					postdata['markers'].push({
-						'master': {'x': left_m, 'y': top_m },
-						'slave': {'x': left_s, 'y': top_s }
-					});
+					$.post(
+						'{% url morphin:generate %}',
+						{ 'data': JSON.stringify(postdata) },
+						function(response) {
+							alert(JSON.stringify(response));
+						}, 'json'
+					);
 				}
-				$.post(
-					'{% url morphin_generate %}',
-					{ 'data': JSON.stringify(postdata) },
-					function(response) {
-						alert(JSON.stringify(response));
-					}, 'json'
-				);
 			});
 			
 			$('body').keyup(function(e) { 
@@ -88,7 +73,7 @@
 		});
 		function pick_pic() {
 			var pic;
-			$('#pictures .picture.master').addClass('current').nextWrap().removeClass('current');
+			$('#pictures .picture.master').addClass('current').removeClass('inactive').nextWrap().removeClass('current').addClass('inactive');
 		}
 		function log(text) {
 			$('#imagick').append("\n"+text)
@@ -115,15 +100,14 @@
 	<div id='wrapper'>
 		<h1>morphin</h1>
 		<div id='pictures'>
-			<div id='hint'>start clicking</div>
+			<div id='hint'>starting with the left image,<br />click on points that you want to morph into each other.</div>
 			<table>
 				<tr>
-					<td class='picture master current'><img src='{{ MEDIA_URL }}morphin/manuel.jpg' /></td>
-					<td class='picture slave'><img src='{{ MEDIA_URL }}morphin/squirrel.jpg' /></td>
+					<td class='picture master current'><img src='{{ morph.master_image.url }}?points' /></td><!-- anticache -->
+					<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->
 				</tr>
 			</table>
-			<button id='done'>Shell</button> 
-			<button id='json'>JSON</button>
+			<button id='done' disabled='disabled'>Done</button>
 			<div id='imagick'></div>
 		</div>
 	</div>

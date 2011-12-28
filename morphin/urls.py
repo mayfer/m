@@ -5,4 +5,5 @@ urlpatterns = patterns('morphin.views',
     url(r'^generate/?$', 'generate', name='generate'),
     url(r'^upload/?$', 'upload', name='upload'),
     url(r'^crop/(\d*)/?$', 'crop', name='crop'),
+    url(r'^points/(\d*)/?$', 'points', name='points'),
 )

@@ -7,7 +7,7 @@ import os
 
 def index(request):
 	response = {}
-	return template_response('morphin/morphin.html', response, request)
+	return template_response('morphin/index.html', response, request)
 	
 def upload(request):
 	response = {}
@@ -18,13 +18,13 @@ def upload(request):
 		morph = Morph()
 		morph.save()
 		try:
-			w, h = 600, 600
+			w, h = 300, 300
 			morph.master_image.save("m_{0}".format(master.name), master, save=True)
 			morph.slave_image.save("s_{0}".format(slave.name), slave, save=True)
 			cropper_master = Cropper(morph.master_image.path)
 			cropper_slave = Cropper(morph.slave_image.path)
-			cropper_master.resize(w, h)
-			cropper_slave.resize(w, h)
+			cropper_master.resize(w, h, even_if_larger=False)
+			cropper_slave.resize(w, h, even_if_larger=False)
 			return redirect(label='morphin:crop', args=[morph.id])
 		except Exception, e:
 			morph.delete()
@@ -54,15 +54,37 @@ def crop(request, morph_id):
 		cropper_master = Cropper(morph.master_image.path)
 		cropper_slave = Cropper(morph.slave_image.path)
 		
-		master_crop = json.loads(request.POST['master'])
-		slave_crop = json.loads(request.POST['slave'])
+		master_cropdata = json.loads(request.POST['master'])
+		slave_cropdata = json.loads(request.POST['slave'])
 		
-		cropper_master.crop(master_crop)
-		cropper_slave.crop(slave_crop)
+		cropper_master.crop(master_cropdata)
+		cropper_slave.crop(slave_cropdata)
 		
-		return redirect(label='morphin:crop', args=[morph_id])
+		# resize to the average of the two images
+		mw, mh = cropper_master.image.size
+		sw, sh = cropper_master.image.size
+		w = (mw+sw)/2
+		h = (mh+sh)/2
+		print w, h
+		cropper_master.resize(w, h)
+		cropper_slave.resize(w, h)
+			
+		return redirect(label='morphin:points', args=[morph_id])
 	else:
 		response = {
 			'morph': morph
 		}
 		return template_response('morphin/crop.html', response, request)
+		
+def points(request, morph_id):
+	try:
+		morph = Morph.objects.get(id=morph_id)
+	except:
+		not_found()
+		
+	response = {'morph': morph}
+	return template_response('morphin/points.html', response, request)
+	
+def view(request, morph_id):
+	response = {}
+	return template_response('morphin/view.html', response, request)

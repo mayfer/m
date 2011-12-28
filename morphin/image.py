@@ -53,22 +53,20 @@ class Morpher(object):
 class Cropper(object):
 	def __init__(self, filename):
 		self.filename = filename
+		self.image = Image.open(self.filename)
 		
-	def resize(self, w, h):
+	def resize(self, w, h, even_if_larger=True):
 		try:
-			image = Image.open(self.filename)
-			x, y = image.size
-			if x > w or y > h:
-				image.thumbnail((w, h), Image.ANTIALIAS)
-				image.save(self.filename, 'JPEG')
+			x, y = self.image.size
+			if (x > w or y > h) or even_if_larger:
+				self.image = self.image.resize((w, h), Image.ANTIALIAS)
+				self.image.save(self.filename, 'JPEG')
 		except IOError, e:
 			print "cannot resize '%s'" % filename
 			print e
 	            
 	def crop(self, attrs):
-		try:
-			image = Image.open(self.filename)
-			
+		try:			
 			for key, val in attrs.items():
 				attrs[key] = int(val)
 				
@@ -79,8 +77,8 @@ class Cropper(object):
 				attrs['y']+attrs['h']
 			)
 			
-			area = image.crop(box)
-			area.save(self.filename, 'JPEG')
+			self.image = self.image.crop(box)
+			self.image.save(self.filename, 'JPEG')
 		except IOError, e:
 			print "cannot crop '%s':" % filename
 			print e
