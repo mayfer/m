@@ -18,13 +18,17 @@ def upload(request):
 		morph = Morph()
 		morph.save()
 		try:
+			w, h = 600, 600
 			morph.master_image.save("m_{0}".format(master.name), master, save=True)
 			morph.slave_image.save("s_{0}".format(slave.name), slave, save=True)
-	
-			return redirect(label='morphin_crop', args=[morph.id])
-		except Exception:
+			cropper_master = Cropper(morph.master_image.path)
+			cropper_slave = Cropper(morph.slave_image.path)
+			cropper_master.resize(w, h)
+			cropper_slave.resize(w, h)
+			return redirect(label='morphin:crop', args=[morph.id])
+		except Exception, e:
 			morph.delete()
-			return html_response("something went wrong. hhhhmmmmm.....")
+			return html_response(e)
 	return template_response('morphin/upload.html', response, request)
 	
 def generate(request):
@@ -47,11 +51,15 @@ def crop(request, morph_id):
 		not_found()
 	
 	if request.method == 'POST':
-		cropper = Cropper()
+		cropper_master = Cropper(morph.master_image.path)
+		cropper_slave = Cropper(morph.slave_image.path)
+		
 		master_crop = json.loads(request.POST['master'])
 		slave_crop = json.loads(request.POST['slave'])
-		cropper.crop(morph.master_image.path, master_crop)
-		cropper.crop(morph.slave_image.path, slave_crop)
+		
+		cropper_master.crop(master_crop)
+		cropper_slave.crop(slave_crop)
+		
 		return redirect(label='morphin:crop', args=[morph_id])
 	else:
 		response = {
