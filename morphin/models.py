@@ -13,6 +13,7 @@ class Morph(models.Model):
 	morph_image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
 	date = models.DateTimeField()
 	visible = models.BooleanField(default=True)
+	final = models.BooleanField(default=False)
 	
 	def __unicode__(self):
 		return self.url_title

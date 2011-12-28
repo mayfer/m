@@ -40,7 +40,9 @@
 			
 			$('#done').click(function(e){
 				if($(this).prop('disabled') == false) {
-					$('#morph').html("Processing...");
+					$('#final').show();
+					$('#done').html('Processing...');
+					$('#morph').html("<img src='{{ MEDIA_URL }}loader.gif' />");
 									
 					var postdata = {'markers': []};
 					
@@ -60,14 +62,18 @@
 						{ 'data': JSON.stringify(postdata) },
 						function(response) {
 							if(response.status=='ok') {
-								//window.location == "{% url morphin:view morph.id %}";
 								$('#morph').html("<img src='"+response.image_url+"' />");
+								$('#done').html("Update");
 							} else {
 								alert(JSON.stringify(response));
 							}
 						}, 'json'
 					);
 				}
+			});
+			
+			$('#finalize').click(function(e){
+				window.location = '{% url morphin:view morph.id %}';
 			});
 			
 			$('body').keyup(function(e) { 
@@ -114,12 +120,17 @@
 					<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->
 				</tr>
 			</table>
-			<div class='tip'>more points yield better results.</div>
+			<div class='tip'>more points yield better results.<br />also, hit escape to undo.</div>
 			<button id='done' disabled='disabled'>Done</button>
 			<div id='morph'>
 				{% if morph.morph_image %}
 					<img src='{{ morph.morph_image.url }}' />
 				{% endif %}
+			</div>
+			
+			<div id='final' {% if not morph.morph_image %} style='display:none;' {% endif %}>
+				<div class='tip'>when satisfied, finalize</div>
+				<button id='finalize'>Finalize</button>
 			</div>
 		</div>
 	</div>
