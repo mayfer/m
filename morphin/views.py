@@ -1,5 +1,6 @@
 from m.shortcuts import template_response, json_response, html_response, not_found, redirect
 from django.conf import settings
+from django.core.files import File
 from m.morphin.models import Morph
 from m.morphin.image import Morpher, Cropper
 import simplejson as json
@@ -30,19 +31,6 @@ def upload(request):
 			morph.delete()
 			return html_response(e)
 	return template_response('morphin/upload.html', response, request)
-	
-def generate(request):
-	response = {}
-	if request.method == 'POST' and 'data' in request.POST:
-		response['status'] = 'ok'
-		input = json.loads(request.POST['data'])
-		morpher = Morpher(input['markers'])
-		print input['markers']
-		morpher.generate_frames()
-		response['data'] = input
-	else:
-		response['status'] = 'error'
-	return json_response(response)
 	
 def crop(request, morph_id):
 	try:
@@ -84,7 +72,39 @@ def points(request, morph_id):
 		
 	response = {'morph': morph}
 	return template_response('morphin/points.html', response, request)
-	
-def view(request, morph_id):
+
+def generate(request, morph_id):
+	try:
+		morph = Morph.objects.get(id=morph_id)
+	except:
+		not_found()
+		
 	response = {}
+	if request.method == 'POST' and 'data' in request.POST:
+		response['status'] = 'ok'
+		input = json.loads(request.POST['data'])
+		morpher = Morpher(morph.master_image.path, morph.slave_image.path)
+		print input['markers']
+		
+		gif_path = morpher.generate_frames(input['markers'])
+		
+		morph.morph_image = os.path.join('uploads', str(morph.id), os.path.basename(gif_path))
+		morph.save()
+		
+		response['data'] = input
+		response['image_url'] = morph.morph_image.url
+	else:
+		response['status'] = 'error'
+	return json_response(response)
+
+def view(request, morph_id):
+	try:
+		morph = Morph.objects.get(id=morph_id)
+	except:
+		not_found()
+		
+	if not morph.morph_image:
+		not_found()
+	
+	response = {'morph': morph}
 	return template_response('morphin/view.html', response, request)

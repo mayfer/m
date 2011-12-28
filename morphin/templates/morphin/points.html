@@ -40,6 +40,8 @@
 			
 			$('#done').click(function(e){
 				if($(this).prop('disabled') == false) {
+					$('#morph').html("Processing...");
+									
 					var postdata = {'markers': []};
 					
 					var master = $('.picture.master'), slave = $('.picture.slave');
@@ -54,10 +56,15 @@
 						});
 					}
 					$.post(
-						'{% url morphin:generate %}',
+						'{% url morphin:generate morph.id %}',
 						{ 'data': JSON.stringify(postdata) },
 						function(response) {
-							alert(JSON.stringify(response));
+							if(response.status=='ok') {
+								//window.location == "{% url morphin:view morph.id %}";
+								$('#morph').html("<img src='"+response.image_url+"' />");
+							} else {
+								alert(JSON.stringify(response));
+							}
 						}, 'json'
 					);
 				}
@@ -107,8 +114,13 @@
 					<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->
 				</tr>
 			</table>
+			<div class='tip'>more points yield better results.</div>
 			<button id='done' disabled='disabled'>Done</button>
-			<div id='imagick'></div>
+			<div id='morph'>
+				{% if morph.morph_image %}
+					<img src='{{ morph.morph_image.url }}' />
+				{% endif %}
+			</div>
 		</div>
 	</div>
 {% endblock %}

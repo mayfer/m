@@ -1,0 +1,20 @@
+{% extends "morphin/base.html" %}
+{% block head %}
+	<script type='text/javascript'>
+	</script>
+{% endblock %}
+
+{% block content %}
+	<div id='wrapper'>
+		<h1>morphin</h1>
+		<div id='pictures'>
+			<div id='hint'>
+				hi
+			</div>	
+			<div class='morph'>
+				<img src='{{ morph.morph_image.url }}' />
+			</div>
+			<div id='info'></div>
+		</div>
+	</div>
+{% endblock %}

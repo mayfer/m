@@ -7,14 +7,16 @@ from PIL import Image
 # imgur api: ee1c55995a1a35cf35223ca8cd5bee8f (anonymous)
 
 class Morpher(object):
-	def __init__(self, marker_pairs):
-		self.marker_pairs = marker_pairs
+	def __init__(self, master_file, slave_file):
 		self.frames = 20
 		self.delay = 5
-		self.master_filename = "manuel.jpg"
-		self.slave_filename = "squirrel.jpg"
+		self.master_filename = master_file
+		self.slave_filename = slave_file
+		self.path = os.path.dirname(master_file)
 		
-	def generate_frames(self):
+	def generate_frames(self, marker_pairs):
+		self.marker_pairs = marker_pairs
+		
 		for frame in range(1, self.frames+1):
 			frame_top_layer = "convert {0} -virtual-pixel Mirror -distort Shepards '".format(self.master_filename)
 			frame_bottom_layer = "convert {0} -virtual-pixel Mirror -distort Shepards '".format(self.slave_filename)
@@ -34,21 +36,25 @@ class Morpher(object):
 				slave_new_y = int(round(slave['y'] + (-diff_y * ((self.frames - frame)/self.frames))))
 				frame_bottom_layer += " {0},{1} {2},{3} ".format(slave['x'], slave['y'], slave_new_x, slave_new_y)
 				
-			frame_top_layer += "' master_slave_{0}.jpg".format(frame)
-			frame_bottom_layer += "' slave_master_{0}.jpg".format(frame)
+			frame_top_layer += "' {path}/master_slave_{0}.jpg".format(frame, path=self.path)
+			frame_bottom_layer += "' {path}/slave_master_{0}.jpg".format(frame, path=self.path)
 			
-			frame_image = "composite -dissolve {0}x{1}  -gravity center slave_master_{2}.jpg  master_slave_{2}.jpg -alpha Set frame{2}.jpg".format(int((frame/self.frames)*100), int(((self.frames-frame)/self.frames)*100), frame)
-			self.execute([frame_top_layer, frame_bottom_layer, frame_image])
+			frame_image = "composite -dissolve {0}x{1}  -gravity center {path}/slave_master_{2}.jpg  {path}/master_slave_{2}.jpg -alpha Set {path}/frame{2}.jpg".format(int((frame/self.frames)*100), int(((self.frames-frame)/self.frames)*100), frame, path=self.path)
 			
-		all_frames = " ".join( [ "frame{0}.jpg".format(i) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
-		animation = """convert -verbose -delay {0} -loop 0 {1} animation.gif""".format(self.delay, all_frames)
-		self.execute(["cp manuel.jpg frame0.jpg", "cp squirrel.jpg frame{0}.jpg".format(self.frames+1), animation])
+			self.execute(frame_top_layer)
+			self.execute(frame_bottom_layer)
+			self.execute(frame_image)
+			
+		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
+		
+		gif_name = "animation.gif"
+		animation = "convert -verbose -delay {0} -loop 0 {1} {path}/{gif_name}".format(self.delay, all_frames, path=self.path, gif_name=gif_name)
+		self.execute(animation)
+		return os.path.join(self.path, gif_name)
 
-	def execute(self, commands):
-		for command in commands:
-			os.chdir(settings.TMP_ROOT)
-			#print command
-			os.system(command)
+	def execute(self, command):
+		#os.chdir(settings.FILE_ROOT)
+		os.system(command)
 
 class Cropper(object):
 	def __init__(self, filename):
