@@ -1,7 +1,7 @@
-from m.shortcuts import template_response, json_response, html_response, redirect
+from m.shortcuts import template_response, json_response, html_response, not_found, redirect
 from django.conf import settings
 from m.morphin.models import Morph
-from m.morphin.morpher import Morpher
+from m.morphin.image import Morpher, Cropper
 import simplejson as json
 import os
 
@@ -41,7 +41,20 @@ def generate(request):
 	return json_response(response)
 	
 def crop(request, morph_id):
-	response = {
-		'morph': Morph.objects.get(id=morph_id)
-	}
-	return template_response('morphin/crop.html', response, request)
+	try:
+		morph = Morph.objects.get(id=morph_id)
+	except:
+		not_found()
+	
+	if request.method == 'POST':
+		cropper = Cropper()
+		master_crop = json.loads(request.POST['master'])
+		slave_crop = json.loads(request.POST['slave'])
+		cropper.crop(morph.master_image.path, master_crop)
+		cropper.crop(morph.slave_image.path, slave_crop)
+		return redirect(label='morphin:crop', args=[morph_id])
+	else:
+		response = {
+			'morph': morph
+		}
+		return template_response('morphin/crop.html', response, request)

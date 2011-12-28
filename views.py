@@ -1,6 +1,5 @@
 from m.shortcuts import template_response, json_response, html_response
 from m.mlog.models import Entry
-from django.conf import settings
 
 def home(request):
 	response = {}

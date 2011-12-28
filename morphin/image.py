@@ -2,6 +2,7 @@ from __future__ import division
 from m.morphin.models import Morph
 from django.conf import settings
 import os
+from PIL import Image
 
 # imgur api: ee1c55995a1a35cf35223ca8cd5bee8f (anonymous)
 
@@ -36,7 +37,6 @@ class Morpher(object):
 			frame_top_layer += "' master_slave_{0}.jpg".format(frame)
 			frame_bottom_layer += "' slave_master_{0}.jpg".format(frame)
 			
-			dissolve_percentage = int()
 			frame_image = "composite -dissolve {0}x{1}  -gravity center slave_master_{2}.jpg  master_slave_{2}.jpg -alpha Set frame{2}.jpg".format(int((frame/self.frames)*100), int(((self.frames-frame)/self.frames)*100), frame)
 			self.execute([frame_top_layer, frame_bottom_layer, frame_image])
 			
@@ -49,3 +49,28 @@ class Morpher(object):
 			os.chdir(settings.TMP_ROOT)
 			#print command
 			os.system(command)
+
+class Cropper(object):
+	def resize(self, filename, w, h):
+		try:
+			image = Image.open(filename)
+			image.thumbnail((w, h), Image.ANTIALIAS)
+			image.save(filename, 'JPEG')
+		except IOError, e:
+			print "cannot resize '%s'" % filename
+			print e
+	            
+	def crop(self, filename, attrs):
+		try:
+			image = Image.open(filename)
+			
+			for key, val in attrs.items():
+				attrs[key] = int(val)
+				
+			box = (attrs['x'], attrs['y'], attrs['x']+attrs['w'], attrs['y']+attrs['h'])
+			
+			area = image.crop(box)
+			area.save(filename, 'JPEG')
+		except IOError, e:
+			print "cannot crop '%s':" % filename
+			print e
