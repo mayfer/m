@@ -127,8 +127,11 @@
 		</div>
 		
 		<div id='final' {% if not morph.morph_image %} style='display:none;' {% endif %}>
-			<div class='tip'>when satisfied, finalize</div>
-			<button id='finalize'>Finalize</button>
+			<div class='tip'>when satisfied, caption and finalize</div>
+			<form action='{% url morphin:view morph.id %}' method='post'>
+				<textarea class='caption' name='caption'>Enter a caption. Or not.</textarea>
+				<button id='finalize' type='submit'>Finalize</button>
+			</form>
 		</div>
 	</div>
 {% endblock %}

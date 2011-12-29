@@ -14,6 +14,7 @@ class Morph(models.Model):
 	date = models.DateTimeField()
 	visible = models.BooleanField(default=True)
 	final = models.BooleanField(default=False)
+	caption = models.TextField(null=True, blank=True)
 	
 	def __unicode__(self):
 		return self.url_title

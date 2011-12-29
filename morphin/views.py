@@ -108,6 +108,8 @@ def view(request, morph_id):
 	try:
 		morph = Morph.objects.get(id=morph_id)
 		if not morph.final:
+			if request.method == "POST" and 'caption' in request.POST and request.POST['caption'] != "Enter a caption. Or not.":
+				morph.caption = request.POST['caption']
 			firsttime = True
 			morph.final = True
 			morph.save()

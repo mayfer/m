@@ -13,9 +13,9 @@
 			<img class='morph single' src='{{ morph.morph_image.url }}' />
 		</div>
 		{% if morph.caption %}
-			<div class='caption'>
-				{{ morph.caption|linebreaks }}
-			</div>
+			<span class='caption'>
+				{{ morph.caption|linebreaksbr }}
+			</span>
 		{% endif %}
 	</div>
 {% endblock %}
