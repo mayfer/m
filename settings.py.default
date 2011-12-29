@@ -40,7 +40,9 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static')
+FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(FILE_ROOT, 'static')
+TMP_ROOT = os.path.join(FILE_ROOT, 'tmp')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -66,6 +68,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'm.mtracker.middleware.TrackerMiddleware'
 )
 
 ROOT_URLCONF = 'm.urls'
@@ -75,8 +78,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/usr/share/pyshared/django/contrib/admin/templates/',
-	os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates/')
-
+	os.path.join(FILE_ROOT, 'templates/'),
+	os.path.join(FILE_ROOT, 'morphin/templates/'),
 )
 
 INSTALLED_APPS = (
@@ -86,4 +89,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'm.mlog',
+    'm.mtracker',
+    'm.morphin',
 )
