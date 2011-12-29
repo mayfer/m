@@ -45,8 +45,8 @@ class Morpher(object):
 			self.execute(frame_bottom_layer)
 			self.execute(frame_image)
 		
-		self.execute("cp {master} {path}/frame0.jpg".format(master=self.master_filename))
-		self.execute("cp {slave} {path}/frame{frames}.jpg".format(slave=self.slave_filename, frames=self.frames))
+		self.execute("cp {master} {path}/frame0.jpg".format(master=self.master_filename, path=self.path))
+		self.execute("cp {slave} {path}/frame{frames}.jpg".format(slave=self.slave_filename, path=self.path, frames=self.frames))
 		
 		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
 		
