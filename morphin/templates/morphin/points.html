@@ -40,7 +40,6 @@
 			
 			$('#done').click(function(e){
 				if($(this).prop('disabled') == false) {
-					$('#final').show();
 					$('#done').html('Processing...');
 					$('#morph').html("<img src='{{ MEDIA_URL }}loader.gif' />");
 									
@@ -62,8 +61,9 @@
 						{ 'data': JSON.stringify(postdata) },
 						function(response) {
 							if(response.status=='ok') {
+								$('#final').show();
+								$('#done').html('Preview');
 								$('#morph').html("<img src='"+response.image_url+"' />");
-								$('#done').html("Update");
 							} else {
 								alert(JSON.stringify(response));
 							}
@@ -110,28 +110,25 @@
 {% endblock %}
 
 {% block content %}
-	<div id='wrapper'>
-		<h1>morphin</h1>
-		<div id='pictures'>
-			<div id='hint'>starting with the left image,<br />click on points that you want to morph into each other.</div>
-			<table>
-				<tr>
-					<td class='picture master current'><img src='{{ morph.master_image.url }}?points' /></td><!-- anticache -->
-					<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->
-				</tr>
-			</table>
-			<div class='tip'>more points yield better results.<br />also, hit escape to undo.</div>
-			<button id='done' disabled='disabled'>Done</button>
-			<div id='morph'>
-				{% if morph.morph_image %}
-					<img src='{{ morph.morph_image.url }}' />
-				{% endif %}
-			</div>
-			
-			<div id='final' {% if not morph.morph_image %} style='display:none;' {% endif %}>
-				<div class='tip'>when satisfied, finalize</div>
-				<button id='finalize'>Finalize</button>
-			</div>
+	<div id='pictures'>
+		<div id='hint'>starting with the left image,<br />click on points that you want to morph into each other.</div>
+		<table>
+			<tr>
+				<td class='picture master current'><img src='{{ morph.master_image.url }}?points' /></td><!-- anticache -->
+				<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->
+			</tr>
+		</table>
+		<div class='tip'>more points yield better results.<br />also, hit escape to undo.</div>
+		<button id='done' disabled='disabled'>Preview</button>
+		<div id='morph'>
+			{% if morph.morph_image %}
+				<img src='{{ morph.morph_image.url }}' />
+			{% endif %}
+		</div>
+		
+		<div id='final' {% if not morph.morph_image %} style='display:none;' {% endif %}>
+			<div class='tip'>when satisfied, finalize</div>
+			<button id='finalize'>Finalize</button>
 		</div>
 	</div>
 {% endblock %}

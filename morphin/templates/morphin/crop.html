@@ -44,31 +44,28 @@
 {% endblock %}
 
 {% block content %}
-	<div id='wrapper'>
-		<h1>morphin</h1>
-		<div id='pictures'>
-			<div id='hint'>
-				okay so you gave me two photos now let's crop
-			</div>
-			<form method='post' action='{% url morphin:crop morph.id %}'>
-				<table>
-					<tr>
-						<td class='picture master'>
-							<img id='master' src='{{ morph.master_image.url }}?crop' /><!-- anticache -->
-							<input type='hidden' name='master' id='master-data' value='{}' />
-						</td>
-						<td class='picture slave'>
-							<img id='slave' src='{{ morph.slave_image.url }}?crop' /><!-- anticache -->
-							<input type='hidden' name='slave' id='slave-data' value='{}' />
-						</td>
-					</tr>
-				</table>
-				<div class='tip'>
-					the aspect ratio of the second image will adapt to the first
-				</div>
-				<button type='submit' disabled='disabled' id='submit'>Next</button>
-			</form>
-			<div id='info'></div>
+	<div id='pictures'>
+		<div id='hint'>
+			okay so you gave me two photos now let's crop
 		</div>
+		<form method='post' action='{% url morphin:crop morph.id %}'>
+			<table>
+				<tr>
+					<td class='picture master'>
+						<img id='master' src='{{ morph.master_image.url }}?crop' /><!-- anticache -->
+						<input type='hidden' name='master' id='master-data' value='{}' />
+					</td>
+					<td class='picture slave'>
+						<img id='slave' src='{{ morph.slave_image.url }}?crop' /><!-- anticache -->
+						<input type='hidden' name='slave' id='slave-data' value='{}' />
+					</td>
+				</tr>
+			</table>
+			<div class='tip'>
+				the aspect ratio of the second image will adapt to the first
+			</div>
+			<button type='submit' disabled='disabled' id='submit'>Next</button>
+		</form>
+		<div id='info'></div>
 	</div>
 {% endblock %}

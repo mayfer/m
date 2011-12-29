@@ -104,9 +104,11 @@ def generate(request, morph_id):
 	return json_response(response)
 
 def view(request, morph_id):
+	firsttime = False
 	try:
 		morph = Morph.objects.get(id=morph_id)
 		if not morph.final:
+			firsttime = True
 			morph.final = True
 			morph.save()
 	except:
@@ -115,5 +117,5 @@ def view(request, morph_id):
 	if not morph.morph_image:
 		not_found()
 	
-	response = {'morph': morph}
+	response = {'morph': morph, 'firsttime': firsttime}
 	return template_response('morphin/view.html', response, request)

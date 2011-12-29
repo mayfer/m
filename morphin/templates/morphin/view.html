@@ -5,16 +5,17 @@
 {% endblock %}
 
 {% block content %}
-	<div id='wrapper'>
-		<h1>morphin</h1>
-		<div id='pictures'>
-			<div id='hint'>
-				hi
-			</div>	
-			<div class='morph'>
-				<img src='{{ morph.morph_image.url }}' />
-			</div>
-			<div id='info'></div>
+	<div id='pictures'>
+		<div id='hint'>
+			check dis out
+		</div>	
+		<div>
+			<img class='morph single' src='{{ morph.morph_image.url }}' />
 		</div>
+		{% if morph.caption %}
+			<div class='caption'>
+				{{ morph.caption|linebreaks }}
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}

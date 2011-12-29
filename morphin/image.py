@@ -64,13 +64,20 @@ class Cropper(object):
 	def resize(self, w, h, even_if_larger=True):
 		try:
 			x, y = self.image.size
+			aspect = x/y
+			
+			if aspect > w/h:
+				h = w / aspect
+			if aspect < w/h:
+				w = h * aspect
+			
 			if (x > w or y > h) or even_if_larger:
 				self.image = self.image.resize((w, h), Image.ANTIALIAS)
 				self.image.save(self.filename, 'JPEG')
 		except IOError, e:
 			print "cannot resize '%s'" % filename
 			print e
-	            
+
 	def crop(self, attrs):
 		try:			
 			for key, val in attrs.items():

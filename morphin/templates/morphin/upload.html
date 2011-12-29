@@ -8,23 +8,20 @@
 {% endblock %}
 
 {% block content %}
-	<div id='wrapper'>
-		<h1>morphin</h1>
-		<div id='pictures'>
-			<div id='hint'>give me two photos</div>
-			<form method='post' enctype="multipart/form-data" action='{% url morphin:upload %}'>
-				<table>
-					<tr>
-						<td class='picture master'>
-							<input type='file' name='master' />
-						</td>
-						<td class='picture slave'>
-							<input type='file' name='slave' />
-						</td>
-					</tr>
-				</table>
-				<button type='submit'>Upload</button>
-			</form>
-		</div>
+	<div id='pictures'>
+		<div id='hint'>give me two photos</div>
+		<form method='post' enctype="multipart/form-data" action='{% url morphin:upload %}'>
+			<table>
+				<tr>
+					<td class='picture master'>
+						<input type='file' name='master' />
+					</td>
+					<td class='picture slave'>
+						<input type='file' name='slave' />
+					</td>
+				</tr>
+			</table>
+			<button type='submit'>Upload</button>
+		</form>
 	</div>
 {% endblock %}

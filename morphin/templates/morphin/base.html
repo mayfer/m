@@ -13,20 +13,29 @@
 			#pictures table td.picture.current { border-color: #fff; }
 			#pictures table td.picture.inactive img { opacity: 0.5 }
 			#pictures img { display: block; }
-			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; }
+			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; text-shadow: 0 0 5px #f0f; color: #fff; }
+			h1 a, h1 a:visited { color: #fff; text-decoration: none; }
+			h1 a:hover { text-shadow: 0 0 15px #f0f; }
+			
 			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: crosshair; }
 			button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
 			
 			#hint { font-size: 15px; line-height: 20px; }
 			.tip { font-size: 14px; margin-bottom: 10px; opacity: 0.8; }
+			.caption { margin: 15px auto; padding: 10px; background: #181818; border-radius: 5px; }
 			
 			#morph img { margin: 15px auto; padding: 5px; border: 3px solid #aaa; }
+			
+			.morph.single { margin: 15px auto; padding: 10px; border-radius: 5px; -webkit-box-shadow: 0 0 20px #606; }
 			
 			button:disabled, input:disabled { opacity: 0.5; }
 		</style>
 		{% block head %}{% endblock %}
 	</head>
 	<body>
-		{% block content %}{% endblock %}
+		<h1><a href='{% url morphin:index %}'>morphin</a></h1>
+		<div id='wrapper'>
+			{% block content %}{% endblock %}
+		</div>
 	</body>
 </html>
