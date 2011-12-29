@@ -44,8 +44,11 @@ class Morpher(object):
 			self.execute(frame_top_layer)
 			self.execute(frame_bottom_layer)
 			self.execute(frame_image)
-			
-		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(1, self.frames)+range(self.frames, -1, -1) ] )
+		
+		self.execute("cp {master} {path}/frame0.jpg".format(master=master_file))
+		self.execute("cp {slave} {path}/frame{frames}.jpg".format(slave=slave_file, frames=self.frames))
+		
+		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
 		
 		gif_name = "animation.gif"
 		animation = "convert -verbose -delay {0} -loop 0 {1} {path}/{gif_name}".format(self.delay, all_frames, path=self.path, gif_name=gif_name)
