@@ -40,7 +40,7 @@
 			
 			$('#done').click(function(e){
 				if($(this).prop('disabled') == false) {
-					$('#done').html('Processing...');
+					$('#done').html('Processing...').prop('disabled', true);
 					$('#morph').html("<img src='{{ MEDIA_URL }}loader.gif' />");
 									
 					var postdata = {'markers': []};
@@ -62,7 +62,7 @@
 						function(response) {
 							if(response.status=='ok') {
 								$('#final').show();
-								$('#done').html('Preview');
+								$('#done').html('Preview').prop('disabled', false);
 								$('#morph').html("<img src='"+response.image_url+"' />");
 							} else {
 								alert(JSON.stringify(response));
