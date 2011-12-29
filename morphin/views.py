@@ -36,7 +36,7 @@ def crop(request, morph_id):
 	try:
 		morph = Morph.objects.get(id=morph_id)
 		if morph.final:
-			not_found()
+			return redirect(label='morphin:view', args=[morph_id])
 	except:
 		not_found()
 	
@@ -70,7 +70,7 @@ def points(request, morph_id):
 	try:
 		morph = Morph.objects.get(id=morph_id)
 		if morph.final:
-			not_found()
+			return redirect(label='morphin:view', args=[morph_id])
 	except:
 		not_found()
 		
@@ -81,7 +81,7 @@ def generate(request, morph_id):
 	try:
 		morph = Morph.objects.get(id=morph_id)
 		if morph.final:
-			not_found()
+			return redirect(label='morphin:view', args=[morph_id])
 	except:
 		not_found()
 		
