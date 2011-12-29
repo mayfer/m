@@ -67,9 +67,9 @@ class Cropper(object):
 			aspect = x/y
 			
 			if aspect > w/h:
-				h = w / aspect
+				h = int(w / aspect)
 			if aspect < w/h:
-				w = h * aspect
+				w = int(h * aspect)
 			
 			if (x > w or y > h) or even_if_larger:
 				self.image = self.image.resize((w, h), Image.ANTIALIAS)
