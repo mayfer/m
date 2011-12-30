@@ -2,7 +2,7 @@ from m.shortcuts import template_response, json_response, html_response, not_fou
 from django.conf import settings
 from django.core.files import File
 from m.morphin.models import Morph
-from m.morphin.image import Morpher, Cropper
+from m.morphin.image import Morpher, Cropper, sanitize
 import simplejson as json
 import os
 
@@ -20,8 +20,8 @@ def upload(request):
 		morph.save()
 		try:
 			w, h = 300, 300
-			morph.master_image.save("m_{0}".format(master.name), master, save=True)
-			morph.slave_image.save("s_{0}".format(slave.name), slave, save=True)
+			morph.master_image.save("m_{0}".format(sanitize(master.name)), master, save=True)
+			morph.slave_image.save("s_{0}".format(sanitize(slave.name)), slave, save=True)
 			cropper_master = Cropper(morph.master_image.path)
 			cropper_slave = Cropper(morph.slave_image.path)
 			cropper_master.resize(w, h, even_if_larger=False)

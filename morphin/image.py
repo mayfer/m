@@ -2,9 +2,13 @@ from __future__ import division
 from m.morphin.models import Morph
 from django.conf import settings
 import os
+import re
 from PIL import Image
 
 # imgur api: ee1c55995a1a35cf35223ca8cd5bee8f (anonymous)
+
+def sanitize(filename):
+	return re.sub(r'[^a-zA-Z0-9]+', '_', filename)
 
 class Morpher(object):
 	def __init__(self, master_file, slave_file):
@@ -46,7 +50,7 @@ class Morpher(object):
 			self.execute(frame_image)
 		
 		self.execute("cp {master} {path}/frame0.jpg".format(master=self.master_filename, path=self.path))
-		self.execute("cp {slave} {path}/frame{frames}.jpg".format(slave=self.slave_filename, path=self.path, frames=self.frames))
+		self.execute("cp {slave} {path}/frame{frame}.jpg".format(slave=self.slave_filename, path=self.path, frame=self.frames+1))
 		
 		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
 		
