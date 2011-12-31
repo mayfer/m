@@ -8,7 +8,7 @@ from PIL import Image
 # imgur api: ee1c55995a1a35cf35223ca8cd5bee8f (anonymous)
 
 def sanitize(filename):
-	return re.sub(r'[^a-zA-Z0-9]+', '_', filename)
+	return re.sub(r'[^a-zA-Z0-9.]+', '_', filename)
 
 class Morpher(object):
 	def __init__(self, master_file, slave_file):
