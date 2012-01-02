@@ -9,6 +9,9 @@
 		an image morphing toy.
 	</div>
 	<div id='content'>
+		<a href='{% url morphin:upload %}' class='button'>make your own</a>
+		<br /><br />
+		or look at some examples
 		<div>
 			{% with morph_examples as morphs %}
 				{% include "morphin/list_morphs.html" %}
