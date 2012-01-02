@@ -10,9 +10,9 @@ import os
 def index(request):
 	morphs = Morph.objects.filter(
 		Q(visible=True),
-		Q(master_image__isnull=False) | ~Q(master_image__exact=''),
-		Q(slave_image__isnull=False) | ~Q(slave_image__exact=''),
-		Q(morph_image__isnull=False) | ~Q(morph_image__exact='')
+		Q(master_image__isnull=False), ~Q(master_image__exact=''),
+		Q(slave_image__isnull=False), ~Q(slave_image__exact=''),
+		Q(morph_image__isnull=False), ~Q(morph_image__exact='')
 	)
 	
 	for morph in morphs:
@@ -138,3 +138,20 @@ def view(request, morph_id):
 	}
 	
 	return template_response('morphin/view.html', response, request)
+
+def recent(request):
+	morphs = Morph.objects.filter(
+		Q(points__isnull=False), ~Q(points__exact=''),
+		Q(master_image__isnull=False), ~Q(master_image__exact=''),
+		Q(slave_image__isnull=False), ~Q(slave_image__exact=''),
+		Q(morph_image__isnull=False), ~Q(morph_image__exact='')
+	)
+	
+	for morph in morphs:
+		morph.points = json.loads(morph.points)
+	
+	response = {
+		'morphs': morphs
+	}
+	
+	return template_response('morphin/all.html', response, request)

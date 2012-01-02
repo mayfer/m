@@ -7,4 +7,5 @@ urlpatterns = patterns('m.morphin.views',
     url(r'^points/(\d*)/?$', 'points', name='points'),
     url(r'^generate/(\d*)/?$', 'generate', name='generate'),
     url(r'^view/(\d*)/?$', 'view', name='view'),
+    url(r'^recent/?$', 'recent', name='recent'),
 )
