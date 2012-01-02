@@ -1,0 +1,26 @@
+<VirtualHost *:80>
+	ServerAdmin murat@ayfer.net
+	ServerName muratayfer.com
+    ServerAlias www.muratayfer.com
+
+	WSGIScriptAlias / /var/django/m/apache/django.wsgi
+    WSGIDaemonProcess m user=murat group=murat processes=1 threads=10
+    WSGIProcessGroup m
+
+	Alias /static/ /var/django/m/static/
+	<Directory /var/django/m/static/>
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	<Directory /var/django/m/apache/>
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/m.error.log
+	CustomLog ${APACHE_LOG_DIR}/m.access.log combined
+	# Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+	LogLevel warn
+
+</VirtualHost>
