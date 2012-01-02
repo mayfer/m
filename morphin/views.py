@@ -136,7 +136,5 @@ def view(request, morph_id):
 		'morph': morph,
 		'firsttime': firsttime
 	}
-	if firsttime:
-		response['firsttime'] = True
 	
 	return template_response('morphin/view.html', response, request)
