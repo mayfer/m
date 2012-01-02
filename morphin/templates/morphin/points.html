@@ -36,7 +36,7 @@
 				themarker.css( { "top": top, "left": left } );
 			} else {
 				if(box.hasClass('master')) count++;
-				marker().appendTo(box.find('.clickarea')).addClass('m-'+count).css( { "top": top, "left": left } );
+				marker().appendTo(box.find('.clickarea')).addClass('m-'+count).css( { "top": top, "left": left } ).data('count', count);
 				box.removeClass('current').addClass('inactive').nextWrap().addClass('current').removeClass('inactive');
 			}
 			
@@ -73,7 +73,8 @@
 							if(response.status=='ok') {
 								$('#final').show();
 								$('#done').html('Preview').prop('disabled', false);
-								$('#morph').html("<img src='"+response.image_url+"' />");
+								var ts = Math.round((new Date()).getTime() / 1000);
+								$('#morph').html("<img src='"+response.image_url+"?"+ts+"' />");
 							} else {
 								alert(JSON.stringify(response));
 							}
@@ -91,6 +92,8 @@
 					$('.marker.m-'+count).remove();
 					if(count) count--;
 					pick_pic();
+				} else if(e.keyCode == 68) {
+					$('.m-'+$('.moving').data('count')).remove();
 				}
 			});
 			
@@ -107,14 +110,14 @@
 					box.removeClass('crosshair');
 				});
 			});
-			
+
 			$('textarea.caption').click(function(e){
 				$(this).select();
 			});
 		});
 		function pick_pic() {
 			var pic;
-			$('#pictures .picture.master').addClass('current').removeClass('inactive').nextWrap().removeClass('current').addClass('inactive');
+			$('.picture.master').addClass('current').removeClass('inactive').nextWrap().removeClass('current').addClass('inactive');
 		}
 
 	</script>
@@ -139,7 +142,7 @@
 				</td>
 			</tr>
 		</table>
-		<div class='tip'>more points yield better results.<br />also, hit escape to undo.</div>
+		<div class='tip'>more points yield better results.<br />also, press d while dragging to delete a point.</div>
 		<button id='done' disabled='disabled'>Preview</button>
 		<div id='morph'>
 			{% if morph.morph_image %}

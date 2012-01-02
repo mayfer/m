@@ -29,16 +29,17 @@ class Morpher(object):
 				master = marker_pair['master']
 				slave = marker_pair['slave']
 				
-				diff_x = slave['x'] - master['x']
-				diff_y = slave['y'] - master['y']
-				
-				master_new_x = int(round(master['x'] + (diff_x * (frame/self.frames))))
-				master_new_y = int(round(master['y'] + (diff_y * (frame/self.frames))))
-				frame_top_layer += " {0},{1} {2},{3} ".format(master['x'], master['y'], master_new_x, master_new_y)
-				
-				slave_new_x = int(round(slave['x'] + (-diff_x * ((self.frames - frame)/self.frames))))
-				slave_new_y = int(round(slave['y'] + (-diff_y * ((self.frames - frame)/self.frames))))
-				frame_bottom_layer += " {0},{1} {2},{3} ".format(slave['x'], slave['y'], slave_new_x, slave_new_y)
+				if 'x' in master and 'y' in master and 'x' in slave and 'y' in slave:
+					diff_x = slave['x'] - master['x']
+					diff_y = slave['y'] - master['y']
+					
+					master_new_x = int(round(master['x'] + (diff_x * (frame/self.frames))))
+					master_new_y = int(round(master['y'] + (diff_y * (frame/self.frames))))
+					frame_top_layer += " {0},{1} {2},{3} ".format(master['x'], master['y'], master_new_x, master_new_y)
+					
+					slave_new_x = int(round(slave['x'] + (-diff_x * ((self.frames - frame)/self.frames))))
+					slave_new_y = int(round(slave['y'] + (-diff_y * ((self.frames - frame)/self.frames))))
+					frame_bottom_layer += " {0},{1} {2},{3} ".format(slave['x'], slave['y'], slave_new_x, slave_new_y)
 				
 			frame_top_layer += "' {path}/master_slave_{0}.jpg".format(frame, path=self.path)
 			frame_bottom_layer += "' {path}/slave_master_{0}.jpg".format(frame, path=self.path)

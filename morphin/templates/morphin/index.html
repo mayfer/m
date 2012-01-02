@@ -10,8 +10,9 @@
 	</div>
 	<div id='content'>
 		<a href='{% url morphin:upload %}' class='button'>make your own</a>
-		<br /><br />
-		or look at some examples
+		<div class='tip' style='margin: 30px 0 20px 0;'>
+			or passively look at some examples
+		</div>
 		<div>
 			{% with morph_examples as morphs %}
 				{% include "morphin/list_morphs.html" %}
