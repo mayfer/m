@@ -12,9 +12,10 @@ class Morph(models.Model):
 	slave_image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
 	morph_image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
 	date = models.DateTimeField()
-	visible = models.BooleanField(default=True)
+	visible = models.BooleanField(default=False)
 	final = models.BooleanField(default=False)
 	caption = models.TextField(null=True, blank=True)
+	points = models.TextField(null=True, blank=True)
 	
 	def __unicode__(self):
 		return self.url_title

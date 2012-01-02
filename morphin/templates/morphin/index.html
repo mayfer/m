@@ -5,13 +5,14 @@
 {% endblock %}
 
 {% block content %}
-	<div id='pictures'>
-		<div id='hint'>
-			hi
-		</div>	
-		<div class='tip'>
-			<a href='{% url morphin:upload %}'>start</a>
+	<div id='welcome'>
+		an image morphing toy.
+	</div>
+	<div id='content'>
+		<div>
+			{% with morph_examples as morphs %}
+				{% include "morphin/list_morphs.html" %}
+			{% endwith %}
 		</div>
-		<div id='info'></div>
 	</div>
 {% endblock %}

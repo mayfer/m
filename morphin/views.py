@@ -1,13 +1,26 @@
 from m.shortcuts import template_response, json_response, html_response, not_found, redirect
 from django.conf import settings
 from django.core.files import File
+from django.db.models import Q
 from m.morphin.models import Morph
 from m.morphin.image import Morpher, Cropper, sanitize
 import simplejson as json
 import os
 
 def index(request):
-	response = {}
+	morphs = Morph.objects.filter(
+		Q(visible=True),
+		Q(master_image__isnull=False) | ~Q(master_image__exact=''),
+		Q(slave_image__isnull=False) | ~Q(slave_image__exact=''),
+		Q(morph_image__isnull=False) | ~Q(morph_image__exact='')
+	)
+	
+	for morph in morphs:
+		morph.points = json.loads(morph.points)
+	
+	response = {
+		'morph_examples': morphs
+	}
 	return template_response('morphin/index.html', response, request)
 	
 def upload(request):
@@ -90,11 +103,11 @@ def generate(request, morph_id):
 		response['status'] = 'ok'
 		input = json.loads(request.POST['data'])
 		morpher = Morpher(morph.master_image.path, morph.slave_image.path)
-		print input['markers']
 		
 		gif_path = morpher.generate_frames(input['markers'])
 		
 		morph.morph_image = os.path.join('uploads', str(morph.id), os.path.basename(gif_path))
+		morph.points = json.dumps(input['markers'])
 		morph.save()
 		
 		response['data'] = input

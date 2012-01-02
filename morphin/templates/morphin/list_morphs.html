@@ -1,0 +1,39 @@
+<table class='morphs'>
+	{% for morph in morphs %}
+	<tr>
+		<td>
+			<div class='picture master'>
+				<div class='clickarea'>
+					<img src='{{ morph.master_image.url }}' />
+					{% for point in morph.points %}
+						<div class='marker' style='top: {{ point.master.y|add:"-2" }}px; left: {{ point.master.x|add:"-2"	 }}px;'></div>
+					{% endfor %}
+				</div>
+			</div>
+		</td>
+		<td>
+			+
+		</td>
+		<td>
+			<div class='picture slave'>
+				<div class='clickarea'>
+					<img class='slave' src='{{ morph.slave_image.url }}' />
+					{% for point in morph.points %}
+						<div class='marker' style='top: {{ point.slave.y|add:"-2" }}px; left: {{ point.slave.x|add:"-2"	 }}px;'></div>
+					{% endfor %}
+				</div>
+			</div>
+		</td>
+		<td>
+			=
+		</td>
+		<td>
+			<div class='picture animation'>
+				<div class='hide-morph'>
+					<img src='{{ morph.morph_image.url }}' />
+				</div>
+			</div>
+		</td>
+	</tr>
+	{% endfor %}
+</table>

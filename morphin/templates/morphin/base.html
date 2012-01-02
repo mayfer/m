@@ -7,17 +7,23 @@
 		<style type='text/css'>
 			html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; }
 			body:after { background: url('{{ MEDIA_URL }}loader.gif'); display: none; }
-			#wrapper { width: 950px; margin: 50px auto; }
-			#pictures { position: relative; text-align: center; }
-			#pictures table { border-collapse:separate; border-spacing: 10px; border: none; margin: 0 auto; }
-			#pictures table td.picture { border: 3px solid #555; padding: 5px; position: relative; }
-			#pictures table td.picture.current { border-color: #fff; }
-			#pictures table td.picture.inactive img { opacity: 0.5 }
-			#pictures img { display: block; }
-			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; color: #fff; }
+			#wrapper { width: 950px; margin: 0 auto; }
+						
+			#content { margin: 50px 0; position: relative; text-align: center; }
+			#content table { border-collapse:separate; border-spacing: 10px; border: none; margin: 0 auto; }
+			#content table .picture { border: 3px solid #555; padding: 5px; }
+			#content table .picture.current { border-color: #fff; }
+			#content table .picture.inactive img { opacity: 0.5 }
+			#content img { display: block; }
+			
+			h1 { padding: 0; margin: 50px 0 0 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; color: #fff; }
 			h1 a, h1 a:visited { color: #fff; text-decoration: none; }
 			h1 a:hover {  }
 			
+			#welcome { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de; color: #fff; }
+			#welcome  { margin: 0 0 20px 0; text-align: center; }
+			
+			.clickarea { position: relative; }
 			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: move; }
 			button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
 			
@@ -35,6 +41,10 @@
 			.morph.single { margin: 15px auto; padding: 10px; border-radius: 5px; -webkit-box-shadow: 0 0 20px #606; }
 			
 			button:disabled, input:disabled { opacity: 0.5; }
+			
+			.hide-morph { visibility: none; }
+			.morphs img { margin: 0 auto; }
+			.morphs { font-size: 30px; color: #fff; }
 		</style>
 		{% block head %}{% endblock %}
 	</head>
