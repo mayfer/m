@@ -29,9 +29,9 @@ class Morpher(object):
 				master = marker_pair['master']
 				slave = marker_pair['slave']
 				
-				if int(master['x']) and int(slave['x']):
-					diff_x = slave['x'] - master['x']
-					diff_y = slave['y'] - master['y']
+				if master['x'] and slave['x']:
+					diff_x = int(slave['x']) - int(master['x'])
+					diff_y = int(slave['y']) - int(master['y'])
 					
 					master_new_x = int(round(master['x'] + (diff_x * (frame/self.frames))))
 					master_new_y = int(round(master['y'] + (diff_y * (frame/self.frames))))
