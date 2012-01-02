@@ -1,0 +1,52 @@
+html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; height: 100%; }
+body:after { background: url('{{ MEDIA_URL }}loader.gif'); display: none; }
+#container { min-height: 100%; position: relative; }
+#wrapper { width: 950px; margin: 0 auto; padding-bottom: 50px; }
+			
+#content { margin: 50px 0; position: relative; text-align: center; }
+#content table { border-collapse:separate; border-spacing: 10px; border: none; margin: 0 auto; }
+#content table .picture { border: 3px solid #555; padding: 5px; }
+#content table .picture.current { border-color: #fff; }
+#content table .picture.inactive img { opacity: 0.5 }
+#content img { display: block; }
+
+h1 { padding: 50px 0 0 0; margin: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; color: #fff; }
+h1 a, h1 a:visited { color: #fff; text-decoration: none; }
+h1 a:hover {  }
+
+a { color: #646; text-decoration: none; }
+
+#welcome { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de; color: #fff; }
+#welcome  { margin: 0 0 20px 0; text-align: center; }
+#footer { color: #666; text-shadow: -1px -1px #000; text-align: center; background: rgba(255,255,255,0.1); position: absolute; bottom: 0; left: 0; width: 100%; line-height: 30px;}
+
+.clickarea { position: relative; }
+.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 998; cursor: move; }
+button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
+
+#hint { position: relative; font-size: 15px; line-height: 20px; }
+#hint img { margin: 10px auto; position: absolute; }
+.tip { position: relative; font-size: 14px; margin-bottom: 10px; }
+.caption { display: inline-block; margin: 15px auto; padding: 20px; background: #181818; border-radius: 5px; }
+
+.points .current img, .crosshair, .crosshair .marker { cursor: url({{ MEDIA_URL }}cursor.png) 15 15, default; }
+
+textarea.caption { position: relative; display: block; margin: 5px auto; background: rgba(0.1,0.1,0.1,0.9); color: #fff; padding: 10px; width: 200px; height: 50x; border: 1px solid #777; border-top: 1px solid #222; border-left: 1px solid #222; }
+
+#morph img { margin: 15px auto; padding: 5px; border: 3px solid #aaa; }
+
+.morph.single { display: inline-block; margin: 15px auto; padding: 10px; border-radius: 5px; border: 6px solid #444; }
+
+button:disabled, input:disabled { opacity: 0.5; }
+
+.hide-morph { visibility: none; }
+.morphs img { margin: 0 auto; }
+.morphs { font-size: 30px; color: #fff; }
+
+a.button, input[type="submit"], button { cursor: pointer; display: inline-block; margin: 10px 0; box-shadow:0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 25px #00aa87, 0 0 35px #aa0087, 0 0 45px #aa0087; color: #fff;  text-decoration: none; padding: 10px; border-radius: 10px; text-shadow: 0 0 5px #a0a, 0 0 15px #a0a; }
+a.button:hover, input[type="submit"]:hover, button:hover { display: inline-block; margin: 10px 0; box-shadow:0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 25px #aa0087, 0 0 45px #aa0087, 0 0 55px #aa0087; color: #fff;  text-decoration: none; padding: 10px; border-radius: 10px;}
+
+#about { display: none; text-align: center; position: absolute; bottom: 0; width: 100%; background: #000; box-shadow: 0 0 20px #fff, 0 0 30px #aa0087; padding: 50px 0; z-index: 999; }
+#about table { margin: 0 auto; text-align: left; }
+#about table th { text-align: right; padding-right: 10px; }
+#about a { color: #a8a; }
