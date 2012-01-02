@@ -44,16 +44,16 @@ class Morpher(object):
 			frame_top_layer += "' {path}/master_slave_{0}.jpg".format(frame, path=self.path)
 			frame_bottom_layer += "' {path}/slave_master_{0}.jpg".format(frame, path=self.path)
 			
-			frame_image = "composite -dissolve {0}x{1}  -gravity center {path}/slave_master_{2}.jpg  {path}/master_slave_{2}.jpg -alpha Set {path}/frame{2}.jpg".format(int((frame/self.frames)*100), int(((self.frames-frame)/self.frames)*100), frame, path=self.path)
+			frame_image = "composite -dissolve {0}x{1}  -gravity center {path}/slave_master_{2}.jpg  {path}/master_slave_{2}.jpg -alpha Set {path}/frame{2}.gif".format(int((frame/self.frames)*100), int(((self.frames-frame)/self.frames)*100), frame, path=self.path)
 			
 			self.execute(frame_top_layer)
 			self.execute(frame_bottom_layer)
 			self.execute(frame_image)
 		
-		self.execute("cp {master} {path}/frame0.jpg".format(master=self.master_filename, path=self.path))
-		self.execute("cp {slave} {path}/frame{frame}.jpg".format(slave=self.slave_filename, path=self.path, frame=self.frames+1))
+		self.execute("convert {master} {path}/frame0.gif".format(master=self.master_filename, path=self.path))
+		self.execute("convert {slave} {path}/frame{frame}.gif".format(slave=self.slave_filename, path=self.path, frame=self.frames+1))
 		
-		all_frames = " ".join( [ "{path}/frame{0}.jpg".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
+		all_frames = " ".join( [ "{path}/frame{0}.gif".format(i, path=self.path) for i in range(0, self.frames+1)+range(self.frames+1, -1, -1) ] )
 		
 		gif_name = "animation.gif"
 		animation = "convert -verbose -delay {0} -loop 0 {1} {path}/{gif_name}".format(self.delay, all_frames, path=self.path, gif_name=gif_name)
