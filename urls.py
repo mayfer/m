@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     #url(r'^pretend/?$', 'views.pretend', name='pretend'),
     
     url(r'^morphin/', include('morphin.urls', namespace='morphin')),
+    # url(r'^gl/', include('gl.urls', namespace='gl')),
 )
 
 # to serve static files on development servers

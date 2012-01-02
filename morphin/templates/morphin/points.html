@@ -21,21 +21,31 @@
 		count = 0;
 		frames = 10;
 		captureClick = function(e) {
-			var offset = $(this).offset();
-			var box = $(this).parent();
-			if(box.hasClass('master')) count++;
-			var left = (e.pageX - offset.left), top = (e.pageY - offset.top);
-			//log(left + ", " + top);
+		
+			var themarker, thepicture, offset, box, has_moving;
 			
-			marker().appendTo(box).addClass('m-'+count).css( { "top": top, "left": left } );
+			thepicture = $(this);
+			themarker = $(this).parent().find('.marker.moving');	
+			offset = thepicture.offset();
+			box = thepicture.parent();
+
+			// the point actually appears 4 pixels off in both axis.
+			// however the point size is also 4 px, which puts the center at 2, so 4-2=2
+			var left = (e.pageX - offset.left + 2), top = (e.pageY - offset.top + 2);
 			
-			box.removeClass('current').addClass('inactive').nextWrap().addClass('current').removeClass('inactive');
+			if(themarker.length) {
+				themarker.css( { "top": top, "left": left } );
+			} else {
+				if(box.hasClass('master')) count++;
+				marker().appendTo(box).addClass('m-'+count).css( { "top": top, "left": left } );
+				box.removeClass('current').addClass('inactive').nextWrap().addClass('current').removeClass('inactive');
+			}
 			
 			$('#done').prop('disabled', false);
 		}
 		
 		$(document).ready(function(){
-			$('.picture.current img').live('click', captureClick);
+			$('.picture.current img').live('mousedown', captureClick);
 		
 			
 			$('#done').click(function(e){
@@ -49,8 +59,9 @@
 					for(var i=1; i<=count; i++) {
 						var marker_master = master.find('.marker.m-'+i);
 						var marker_slave = slave.find('.marker.m-'+i);
-						var top_m = parseInt(marker_master.css('top')), left_m = parseInt(marker_master.css('left'));
-						var top_s = parseInt(marker_slave.css('top')), left_s = parseInt(marker_slave.css('left'));
+						// for -2, see comment in captureClick
+						var top_m = parseInt(marker_master.css('top'))-2, left_m = parseInt(marker_master.css('left'))-2;
+						var top_s = parseInt(marker_slave.css('top'))-2, left_s = parseInt(marker_slave.css('left'))-2;
 						postdata['markers'].push({
 							'master': {'x': left_m, 'y': top_m },
 							'slave': {'x': left_s, 'y': top_s }
@@ -83,6 +94,20 @@
 					pick_pic();
 				}
 			});
+			
+			$('.marker').live('mousedown', function(e){
+				e.preventDefault();
+				var movingmarker = $(this);
+				movingmarker.addClass('moving');
+				var image = $(this).parent().find('img');
+				var box = image.parent().addClass('crosshair');
+				image.bind('mousemove', captureClick);
+				box.one('mouseup', function(){
+					image.unbind('mousemove');
+					movingmarker.removeClass('moving');
+					box.removeClass('crosshair');
+				});
+			});
 		});
 		function pick_pic() {
 			var pic;
@@ -111,8 +136,10 @@
 
 {% block content %}
 	<div id='pictures'>
-		<div id='hint'>starting with the left image,<br />click on points that you want to morph into each other.</div>
-		<table>
+		<div id='hint'>
+			starting with the left image,<br />click on points that you want to morph into each other.
+		</div>
+		<table class='points'>
 			<tr>
 				<td class='picture master current'><img src='{{ morph.master_image.url }}?points' /></td><!-- anticache -->
 				<td class='picture slave inactive'><img src='{{ morph.slave_image.url }}?points' /></td><!-- anticache -->

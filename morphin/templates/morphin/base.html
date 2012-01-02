@@ -14,16 +14,19 @@
 			#pictures table td.picture.current { border-color: #fff; }
 			#pictures table td.picture.inactive img { opacity: 0.5 }
 			#pictures img { display: block; }
-			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; text-shadow: 0 0 5px #f0f; color: #fff; }
+			h1 { padding: 0; margin: 50px; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; color: #fff; }
 			h1 a, h1 a:visited { color: #fff; text-decoration: none; }
-			h1 a:hover { text-shadow: 0 0 15px #f0f; }
+			h1 a:hover {  }
 			
-			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: crosshair; }
+			.marker { height: 4px; width: 4px; border-radius: 4px; background: #ffa; position: absolute; z-index: 1000; cursor: move; }
 			button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3px 7px; background: #111; }
 			
 			#hint { font-size: 15px; line-height: 20px; }
+			#hint img { margin: 10px auto; position: absolute; }
 			.tip { font-size: 14px; margin-bottom: 10px; opacity: 0.8; }
 			.caption { display: inline-block; margin: 15px auto; padding: 20px; background: #181818; border-radius: 5px; }
+			
+			.points .current img, .crosshair, .crosshair .marker { cursor: url({{ MEDIA_URL }}cursor.png) 15 15, default; }
 			
 			textarea.caption { display: block; margin: 5px auto; background: #333; color: #fff; padding: 10px; width: 200px; height: 50x; border: 1px solid #777; }
 			
