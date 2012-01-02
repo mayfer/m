@@ -6,13 +6,17 @@
 
 {% block content %}
 	<div id='content'>
-		<div id='hint'>
-			check dis out
-		</div>	
-		<div>
-			<img class='morph single' src='{{ morph.morph_image.url }}' />
+		{% if morph %}
+			you're done.<br /><br />
+			if you want you can share this page on facebook or wherever.<br />
+			not that i'm trying to encourage it. i'm just saying, this page won't disappear.<br />
+			but this stupid note will.<br /><br />
+		{% endif %}
+		<div class='morph single'>
+			<img src='{{ morph.morph_image.url }}' />
 		</div>
 		{% if morph.caption %}
+			<br />
 			<span class='caption'>
 				{{ morph.caption|linebreaksbr }}
 			</span>

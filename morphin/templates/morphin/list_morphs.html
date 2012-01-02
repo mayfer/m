@@ -30,7 +30,7 @@
 		<td>
 			<div class='picture animation'>
 				<div class='hide-morph'>
-					<img src='{{ morph.morph_image.url }}' />
+					<a href='{% url morphin:view morph.id %}'><img src='{{ morph.morph_image.url }}' /></a>
 				</div>
 			</div>
 		</td>

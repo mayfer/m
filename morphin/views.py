@@ -132,5 +132,11 @@ def view(request, morph_id):
 	if not morph.morph_image:
 		not_found()
 	
-	response = {'morph': morph, 'firsttime': firsttime}
+	response = {
+		'morph': morph,
+		'firsttime': firsttime
+	}
+	if firsttime:
+		response['firsttime'] = True
+	
 	return template_response('morphin/view.html', response, request)
