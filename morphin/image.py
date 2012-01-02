@@ -29,7 +29,7 @@ class Morpher(object):
 				master = marker_pair['master']
 				slave = marker_pair['slave']
 				
-				if 'x' in master and 'y' in master and 'x' in slave and 'y' in slave:
+				if int(master['x']) and int(slave['x']):
 					diff_x = slave['x'] - master['x']
 					diff_y = slave['y'] - master['y']
 					
