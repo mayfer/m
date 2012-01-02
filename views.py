@@ -1,6 +1,9 @@
 from m.shortcuts import template_response, json_response, html_response
 from m.mlog.models import Entry
 
+def placeholder(request):
+	return html_response("my old server died.<br />i need to revive my site.<br /><br />note to self: make backups")
+
 def home(request):
 	response = {}
 	return template_response('home.html', response, request)
