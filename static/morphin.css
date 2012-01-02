@@ -1,5 +1,5 @@
 html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; height: 100%; }
-body:after { background: url('{{ MEDIA_URL }}loader.gif'); display: none; }
+body:after { background: url('loader.gif'); display: none; }
 #container { min-height: 100%; position: relative; }
 #wrapper { width: 950px; margin: 0 auto; padding-bottom: 50px; }
 			
@@ -29,7 +29,7 @@ button { font-family: monospace; border: 2px solid #444; color: #aaa; padding: 3
 .tip { position: relative; font-size: 14px; margin-bottom: 10px; }
 .caption { display: inline-block; margin: 15px auto; padding: 20px; background: #181818; border-radius: 5px; }
 
-.points .current img, .crosshair, .crosshair .marker { cursor: url({{ MEDIA_URL }}cursor.png) 15 15, default; }
+.points .current img, .crosshair, .crosshair .marker { cursor: url(cursor.png) 15 15, default; }
 
 textarea.caption { position: relative; display: block; margin: 5px auto; background: rgba(0.1,0.1,0.1,0.9); color: #fff; padding: 10px; width: 200px; height: 50x; border: 1px solid #777; border-top: 1px solid #222; border-left: 1px solid #222; }
 
