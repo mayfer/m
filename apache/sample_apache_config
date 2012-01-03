@@ -8,6 +8,7 @@
     WSGIProcessGroup m
 
 	Alias /static/ /var/django/m/static/
+	Alias /admin/static/  /usr/local/lib/python2.7/dist-packages/django/contrib/admin/media
 	<Directory /var/django/m/static/>
 		Order deny,allow
 		Allow from all
