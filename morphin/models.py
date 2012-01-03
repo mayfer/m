@@ -25,6 +25,3 @@ class Morph(models.Model):
 		if not self.id:
 			self.date = datetime.datetime.today()
 		super(Morph, self).save(*args, **kwargs)
-
-def get_upload_path(instance, filename, type):
-	return os.path.join("uploads", "{id}_{filename}".format(instance.id, filename=filename))
