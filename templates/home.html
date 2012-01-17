@@ -39,7 +39,7 @@
 		    		$('#nav').fadeIn(300);
 		    	});
 		    	
-		    	$('#work, #play, #pretend').hover(function(e){
+		    	$('#work, #play, #make').hover(function(e){
 		    		$('#intro-container').addClass($(this).attr('id'));
 		    		$(this).find('.icon .default').fadeOut(200);
 		    		$(this).find('.icon .hover').fadeIn(200);
@@ -77,10 +77,10 @@
 									</div>
 									play
 								</a>
-								<a id='pretend' href='{% url pretend %}'>
+								<a id='make' href='{% url make %}'>
 									<div class='icon'>
-										<img class='default' src='{{ MEDIA_URL }}pretend.png' />
-										<img class='hover' src='{{ MEDIA_URL }}pretend_hover.png' />
+										<img class='default' src='{{ MEDIA_URL }}make.png' />
+										<img class='hover' src='{{ MEDIA_URL }}make_hover.png' />
 									</div>
 									make
 								</a>

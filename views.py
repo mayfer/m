@@ -17,6 +17,6 @@ def play(request):
 	response['entries'] = Entry.objects.filter(visible=True).order_by('-date')
 	return template_response('play.html', response, request)
 
-def pretend(request):
+def make(request):
 	response = {}
-	return template_response('pretend.html', response, request)
+	return template_response('make.html', response, request)

@@ -15,10 +15,11 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^$', 'm.views.placeholder', name='home'),
-    #url(r'^work/?$', 'views.work', name='work'),
-    #url(r'^play/?$', 'views.play', name='play'),
-    #url(r'^pretend/?$', 'views.pretend', name='pretend'),
+    url(r'^$', 'm.views.placeholder', name='placeholder'),
+    url(r'^mur/?$', 'm.views.home', name='home'),
+    url(r'^work/?$', 'm.views.work', name='work'),
+    url(r'^play/?$', 'm.views.play', name='play'),
+    url(r'^make/?$', 'm.views.make', name='make'),
     
     url(r'^morphin/', include('m.morphin.urls', namespace='morphin')),
     # url(r'^gl/', include('gl.urls', namespace='gl')),

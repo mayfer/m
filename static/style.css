@@ -1,5 +1,5 @@
 html { padding: 0; margin: 0; }
-body { color: #fff; padding: 20px 0; margin: 0; background: url(background.gif); font-family: 'Trebuchet MS'; font-size: 14px; line-height: 17px; }
+body { color: #fff; padding: 20px 0; margin: 0; background: url(background.gif); font-family: 'Trebuchet MS', sans-serif; font-size: 14px; font-weight: normal; line-height: 19px; }
 
 a { color: #fff; text-decoration: none; }
 
@@ -26,7 +26,8 @@ h2 { color: #fff; font-family: 'Comfortaa', cursive; margin: 0; padding: 0; font
 .spam { text-shadow: #0aa -1px -1px 1px; font-size: 12px; line-height: 25px; }
 .rain { text-shadow: #a0a -1px -1px 7px; }
 
-ul li { margin: 0 0 5px 0; }
+ul { padding: 0 0 0 15px; margin: 5px 0 15px 15px; }
+ul li { margin: 0 0 10px 0; }
 
 #crumbs { height: 50px; line-height: 50px; font-size: 25px; font-family: 'Amatic SC', cursive; }
 #crumbs div { float: right; }
@@ -41,11 +42,11 @@ ul li { margin: 0 0 5px 0; }
 #crumbs .home:hover { background-image: url('home_hover.png'), url('tile_test4.png'); }
 /* .work #crumbs .home { background-image: url('home.png'), url('tile_green.png'); } */
 .play #crumbs .home { background-image: url('home.png'), url('tile_purple.png'); }
-.pretend #crumbs .home { background-image: url('home.png'), url('tile_red.png'); }
+.make #crumbs .home { background-image: url('home.png'), url('tile_red.png'); }
 
 /* .work #crumbs .home:hover { background-image: url('home_hover.png'), url('tile_green.png'); } */
 .play #crumbs .home:hover { background-image: url('home_hover.png'), url('tile_purple.png'); }
-.pretend #crumbs .home:hover { background-image: url('home_hover.png'), url('tile_red.png'); }
+.make #crumbs .home:hover { background-image: url('home_hover.png'), url('tile_red.png'); }
 
 #intro {
 	padding: 10px 0;
@@ -55,10 +56,11 @@ ul li { margin: 0 0 5px 0; }
 }
 /* .work #intro { background:url('tile_green.png'); } */
 .play #intro { background:url('tile_purple.png'); }
-.pretend #intro { background:url('tile_red.png'); }
+.make #intro { background:url('tile_red.png'); }
 
 #resume { color: #aaa; padding: 0 15px 15px 15px; border-radius: 4px; margin: 20px 0 0 20px; }
 #resume h3 { color: #fff; margin: 0 -15px 10px -15px; line-height: 15px; padding: 0 0 0 20px; background: rgba(255,255,255,0.1); display: block; font-family: 'Comfortaa'; border-top-left-radius: 5px; border-top-right-radius: 5px; text-shadow: #a0a 0 0 15px; }
+#resume .subtitle { color: #fff; text-shadow: 0 0 15px #a0a, 0 0 25px #a0a; line-height: 25px; text-transform: uppercase; font-size: 12px; }
 
 #timestamp { margin: 0 0 0 25px; color: #aaa; font-size: 12px; text-align: right; }
 

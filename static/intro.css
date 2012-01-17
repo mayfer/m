@@ -9,10 +9,10 @@ a { color: #fff; text-decoration: none; }
     display: inline;
     background-image: url('work.png');
     background-image: url('play.png');
-    background-image: url('pretend.png');
+    background-image: url('make.png');
     background-image: url('work_hover.png');
     background-image: url('play_hover.png');
-    background-image: url('pretend_hover.png');
+    background-image: url('make_hover.png');
 }
 
 #wrapper { height: 100%; }
@@ -49,7 +49,7 @@ td { vertical-align: center; text-align: center; }
 	box-shadow: 2px 2px 15px 2px rgba(50,0,50,0.5) inset, -4px -4px 10px 2px rgba(255,0,255,0.4);
 	-moz-box-shadow: 2px 2px 15px 2px rgba(50,0,50,0.5) inset, -4px -4px 10px 2px rgba(255,0,255,0.4);
 }
-#intro-container.pretend {
+#intro-container.make {
 	box-shadow: 2px 2px 15px 2px rgba(50,0,0,0.5) inset, -4px -4px 10px 2px rgba(255,0,0,0.4);
 	-moz-box-shadow: 2px 2px 15px 2px rgba(50,0,0,0.5) inset, -4px -4px 10px 2px rgba(255,0,0,0.4);
 }
@@ -61,13 +61,13 @@ td { vertical-align: center; text-align: center; }
 #nav a .icon img { position: absolute; top: 0; left: 0; }
 #nav a .icon .hover { display: none; }
 
-#work, #play, #pretend { /*color: #577e97;*/ color: #ccc; float: left; margin-right: 10px; line-height: 10px; display: block; width: 100px; text-aign: center; text-shadow: #000 0 0 15px; font-weight: bold; opacity: 0.5;
+#work, #play, #make { /*color: #577e97;*/ color: #ccc; float: left; margin-right: 10px; line-height: 10px; display: block; width: 100px; text-aign: center; text-shadow: #000 0 0 15px; font-weight: bold; opacity: 0.5;
 -webkit-transition-property: text-shadow, color, opacity; -webkit-transition-duration: 0.2s, 0.2s; -webkit-transition-timing-function: linear, linear;
  }
-#work.hover, #play.hover, #pretend.hover { color: #fff; opacity: 1; }
+#work.hover, #play.hover, #make.hover { color: #fff; opacity: 1; }
 #work.hover { text-shadow: #0f0 0 0 15px; }
 #play.hover { text-shadow: #f0f 0 0 15px; }
-#pretend.hover { text-shadow: #f00 0 0 15px; }
+#make.hover { text-shadow: #f00 0 0 15px; }
 
 
 #intro {
