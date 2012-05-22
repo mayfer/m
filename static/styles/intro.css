@@ -1,5 +1,5 @@
 html { height: 100%; padding: 0; margin: 0; }
-body { height: 100%; padding: 0; margin: 0; background: url('background.gif'); font-family: 'Comfortaa', cursive; }
+body { height: 100%; padding: 0; margin: 0; background: url('../images/background.gif'); font-family: 'Comfortaa', cursive; }
 
 a { color: #fff; text-decoration: none; }
 
@@ -7,12 +7,12 @@ a { color: #fff; text-decoration: none; }
     width: 0px;
     height: 0px;
     display: inline;
-    background-image: url('work.png');
-    background-image: url('play.png');
-    background-image: url('make.png');
-    background-image: url('work_hover.png');
-    background-image: url('play_hover.png');
-    background-image: url('make_hover.png');
+    background-image: url('../images/work.png');
+    background-image: url('../images/play.png');
+    background-image: url('../images/make.png');
+    background-image: url('../images/work_hover.png');
+    background-image: url('../images/play_hover.png');
+    background-image: url('../images/make_hover.png');
 }
 
 #wrapper { height: 100%; }
@@ -121,5 +121,5 @@ td { vertical-align: center; text-align: center; }
 
 #murat:hover { -webkit-animation: none; -moz-animation: none; color: rgba(150,150,150,1); text-shadow: #000 2px 2px 10px; }
 
-#ayfer { display: block; color: transparent; padding-left: 30px; line-height: 25px; opacity: 0.25; background: url('ay.png') center left no-repeat; float: right; position: relative; top: -25px; }
+#ayfer { display: block; color: transparent; padding-left: 30px; line-height: 25px; opacity: 0.25; background: url('../images/ay.png') center left no-repeat; float: right; position: relative; top: -25px; }
 #ayfer:hover { color: #fff; opacity: 0.5; }

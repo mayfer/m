@@ -1,5 +1,5 @@
 html, body { margin: 0; padding: 0; background: #000; color: #aaa; font-family: monospace; height: 100%; }
-body:after { background: url('loader.gif'); display: none; }
+body:after { background: url('../images/loader.gif'); display: none; }
 #container { min-height: 100%; position: relative; }
 #wrapper { width: 950px; margin: 0 auto; padding-bottom: 50px; }
 			

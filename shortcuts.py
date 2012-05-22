@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
-import simplejson as json
+import django.utils.simplejson as json
 
 def template_response(template, data, request):
     return HttpResponse(render_to_response(template, data, context_instance=RequestContext(request)))
