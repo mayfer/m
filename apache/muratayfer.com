@@ -7,9 +7,24 @@
     WSGIDaemonProcess m user=murat group=murat processes=1 threads=10
     WSGIProcessGroup m
 
+	Alias /static/admin/  /usr/lib/python2.7/dist-packages/django/contrib/admin/media/
+	<Directory /usr/lib/python2.7/dist-packages/django/contrib/admin/media/>
+		Order deny,allow
+		Allow from all
+	</Directory>
 	Alias /static/ /var/django/m/static/
-	Alias /admin/static/  /usr/local/lib/python2.7/dist-packages/django/contrib/admin/media/
 	<Directory /var/django/m/static/>
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	Alias /secret-box /var/www/secret-box/
+	<Directory /var/www/secret-box/>
+		Order deny,allow
+		Allow from all
+	</Directory>
+	Alias /chords /var/www/chords/
+	<Directory /var/www/chords/>
 		Order deny,allow
 		Allow from all
 	</Directory>
