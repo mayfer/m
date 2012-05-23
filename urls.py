@@ -5,10 +5,6 @@ import m.settings as settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'm.views.home', name='home'),
-    # url(r'^m/', include('m.foo.urls')),
-
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -17,6 +13,7 @@ urlpatterns = patterns('',
     
     url(r'^$', 'm.views.placeholder', name='placeholder'),
     url(r'^mur/?$', 'm.views.home', name='home'),
+    url(r'^mur/#skip$', 'm.views.home', name='home-skip'),
     url(r'^work/?$', 'm.views.work', name='work'),
     url(r'^play/?$', 'm.views.play', name='play'),
     url(r'^make/?$', 'm.views.make', name='make'),
@@ -24,11 +21,3 @@ urlpatterns = patterns('',
     url(r'^morphin/', include('m.morphin.urls', namespace='morphin')),
     url(r'^gl/', include('gl.urls', namespace='gl')),
 )
-
-# to serve static files on development servers
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-   )

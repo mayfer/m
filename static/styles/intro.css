@@ -73,6 +73,7 @@ td { vertical-align: center; text-align: center; }
 #intro {
 	height: 50px;
 	padding: 175px 0;
+	display: none;
 }
 
 #murat { 

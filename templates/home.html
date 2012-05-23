@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel='stylesheet' type='text/css' href='{{ MEDIA_URL }}styles/intro.css' media='screen' />
+		<link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}styles/intro.css' media='screen' />
 		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
 		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
 		<script type='text/javascript'>
@@ -33,8 +33,17 @@
 			        });
 		    	});
 		    	
+				if(window.location.hash == "#skip") {
+		    		$('#intro').hide();
+		    		$('#nav').show();
+				} else {
+		    		$('#intro').show();
+		    		$('#nav').hide();
+				}
+
 		    	$('#murat').click(function(e){
 		    		e.preventDefault();
+					window.location.hash = "skip";
 		    		$('#intro').fadeOut(100).hide();
 		    		$('#nav').fadeIn(300);
 		    	});
@@ -65,22 +74,22 @@
 							<div id='nav'>
 								<a id='work' href='{% url work %}'>
 									<div class='icon'>
-										<img class='default' src='{{ MEDIA_URL }}images/work.png' />
-										<img class='hover' src='{{ MEDIA_URL }}images/work_hover.png' />
+										<img class='default' src='{{ STATIC_URL }}images/work.png' />
+										<img class='hover' src='{{ STATIC_URL }}images/work_hover.png' />
 									</div>
 									work
 								</a>
 								<a id='play' href='{% url play %}'>
 									<div class='icon'>
-										<img class='default' src='{{ MEDIA_URL }}images/play.png' />
-										<img class='hover' src='{{ MEDIA_URL }}images/play_hover.png' />
+										<img class='default' src='{{ STATIC_URL }}images/play.png' />
+										<img class='hover' src='{{ STATIC_URL }}images/play_hover.png' />
 									</div>
 									play
 								</a>
 								<a id='make' href='{% url make %}'>
 									<div class='icon'>
-										<img class='default' src='{{ MEDIA_URL }}images/make.png' />
-										<img class='hover' src='{{ MEDIA_URL }}images/make_hover.png' />
+										<img class='default' src='{{ STATIC_URL }}images/make.png' />
+										<img class='hover' src='{{ STATIC_URL }}images/make_hover.png' />
 									</div>
 									make
 								</a>
