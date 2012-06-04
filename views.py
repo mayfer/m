@@ -17,6 +17,9 @@ def play(request):
 	response['entries'] = Entry.objects.filter(visible=True).order_by('-date')
 	return template_response('play.html', response, request)
 
+def entry_body(request, id):
+	return html_response(Entry.objects.get(id=id).content)
+
 def make(request):
 	response = {}
 	return template_response('make.html', response, request)

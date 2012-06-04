@@ -2,10 +2,27 @@
 
 {% block head_tags %}
 	<title>is murat</title>
+	<script type='text/javascript'>
+		$(document).ready(function(){
+			$('a.expand-story').live('click', function(e){
+				e.preventDefault();
+				var expander = $(this);
+				var url = expander.data('full-url');
+				expander.html('[ one sec ]');
+				$.get(url, function(response){
+					var preview = expander.parent()
+					var entry = preview.parent();
+					entry.find('.date').show()
+					entry.find('.full .text').html(response).show();
+					preview.hide();
+				});
+			});
+		});
+	</script>
 {% endblock %}
 
 {% block page %}play{% endblock %}
-{% block navtitle %}play with me{% endblock %}
+{% block navtitle %}play{% endblock %}
 
 {% block content %}
 	<div id='intro'>
@@ -20,11 +37,16 @@
 			{% for entry in entries %}
 				<div class='entry'>
 					<h3>{{ entry.title }}</h3>
-					<div class='date'>
-						{% firstof entry.date_label entry.date %}
-					</div>
 					<div class='preview'>
-						{{ entry.preview }}
+						{{ entry.preview }} <a href='#' class='expand-story' data-full-url='{% url entry_body entry.id %}	'>[ show the full thing ]</a>
+					</div>
+					<div class='full'>
+						<div class='text'>
+							
+						</div>
+						<div class='date'>
+							{% firstof entry.date_label entry.date %}
+						</div>
 					</div>
 				</div>
 			{% endfor %}
