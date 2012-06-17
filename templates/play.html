@@ -19,6 +19,11 @@
 			});
 		});
 	</script>
+	<style type='text/css'>
+		{% for entry in entries %}
+			{{ entry.custom_css }}
+		{% endfor %}
+	</style>
 {% endblock %}
 
 {% block page %}play{% endblock %}
@@ -41,7 +46,7 @@
 						{{ entry.preview }} <a href='#' class='expand-story' data-full-url='{% url entry_body entry.id %}	'>[ show the full thing ]</a>
 					</div>
 					<div class='full'>
-						<div class='text'>
+						<div class='text {{ entry.url_title }}'>
 							
 						</div>
 						<div class='date'>

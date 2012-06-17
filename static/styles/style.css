@@ -55,7 +55,7 @@ ul li { margin: 0 0 10px 0; padding-left: 25px; background: url('../images/list-
 }
 .work #intro { background: url('../images/glow.png') top center no-repeat, url('../images/tile_test5.png'); }
 .play #intro { background: url('../images/glow.png') top center no-repeat, url('../images/tile_test5.png'); }
-.make #intro { background: url('../images/tile_red.png'); }
+.make #intro { background: url('../images/glow.png') top center no-repeat, url('../images/tile_red.png'); }
 
 #resume, .entry { color: #aaa; padding: 25px; border-radius: 4px; margin: 40px 0 0 0; text-shadow: 0 -1px 1px #000; box-shadow: 0 0 1px 1px rgba(200,200,200,0.5); background: rgba(200,200,200,0.1) }
 #resume h3 { color: #fff; padding: 0; margin: 20px 0 15px 0; line-height: 15px; display: block; font-family: 'Comfortaa'; border-top-left-radius: 5px; border-top-right-radius: 5px; text-shadow: #a0a 0 0 15px; }
@@ -75,8 +75,11 @@ blockquote:after { content: '"'; font-size: 22px; position: absolute; margin: 0 
 .play { color: #aaa; }
 .play h2 { text-shadow: none; }
 
-.entry h3 { color: #fff; padding: 0; margin: 20px 0 15px 0; line-height: 15px; display: block; }
+.entry h3 { color: #fff; padding: 0; margin: 20px 0 15px 0; line-height: 15px; display: block; text-align: center; }
 a.expand-story { padding: 2px 5px; text-shadow: 0 0 5px #a0a; border-radius: 3px; }
 a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .entry .date { display: none; margin-top: 20px; color: #777; text-align: center; }
 .entry .text { display: none; }
+
+
+.make .project { float: left; height: 200px; border-radius: 5px; background: #333; box-shadow: 0 0 10px #000; }
