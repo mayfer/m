@@ -18,7 +18,7 @@ class Morph(models.Model):
 	points = models.TextField(null=True, blank=True)
 	
 	def __unicode__(self):
-		return self.url_title
+		return self.url
 
 	def save(self, *args, **kwargs):
 		"set current timestamp on first save"
