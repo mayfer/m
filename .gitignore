@@ -3,3 +3,4 @@ settings.py
 *.pyc
 tmp/*
 static/uploads
+static/media/uploads
