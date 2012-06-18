@@ -41,10 +41,10 @@ USE_I18N = True
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
-MEDIA_ROOT = os.path.join(FILE_ROOT, 'static')
+MEDIA_ROOT = os.path.join(FILE_ROOT, 'static', 'media')
 STATIC_ROOT = ''
 STATICFILES_DIRS = (
-	MEDIA_ROOT,
+	os.path.join(FILE_ROOT, 'static')
 )
 TMP_ROOT = os.path.join(FILE_ROOT, 'tmp')
 
@@ -52,7 +52,7 @@ TMP_ROOT = os.path.join(FILE_ROOT, 'tmp')
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 STATIC_URL = '/static/'
-MEDIA_URL = '/static/'
+MEDIA_URL = '/static/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '6o@*m=wz+)te&&2vzjly@m)ezkj6w87n0-=anlk%#79+=ytmcb'
