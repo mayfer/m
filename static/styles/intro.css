@@ -104,12 +104,12 @@ td { vertical-align: center; text-align: center; }
 
 
 @-webkit-keyframes pulse {
-	0% { text-shadow: #fff 0px 0px 70px, #fff 0px 0px 50px; }
-	35% { text-shadow: #fff 0px 0px 25px, #fff 0px 0px 15px; }
-	40% { text-shadow: #fff 0px 0px 90px, #fff 0px 0px 70px; }
-	60% { text-shadow: #fff 0px 0px 45px, #fff 0px 0px 35px; }
-	70% { text-shadow: #fff 0px 0px 80px, #fff 0px 0px 60px; }
-	100% { text-shadow: #fff 0px 0px 70px, #fff 0px 0px 50px; }
+	0% { text-shadow: #fff 0px 0px 40px, #fff 0px 0px 20px; }
+	35% { text-shadow: #fff 0px 0px 15px, #fff 0px 0px 10px; }
+	40% { text-shadow: #fff 0px 0px 60px, #fff 0px 0px 40px; }
+	60% { text-shadow: #fff 0px 0px 15px, #fff 0px 0px 25px; }
+	70% { text-shadow: #fff 0px 0px 50px, #fff 0px 0px 30px; }
+	100% { text-shadow: #fff 0px 0px 40px, #fff 0px 0px 20px; }
 }
 @-moz-keyframes pulse {
 	0% { text-shadow: #fff 0px 0px 40px, #fff 0px 0px 20px; }
