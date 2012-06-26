@@ -44,7 +44,7 @@ FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(FILE_ROOT, 'static', 'media')
 STATIC_ROOT = ''
 STATICFILES_DIRS = (
-	os.path.join(FILE_ROOT, 'static')
+	os.path.join(FILE_ROOT, 'static'),
 )
 TMP_ROOT = os.path.join(FILE_ROOT, 'tmp')
 
