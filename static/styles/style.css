@@ -64,7 +64,7 @@ ul li { margin: 0 0 10px 0; padding-left: 25px; background: url('../images/list-
 #timestamp { margin: 0 0 0 25px; color: #aaa; font-size: 12px; text-align: right; }
 
 .entry img { padding: 5px; background: #000; border: 2px solid #fff; margin: 10px; max-width: 600px; box-shadow: 0 0 5px 2px rgba(255,0,255,0.5), 0 0 5px 2px rgba(255,0,255,0.5) inset; }
-.entry img.center { display: block; margin: 10px auto; }
+.entry img.center { display: block; margin: 20px auto; }
 
 .fade { opacity: 0.6; font-size: 0.9em;  }
 .clear { clear: both; }
@@ -83,3 +83,5 @@ a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 
 
 .make .project { float: left; height: 200px; border-radius: 5px; background: #333; box-shadow: 0 0 10px #000; }
+
+.source { text-align: center; }
