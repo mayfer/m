@@ -14,8 +14,13 @@ def work(request):
 
 def play(request):
 	response = {}
-	response['entries'] = Entry.objects.filter(visible=True).order_by('date')
+	response['entries'] = Entry.objects.filter(visible=True)
 	return template_response('play.html', response, request)
+
+def entry(request, id):
+	response = {}
+	response['entry'] = Entry.objects.get(id=id, visible=True)
+	return template_response('play_entry.html', response, request)
 
 def entry_body(request, id):
 	return html_response(Entry.objects.get(id=id).content)

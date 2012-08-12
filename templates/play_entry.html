@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head_tags %}
+	<title>is murat</title>
+	<style type='text/css'>
+		{{ entry.custom_css }}
+	</style>
+{% endblock %}
+
+{% block page %}play{% endblock %}
+{% block navtitle %}<a href='{% url play %}'>play</a>{% endblock %}
+
+{% block content %}
+	<div class='wrapper'>
+		<div id='play-content'>
+			{% autoescape off %}
+				<div class='entry'>
+					<h3>{{ entry.title }}</h3>
+					<div class='full'>
+						<div class='text {{ entry.url_title }}'>
+							{{ entry.content }}
+						</div>
+						<div class='date'>
+							{% firstof entry.date_label entry.date %}
+						</div>
+					</div>
+				</div>
+			{% endautoescape %}
+		</div>
+	</div>
+{% endblock %}

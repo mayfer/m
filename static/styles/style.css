@@ -79,8 +79,6 @@ blockquote:after { content: '"'; font-size: 22px; position: absolute; margin: 0 
 a.expand-story { padding: 2px 5px; text-shadow: 0 0 5px #a0a; border-radius: 3px; }
 a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .entry .date { display: none; margin-top: 20px; color: #777; text-align: center; }
-.entry .text { display: none; }
-
 
 .make .project { float: left; height: 200px; border-radius: 5px; background: #333; box-shadow: 0 0 10px #000; }
 

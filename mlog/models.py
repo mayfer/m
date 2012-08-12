@@ -2,8 +2,6 @@ from django.db import models
 import datetime
 
 class Entry(models.Model):
-	class Meta:
-		db_table = 'entries'
 	id = models.AutoField(primary_key=True)
 	title = models.TextField()
 	preview = models.TextField(blank=True)
@@ -14,11 +12,9 @@ class Entry(models.Model):
 	date_label = models.CharField(max_length=100)
 	visible = models.BooleanField(default=False)
 	
-	def __unicode__(self):
-		return self.url_title
+	class Meta:
+		db_table = 'entries'
+		ordering = ['-date']
 
-	def save(self, *args, **kwargs):
-		"set current timestamp on first save"
-		if not self.id:
-			self.date = datetime.datetime.today()
-		super(Entry, self).save(*args, **kwargs)
+	def __unicode__(self):
+		return "{title} ({date})".format(title=self.url_title, date=self.date)
