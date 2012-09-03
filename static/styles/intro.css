@@ -122,5 +122,5 @@ td { vertical-align: center; text-align: center; }
 
 #murat:hover { -webkit-animation: none; -moz-animation: none; color: rgba(150,150,150,1); text-shadow: #000 2px 2px 10px; }
 
-#ayfer { display: block; color: transparent; padding-left: 30px; line-height: 25px; opacity: 0.25; background: url('../images/ay.png') center left no-repeat; float: right; position: relative; top: -25px; width: 100px; }
+#ayfer { display: block; color: transparent; padding-left: 30px; line-height: 25px; opacity: 0.25; background: url('../images/ay.png') center left no-repeat; float: right; position: relative; top: -25px; right: -30px; width: 100px; }
 #ayfer:hover { color: #fff; opacity: 0.5; }
