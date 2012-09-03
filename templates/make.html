@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head_tags %}
-	<title>is murat</title>
+	<title>murat &raquo; make</title>
 {% endblock %}
 
 {% block page %}make{% endblock %}
@@ -16,9 +16,61 @@
 	
 	<div class='wrapper'>
 		<div id='make-content'>
-			<a class='project'>
-				Transit
-			</a>
+			<div class='project'>
+                <div class='thumb'>
+                    <a href='http://takethebus.in/vancouver'><img src='{{ STATIC_URL }}images/projects/transit.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='http://takethebus.in/vancouver'>Transit</a></h3>
+                    Shows bus stops, bus schedules, and bus routes.
+                    <br />Uses GTFS data. Built on Django.
+                    <br />Don't use it, the data is out of date.
+                </div>
+			</div>
+			<div class='project'>
+                <div class='thumb'>
+                    <a href='http://muratayfer.com/chords'><img src='{{ STATIC_URL }}images/projects/korde.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='http://muratayfer.com/chords'>Chord progression builder</a></h3>
+                    The idea is to create a chord suggestion engine.
+                    <br />This is a simple framework to play notes and chords with HTML audio.
+                    <br />I also started building an HTML guitar fret to visualize chords.
+                </div>
+			</div>
+			<div class='project'>
+                <div class='thumb'>
+                    <a href='http://muratayfer.com/morphin'><img src='{{ STATIC_URL }}images/projects/morphin.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='http://muratayfer.com/morphin'>Image morpher</a></h3>
+                    Provides a web interface to choose morph points in two images.
+                    <br />Uses the input to create a .gif animation of the morph.
+                    <br />It is slow. EC2 micro instance is slow. Really slow.
+                </div>
+			</div>
+			<div class='project'>
+                <div class='thumb'>
+                    <a href='http://muratayfer.com/secret-box/obscured/'><img src='{{ STATIC_URL }}images/projects/obscured.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='http://muratayfer.com/secret-box/obscured/'>obscured.js</a></h3>
+                    A simple JS library to overlay a flat black layer on top of a web page,
+                    <br />in which only a small area around the cursor is revealed.
+                    <br />Makes any boring page feel mysterious.
+                </div>
+			</div>
+			<div class='project'>
+                <div class='thumb'>
+                    <a href='{% url home-demo %}'><img src='{{ STATIC_URL }}images/projects/blur.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='{% url home-demo %}'>CSS heartbeats</a></h3>
+                    A small CSS demo with animations combined with a blur effect, using text-shadow.
+                    <br />Moving the cursor closer increases the heart rate.
+                    <br />It also makes use of CSS animation javascript events. (I believe WebKit-only.)
+                </div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

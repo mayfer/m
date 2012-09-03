@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>is murat</title>
 		<link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}styles/intro.css' media='screen' />
 		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
 		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
@@ -24,7 +25,6 @@
 		        $element  = $('#murat');
 		        $animate  = $('#murat');
 				
-				/*					
 		   		$(document).mousemove(function(e) {
 		    	    mX = e.pageX;
 		    	    mY = e.pageY;
@@ -33,19 +33,17 @@
 			        	$animate.css('-webkit-animation-duration', seconds+'s');
 			        });
 		    	});
-				*/
 		    	
-				if(window.location.hash == "#skip") {
-		    		$('#intro').hide();
-		    		$('#nav').show();
-				} else {
+				if(window.location.hash == "#demo") {
 		    		$('#intro').show();
 		    		$('#nav').hide();
+				} else {
+		    		$('#intro').hide();
+		    		$('#nav').show();
 				}
 
 		    	$('#murat').click(function(e){
 		    		e.preventDefault();
-					window.location.hash = "skip";
 		    		$('#intro').fadeOut(100).hide();
 		    		$('#nav').fadeIn(300);
 		    	});
@@ -97,7 +95,7 @@
 								</a>
 							</div>
 						</div>
-						<a id='ayfer' href='http://ayfer.net/'>ayfer</a>
+						<div id='ayfer'>hi. i'm murat.</div>
 					</div>
 				</td>
 			</tr>

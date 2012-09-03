@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head_tags %}
-	<title>is murat</title>
+	<title>murat &raquo; play</title>
 	<script type='text/javascript'>
 		$(document).ready(function(){
 			$('a.expand-story').live('click', function(e){
@@ -33,7 +33,7 @@
 {% block content %}
 	<div id='intro'>
 		<div class='wrapper'>
-			<h2 class='rain'>various things i found</h2>
+			<h2>various things i found</h2>
 		</div>
 	</div>
 	
@@ -44,7 +44,10 @@
 				<div class='entry'>
 					<h3><a href='{% url play-entry id=entry.id %}'>{{ entry.title }}</a></h3>
 					<div class='preview'>
-						{{ entry.preview }} <a href='#' class='expand-story' data-full-url='{% url play-entry-ajax id=entry.id %}'>[ show the full thing ]</a>
+						{{ entry.preview }}
+						{% if entry.content %}
+							<a href='#' class='expand-story' data-full-url='{% url play-entry-ajax id=entry.id %}'>[ + ]</a>
+						{% endif %}
 					</div>
 					<div class='full'>
 						<div class='text {{ entry.url_title }}'>

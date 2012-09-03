@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     
     url(r'^$', 'm.views.placeholder', name='placeholder'),
     url(r'^mur/?$', 'm.views.home', name='home'),
-    url(r'^mur/#skip$', 'm.views.home', name='home-skip'),
+    url(r'^mur/#demo$', 'm.views.home', name='home-demo'),
     url(r'^work/?$', 'm.views.work', name='work'),
     url(r'^play/?$', 'm.views.play', name='play'),
     url(r'^play/ajax/(?P<id>\d*)/?$', 'm.views.entry_body', name='play-entry-ajax'),
