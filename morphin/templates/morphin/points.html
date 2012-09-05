@@ -50,7 +50,7 @@
 			$('#done').click(function(e){
 				if($(this).prop('disabled') == false) {
 					$('#done').html('Processing...').prop('disabled', true);
-					$('#morph').html("<img src='{{ MEDIA_URL }}loader.gif' />");
+					$('#morph').html("<img src='{{ STATIC_URL }}loader.gif' />");
 									
 					var postdata = {'markers': []};
 					
