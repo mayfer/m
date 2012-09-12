@@ -12,8 +12,8 @@
 				$.get(url, function(response){
 					var preview = expander.parent()
 					var entry = preview.parent();
-					entry.find('.date').show()
-					entry.find('.full .text').html(response).show();
+					entry.find('.full .text').html(response);
+					entry.find('.full').show()
 					preview.hide();
 				});
 			});
@@ -23,7 +23,6 @@
 		{% for entry in entries %}
 			{{ entry.custom_css }}
 		{% endfor %}
-		.entry .text { display: none; }
 	</style>
 {% endblock %}
 

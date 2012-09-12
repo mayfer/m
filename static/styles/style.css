@@ -81,7 +81,8 @@ blockquote:after { content: '"'; font-size: 22px; position: absolute; margin: 0 
 .entry h3 { color: #fff; padding: 0; margin: 20px 0 15px 0; line-height: 15px; display: block; text-align: center; }
 a.expand-story { padding: 2px 5px; text-shadow: 0 0 5px #a0a; border-radius: 3px; }
 a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
-.entry .date { display: none; margin-top: 20px; color: #777; text-align: center; }
+.entry .date { margin-top: 20px; color: #777; text-align: center; }
+.entry .full { display: none; }
 
 .make #make-content { margin: 20px 0; }
 .make .project { margin-bottom: 10px; height: 100px; border-radius: 5px; background: #333; box-shadow: 0 0 4px #aaa; }
