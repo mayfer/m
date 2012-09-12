@@ -14,7 +14,7 @@ class Visit(models.Model):
 	
 	def __unicode__(self):
 		if self.label:
-			return "{0} ({1})".format(self.label, self.ip)
+			return "Path: {path}, IP: {ip}, Date: {date}".format(path=self.label, ip=self.ip, date=self.date)
 		else:
 			return self.ip
 	
