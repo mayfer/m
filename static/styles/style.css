@@ -75,7 +75,7 @@ ul li { margin: 0 0 10px 0; padding-left: 25px; background: url('../images/list-
 blockquote:before { content: '"'; font-size: 22px; position: absolute; margin: 0 0 0 -10px; opacity: 0.5; }
 blockquote:after { content: '"'; font-size: 22px; position: absolute; margin: 0 -5px 0 0; opacity: 0.5; }
 
-.play { color: #aaa; }
+.play { color: #aaa; margin-bottom: 30px; }
 .play h2 { text-shadow: none; }
 
 .entry h3 { color: #fff; padding: 0; margin: 20px 0 15px 0; line-height: 15px; display: block; text-align: center; }
