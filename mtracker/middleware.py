@@ -1,8 +1,8 @@
 from m.mtracker.models import Visit
 
 class TrackerMiddleware(object):
-	def process_request(self, request):
-		visit = Visit().load(request)
+    def process_request(self, request):
+        visit = Visit().load(request)
         blacklist = [
             '/admin',
             '/favicon.ico',
