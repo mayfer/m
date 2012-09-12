@@ -66,10 +66,13 @@ ul li { margin: 0 0 10px 0; padding-left: 25px; background: url('../images/list-
 .entry img, .entry iframe { padding: 5px; background: #000; border: 2px solid #fff; margin: 10px; max-width: 600px; box-shadow: 0 0 5px 2px rgba(255,0,255,0.5), 0 0 5px 2px rgba(255,0,255,0.5) inset; }
 .entry img.center, .entry iframe.center { display: block; margin: 20px auto; }
 
+.entry label { display: inline-block; background: rgba(255,255,255,0.1); padding: 5px; margin: 10px; text-align: center; border-radius: 5px; } 
+.entry label img, .entry label iframe { border: none; padding: 0; margin: 5px; box-shadow: none; border: none; display: inline; } 
+
 .fade { opacity: 0.6; font-size: 0.9em;  }
 .clear { clear: both; }
 
-blockquote:before { content: '"'; font-size: 22px; position: absolute; margin: 0 0 0 -5px; opacity: 0.5; }
+blockquote:before { content: '"'; font-size: 22px; position: absolute; margin: 0 0 0 -10px; opacity: 0.5; }
 blockquote:after { content: '"'; font-size: 22px; position: absolute; margin: 0 -5px 0 0; opacity: 0.5; }
 
 .play { color: #aaa; }
@@ -88,4 +91,6 @@ a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .make .project a { text-shadow: #a00 0 0 5px; }
 .make .project a:hover { text-shadow: #a00 0 0 10px, #f00 0 0 5px, #fff 0 0 20px; }
 
-.source { text-align: center; }
+.source, .center { text-align: center; }
+.float-left { float: left; margin: 0 15px 15px 0; }
+.float-right { float: right; margin: 0  0 15px 15px; }

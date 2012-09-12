@@ -42,7 +42,7 @@
 			{% autoescape off %}
 			{% for entry in entries %}
 				<div class='entry'>
-					<h3><a href='{% url play-entry id=entry.id %}'>{{ entry.title }}</a></h3>
+					<h3><a href='{% url play-entry-title title=entry.url_title %}'>{{ entry.title }}</a></h3>
 					<div class='preview'>
 						{{ entry.preview }}
 						{% if entry.content %}

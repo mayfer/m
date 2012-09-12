@@ -19,7 +19,12 @@ def play(request):
 
 def entry(request, id):
 	response = {}
-	response['entry'] = Entry.objects.get(id=id, visible=True)
+	response['entry'] = Entry.objects.get(id=id)
+	return template_response('play_entry.html', response, request)
+
+def entry(request, title):
+	response = {}
+	response['entry'] = Entry.objects.get(url_title=title)
 	return template_response('play_entry.html', response, request)
 
 def entry_body(request, id):
