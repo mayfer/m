@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 
 {% block head_tags %}
-	<title>murat's resume</title>
+    <title>murat's resume</title>
 {% endblock %}
 
 {% block page %}work{% endblock %}
 {% block navtitle %}my humble resume{% endblock %}
 
 {% block content %}
-		<div id='intro'>
-			<div class='wrapper'>
-				<h2 class='hello'>hello, i am murat and</h2>
-				<h2 class='good'>i'm good at computer things,</h2>
-				<h2 class='ape'>which is what i do at <a href='http://athinkingape.com'>a thinking ape</a></h2>
-				<h2 class='van'>in vancouver, bc.</h2>
-				<h2 class='contact'>you can contact me at <a href='mailto:murat@ayfer.net'>murat@ayfer.net</a></h2>
-			</div>
-		</div>
-		
-		<div class='wrapper'>
-			<div id='resume'>
-				<h3>things I do</h3>
-				<p>Coder, UNIX system administrator, interface designer. Can also interface with people.</p>
-				<h3>full time work</h3>
-				<p>I loved working at <a href='http://www.invokemedia.com/'>Invoke Media</a> for a while, then moved to <a href='http://www.athinkingape.com/'>A Thinking Ape</a>, where my responsibilities mostly revolve around leading the <a href='http://en.wikipedia.org/wiki/DevOps'>dev ops</a> team.</p>
-				<h3>current side projects</h3>
+        <div id='intro'>
+            <div class='wrapper'>
+                <h2 class='hello'>hello, i am murat and</h2>
+                <h2 class='good'>i'm good at computer things,</h2>
+                <h2 class='ape'>which is what i do at <a href='http://athinkingape.com'>a thinking ape</a></h2>
+                <h2 class='van'>in vancouver, bc.</h2>
+                <h2 class='contact'>you can contact me at <a href='mailto:murat@ayfer.net'>murat@ayfer.net</a></h2>
+            </div>
+        </div>
+        
+        <div class='wrapper'>
+            <div id='resume'>
+                <h3>things I do</h3>
+                <p>Coder, UNIX system administrator, interface designer. Can also interface with people.</p>
+                <h3>full time work</h3>
+                <p>I loved working at <a href='http://www.invokemedia.com/'>Invoke Media</a> for a while, then moved to <a href='http://www.athinkingape.com/'>A Thinking Ape</a>, where my responsibilities mostly revolve around leading the <a href='http://en.wikipedia.org/wiki/DevOps'>dev ops</a> team.</p>
+                <h3>current side projects</h3>
                 <p>Please see the <a href='{% url make %}'>make section</a></p>
                 <h3>programming skills</h3>
                 <ul>
                     <li>Currently enjoying poetic Python with Django. By far my favorite web programming setup.</li>
                     <li>Pretty experienced with PHP. CodeIgniter is my favorite framework (because it lets <em>me</em> do the coding), however i've also used Zend, Cake and perhaps others I may have forgotten about. Bit of experience with Wordpress and Drupal.</li>
-					<li>Javascript is useful and fun and <a href='http://wtfjs.com/'>retarded</a>.</li>
+                    <li>Javascript is useful and fun and <a href='http://wtfjs.com/'>retarded</a>.</li>
                     <li>I know, and dislike Java, due to its wordy and bureaucratic feel. Few friends whom I respect have convinced me that it's not so bad though.</li>
                     <li>Ruby, but I often get confused as to why people use it other than to attend startup meetings without feeling left out. I learned it to write <a href='http://kde-apps.org/content/show.php?content=93907'>an Amarok script</a> which I used for personal convenience, before Spotify came along...</li>
                     <li>I once used Perl long time ago for a regex-heavy script I wrote (i was scraping my school's bookstore database for my <a href='http://ubcbook.com'>book exchange website</a>)</li>
@@ -38,18 +38,18 @@
                     <li>I enjoy spending time looking for better ways of doing certain tasks. I have a good intuition for guessing what is possible, and what is not. My code is clean, concise and maintainable and hence it rarely needs long explanatory comments. I dislike repetitive typing, so I try to come up with generic solutions. <a href='http://c2.com/cgi/wiki?LazinessImpatienceHubris'>Laziness</a> pays off.</li>
                     <li>I would prefer it if you never talked to me about design patterns.</li>
                 </ul>
-				<h3>sys admin skills</h3>
+                <h3>sys admin skills</h3>
                 <ul>
                     <li>apache (vhosts, SSL, mod_php, mod_wsgi, mod_rewrite, etc.)</li>
                     <li>ssh (fail2ban, denyhosts, LDAP, etc.)</li>
                     <li>postfix (and mail-related DNS best practices)</li>
                     <li>cron jobs</li>
                     <li>database management (well, mostly MySQL, nothing fancy)</li>
-					<li>distributed system design (service-based web architecture)</li>
+                    <li>distributed system design (service-based web architecture)</li>
                     <li>HAProxy</li>
                     <li>monitoring tools (monit, munin, nagios)</li>
-					<li>git</li>
-					<li>virtualization and cloud environments</li>
+                    <li>git</li>
+                    <li>virtualization and cloud environments</li>
                     <li class='fade'>list goes on, you get the idea.</li>
                 </ul>
                 <h3>front-end design</h3>
@@ -63,23 +63,23 @@
                 <ul>
                     <li>Generally chill</li>
                     <li>Sensitive to BS</li>
-					<li>Confident at talking to clients</li>
-					<li>Skilled at explaining technical concepts to technically-challenged people in simple terms</li>
-					<li>I wouldn't ever want to separate work and humor</li>
-					<li>I try to stay physically, socially and musically active. Unplugging on a near-daily basis is essential for sanity</li>
+                    <li>Confident at talking to clients</li>
+                    <li>Skilled at explaining technical concepts to technically-challenged people in simple terms</li>
+                    <li>I wouldn't ever want to separate work and humor</li>
+                    <li>I try to stay physically, socially and musically active. Unplugging on a near-daily basis is essential for sanity</li>
                 </ul>
-				<h3>education</h3>
-				<p>UBC Computer Engineering (Software option)<br />I spent 5 months of the 4 years in Uppsala, Sweden</p>
-				<h3>also</h3>
-				<ul>
-					<li>First program I wrote was a calculator in Visual Basic when I was twelve.</li>
-					<li>First useful program I wrote was a bash script that installed persistent live Ubuntu onto USB flash drives. This was before there were GUI installers. Credit goes to fdisk and Ubuntu, not me.</li>
-					<li>Given any problem or project, google and time is all I need. It would be great to have people and music as well though.</li>
-					<li><code>ssh</code> is vital to my survival.</li>
-				</ul>
-			</div>
-			<div id='timestamp'>
-				last updated Tuesday, June 26, 2012
-			</div>
-		</div>
+                <h3>education</h3>
+                <p>UBC Computer Engineering (Software option)<br />I spent 5 months of the 4 years in Uppsala, Sweden</p>
+                <h3>also</h3>
+                <ul>
+                    <li>First program I wrote was a calculator in Visual Basic when I was twelve.</li>
+                    <li>First useful program I wrote was a bash script that installed persistent live Ubuntu onto USB flash drives. This was before there were GUI installers. Credit goes to fdisk and Ubuntu, not me.</li>
+                    <li>Given any problem or project, google and time is all I need. It would be great to have people and music as well though.</li>
+                    <li><code>ssh</code> is vital to my survival.</li>
+                </ul>
+            </div>
+            <div id='timestamp'>
+                last updated Tuesday, June 26, 2012
+            </div>
+        </div>
 {% endblock %}

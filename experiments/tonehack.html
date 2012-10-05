@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tonehack</title>
+        <meta charset='utf-8' />
+        <script type='text/javascript' src='jquery.min.js'></script>
+        <script type='text/javascript'>
+        
+            $(document).ready(function(){
+                var canvas = $('<canvas>');
+                $('#canvas-container').append(canvas);
+                WIDTH=canvas.innerWidth(), HEIGHT=canvas.innerHeight();
+
+                canvas = canvas.get(0);
+                canvas.height = HEIGHT;
+                canvas.width = WIDTH;
+                context = canvas.getContext("2d");
+
+                var standing = Math.PI / WIDTH;
+
+                function sin(x, freq, amplitude) {
+                    if(amplitude==undefined) amplitude = 50;
+                    return -amplitude * Math.sin(freq * x) + (HEIGHT/2);
+                }
+
+                function animateWave(freq, amplitude) {
+                    step = 0;
+                    current_amplitude = amplitude;
+                    var timeout = setInterval(function(){
+                        drawWave(freq, current_amplitude);
+                        current_amplitude = Math.sin(step * 0.05) * amplitude;
+                        step += freq*100;
+                    }, 10);
+                }
+
+                function drawWave(freq, amplitude) {
+                    context.clearRect(0,0,WIDTH,HEIGHT);
+                    context.fillStyle = "rgb(30, 30, 30)";
+                    context.fillRect (0, 0, WIDTH, HEIGHT);
+
+                    context.lineWidth = 2;
+                    context.strokeStyle = "#fff";
+                
+                    var x = -6, y = sin(x);
+                    while(x < WIDTH) {
+                        context.beginPath();
+                        context.moveTo(x + 0.5, y);
+                        y = sin(x, freq, amplitude);
+                        x += 2;
+                        context.lineTo(x + 0.5, y);
+                        context.stroke();
+                    }
+                }
+                animateWave(standing*3, 50);
+            });
+
+        </script>
+        <style type='text/css'>
+        
+            html, body { margin: 0; padding: 0; background: #000; }
+            #canvas-container {  }
+            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 100px auto; border: 2px solid #fff; }
+            
+        </style>
+    </head>
+    <body>
+        <div id='canvas-container'></div>
+    </body>
+</html>

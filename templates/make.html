@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
 {% block head_tags %}
-	<title>murat &raquo; make</title>
+    <title>murat &raquo; make</title>
 {% endblock %}
 
 {% block page %}make{% endblock %}
 {% block navtitle %}make{% endblock %}
 
 {% block content %}
-	<div id='intro'>
-		<div class='wrapper'>
-			<h2>a few projects</h2>
-		</div>
-	</div>
-	
-	<div class='wrapper'>
-		<div id='make-content'>
-			<div class='project'>
+    <div id='intro'>
+        <div class='wrapper'>
+            <h2>a few projects</h2>
+        </div>
+    </div>
+    
+    <div class='wrapper'>
+        <div id='make-content'>
+            <div class='project'>
                 <div class='thumb'>
                     <a href='http://takethebus.in/vancouver'><img src='{{ STATIC_URL }}images/projects/transit.png' /></a>
                 </div>
@@ -26,8 +26,8 @@
                     <br />Uses GTFS data. Built on Django.
                     <br />Don't use it, the data is out of date.
                 </div>
-			</div>
-			<div class='project'>
+            </div>
+            <div class='project'>
                 <div class='thumb'>
                     <a href='http://muratayfer.com/chords'><img src='{{ STATIC_URL }}images/projects/korde.png' /></a>
                 </div>
@@ -37,8 +37,8 @@
                     <br />This is a simple framework to play notes and chords with HTML audio.
                     <br />I also started building an HTML guitar fret to visualize chords.
                 </div>
-			</div>
-			<div class='project'>
+            </div>
+            <div class='project'>
                 <div class='thumb'>
                     <a href='http://muratayfer.com/morphin'><img src='{{ STATIC_URL }}images/projects/morphin.png' /></a>
                 </div>
@@ -48,8 +48,8 @@
                     <br />Uses the input to create a .gif animation of the morph.
                     <br />It is slow. EC2 micro instance is slow. Really slow.
                 </div>
-			</div>
-			<div class='project'>
+            </div>
+            <div class='project'>
                 <div class='thumb'>
                     <a href='http://muratayfer.com/secret-box/obscured/'><img src='{{ STATIC_URL }}images/projects/obscured.png' /></a>
                 </div>
@@ -59,8 +59,8 @@
                     <br />in which only a small area around the cursor is revealed.
                     <br />Makes any boring page feel mysterious.
                 </div>
-			</div>
-			<div class='project'>
+            </div>
+            <div class='project'>
                 <div class='thumb'>
                     <a href='{% url home-demo %}'><img src='{{ STATIC_URL }}images/projects/blur.png' /></a>
                 </div>
@@ -70,7 +70,7 @@
                     <br />Moving the cursor closer increases the heart rate.
                     <br />It also makes use of CSS animation javascript events. (I believe WebKit-only.)
                 </div>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

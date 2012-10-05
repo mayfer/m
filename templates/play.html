@@ -1,64 +1,64 @@
 {% extends "base.html" %}
 
 {% block head_tags %}
-	<title>murat &raquo; play</title>
-	<script type='text/javascript'>
-		$(document).ready(function(){
-			$('a.expand-story').live('click', function(e){
-				e.preventDefault();
-				var expander = $(this);
-				var url = expander.data('full-url');
-				expander.html('[ one sec ]');
-				$.get(url, function(response){
-					var preview = expander.parent()
-					var entry = preview.parent();
-					entry.find('.full .text').html(response);
-					entry.find('.full').show()
-					preview.hide();
-				});
-			});
-		});
-	</script>
-	<style type='text/css'>
-		{% for entry in entries %}
-			{{ entry.custom_css }}
-		{% endfor %}
-	</style>
+    <title>murat &raquo; play</title>
+    <script type='text/javascript'>
+        $(document).ready(function(){
+            $('a.expand-story').live('click', function(e){
+                e.preventDefault();
+                var expander = $(this);
+                var url = expander.data('full-url');
+                expander.html('[ one sec ]');
+                $.get(url, function(response){
+                    var preview = expander.parent()
+                    var entry = preview.parent();
+                    entry.find('.full .text').html(response);
+                    entry.find('.full').show()
+                    preview.hide();
+                });
+            });
+        });
+    </script>
+    <style type='text/css'>
+        {% for entry in entries %}
+            {{ entry.custom_css }}
+        {% endfor %}
+    </style>
 {% endblock %}
 
 {% block page %}play{% endblock %}
 {% block navtitle %}play{% endblock %}
 
 {% block content %}
-	<div id='intro'>
-		<div class='wrapper'>
-			<h2>various things i found</h2>
-		</div>
-	</div>
-	
-	<div class='wrapper'>
-		<div id='play-content'>
-			{% autoescape off %}
-			{% for entry in entries %}
-				<div class='entry'>
-					<h3><a href='{% url play-entry-title title=entry.url_title %}'>{{ entry.title }}</a></h3>
-					<div class='preview'>
-						{{ entry.preview }}
-						{% if entry.content %}
-							<a href='#' class='expand-story' data-full-url='{% url play-entry-ajax id=entry.id %}'>[ + ]</a>
-						{% endif %}
-					</div>
-					<div class='full'>
-						<div class='text {{ entry.url_title }}'>
-							
-						</div>
-						<div class='date'>
-							{% firstof entry.date_label entry.date %}
-						</div>
-					</div>
-				</div>
-			{% endfor %}
-			{% endautoescape %}
-		</div>
-	</div>
+    <div id='intro'>
+        <div class='wrapper'>
+            <h2>various things i found</h2>
+        </div>
+    </div>
+    
+    <div class='wrapper'>
+        <div id='play-content'>
+            {% autoescape off %}
+            {% for entry in entries %}
+                <div class='entry'>
+                    <h3><a href='{% url play-entry-title title=entry.url_title %}'>{{ entry.title }}</a></h3>
+                    <div class='preview'>
+                        {{ entry.preview }}
+                        {% if entry.content %}
+                            <a href='#' class='expand-story' data-full-url='{% url play-entry-ajax id=entry.id %}'>[ + ]</a>
+                        {% endif %}
+                    </div>
+                    <div class='full'>
+                        <div class='text {{ entry.url_title }}'>
+                            
+                        </div>
+                        <div class='date'>
+                            {% firstof entry.date_label entry.date %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endautoescape %}
+        </div>
+    </div>
 {% endblock %}

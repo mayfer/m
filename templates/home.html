@@ -1,67 +1,67 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>is murat</title>
-		<link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}styles/intro.css' media='screen' />
-		<link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
+    <head>
+        <title>is murat</title>
+        <link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}styles/intro.css' media='screen' />
+        <link href='http://fonts.googleapis.com/css?family=Comfortaa:400,700' rel='stylesheet' type='text/css'>
         <meta name="Description" content="Murat Ayfer's personal website.">
-		<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
-		<script type='text/javascript'>
-		
-			function getdistance(elem, mouseX, mouseY) {
-		    	var offset = elem.offset();
-		        return Math.floor(Math.sqrt(Math.pow(mouseX - (offset.left+(elem.width()/2)), 2) + Math.pow(mouseY - (offset.top+(elem.height()/2)), 2)));
-	    	}
-	    	
-	    	function multiplier(dist) {
-	    		var minpoint = 60;
-	    		var maxpoint = 400;
-	    		dist = Math.min(maxpoint, Math.max(0, dist - minpoint));
-	    		return 1 + dist/(maxpoint-minpoint);
-	    	}
-	    	
-			$(document).ready(function(){
-				var mX, mY, distance,
-				seconds = 1.2,
-		        $element  = $('#murat');
-		        $animate  = $('#murat');
-				
-		   		$(document).mousemove(function(e) {
-		    	    mX = e.pageX;
-		    	    mY = e.pageY;
-		    	    seconds = multiplier(getdistance($element, mX, mY)) * 0.6;
-		    	    $animate.bind('webkitAnimationIteration', function(e){
-			        	$animate.css('-webkit-animation-duration', seconds+'s');
-			        });
-		    	});
-		    	
-				if(window.location.hash == "#demo") {
-		    		$('#intro').show();
-		    		$('#nav').hide();
-				} else {
-		    		$('#intro').hide();
-		    		$('#nav').show();
-				}
+        <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js'></script>
+        <script type='text/javascript'>
+        
+            function getdistance(elem, mouseX, mouseY) {
+                var offset = elem.offset();
+                return Math.floor(Math.sqrt(Math.pow(mouseX - (offset.left+(elem.width()/2)), 2) + Math.pow(mouseY - (offset.top+(elem.height()/2)), 2)));
+            }
+            
+            function multiplier(dist) {
+                var minpoint = 60;
+                var maxpoint = 400;
+                dist = Math.min(maxpoint, Math.max(0, dist - minpoint));
+                return 1 + dist/(maxpoint-minpoint);
+            }
+            
+            $(document).ready(function(){
+                var mX, mY, distance,
+                seconds = 1.2,
+                $element  = $('#murat');
+                $animate  = $('#murat');
+                
+                   $(document).mousemove(function(e) {
+                    mX = e.pageX;
+                    mY = e.pageY;
+                    seconds = multiplier(getdistance($element, mX, mY)) * 0.6;
+                    $animate.bind('webkitAnimationIteration', function(e){
+                        $animate.css('-webkit-animation-duration', seconds+'s');
+                    });
+                });
+                
+                if(window.location.hash == "#demo") {
+                    $('#intro').show();
+                    $('#nav').hide();
+                } else {
+                    $('#intro').hide();
+                    $('#nav').show();
+                }
 
-		    	$('#murat').click(function(e){
-		    		e.preventDefault();
-		    		$('#intro').fadeOut(100).hide();
-		    		$('#nav').fadeIn(300);
-		    	});
-		    	
-		    	$('#work, #play, #make').hover(function(e){
-		    		$('#intro-container').addClass($(this).attr('id'));
-		    		$(this).find('.icon .default').fadeOut(200);
-		    		$(this).find('.icon .hover').fadeIn(200);
-		    		$(this).addClass('hover');
-		    	}, function(e){
-		    		$('#intro-container').removeClass($(this).attr('id'));
-		    		$(this).find('.icon .default').fadeIn(200);
-		    		$(this).find('.icon .hover').fadeOut(200);
-		    		$(this).removeClass('hover');
-		    	});
-		    });
-		</script>
+                $('#murat').click(function(e){
+                    e.preventDefault();
+                    $('#intro').fadeOut(100).hide();
+                    $('#nav').fadeIn(300);
+                });
+                
+                $('#work, #play, #make').hover(function(e){
+                    $('#intro-container').addClass($(this).attr('id'));
+                    $(this).find('.icon .default').fadeOut(200);
+                    $(this).find('.icon .hover').fadeIn(200);
+                    $(this).addClass('hover');
+                }, function(e){
+                    $('#intro-container').removeClass($(this).attr('id'));
+                    $(this).find('.icon .default').fadeIn(200);
+                    $(this).find('.icon .hover').fadeOut(200);
+                    $(this).removeClass('hover');
+                });
+            });
+        </script>
         <script type="text/javascript">
 
           var _gaq = _gaq || [];
@@ -76,45 +76,45 @@
           })();
 
         </script>
-	</head>
-	<body>
-		<table>
-			<tr>
-				<td>
-					<div id='wrapper'>
-						<div id='intro-container'>
-							<div id='intro'>
-								<div id='murat'>murat</div>
-							</div>
-							<div id='nav'>
-								<a id='work' href='{% url work %}'>
-									<div class='icon'>
-										<img class='default' src='{{ STATIC_URL }}images/work.png' />
-										<img class='hover' src='{{ STATIC_URL }}images/work_hover.png' />
-									</div>
-									work
-								</a>
-								<a id='play' href='{% url play %}'>
-									<div class='icon'>
-										<img class='default' src='{{ STATIC_URL }}images/play.png' />
-										<img class='hover' src='{{ STATIC_URL }}images/play_hover.png' />
-									</div>
-									play
-								</a>
-								<a id='make' href='{% url make %}'>
-									<div class='icon'>
-										<img class='default' src='{{ STATIC_URL }}images/make.png' />
-										<img class='hover' src='{{ STATIC_URL }}images/make_hover.png' />
-									</div>
-									make
-								</a>
-							</div>
-						</div>
-						<div id='ayfer'>hi. i'm murat.</div>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<div id='preload'></div>
-	</body>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                    <div id='wrapper'>
+                        <div id='intro-container'>
+                            <div id='intro'>
+                                <div id='murat'>murat</div>
+                            </div>
+                            <div id='nav'>
+                                <a id='work' href='{% url work %}'>
+                                    <div class='icon'>
+                                        <img class='default' src='{{ STATIC_URL }}images/work.png' />
+                                        <img class='hover' src='{{ STATIC_URL }}images/work_hover.png' />
+                                    </div>
+                                    work
+                                </a>
+                                <a id='play' href='{% url play %}'>
+                                    <div class='icon'>
+                                        <img class='default' src='{{ STATIC_URL }}images/play.png' />
+                                        <img class='hover' src='{{ STATIC_URL }}images/play_hover.png' />
+                                    </div>
+                                    play
+                                </a>
+                                <a id='make' href='{% url make %}'>
+                                    <div class='icon'>
+                                        <img class='default' src='{{ STATIC_URL }}images/make.png' />
+                                        <img class='hover' src='{{ STATIC_URL }}images/make_hover.png' />
+                                    </div>
+                                    make
+                                </a>
+                            </div>
+                        </div>
+                        <div id='ayfer'>hi. i'm murat.</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id='preload'></div>
+    </body>
 </html>
