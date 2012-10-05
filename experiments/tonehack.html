@@ -37,7 +37,7 @@
                     if(debug) {
                         context.fillStyle = "rgba(30, 30, 30, 0.3)";
                     } else {
-                        context.fillStyle = "rgba(0, 0, 0, 0.3)";
+                        context.fillStyle = "rgba(0, 0, 0, 0.5)";
                     }
                     context.fillRect(0, position-amplitude-10, WIDTH, amplitude*2+20);
 
@@ -78,25 +78,46 @@
                     new standingWave(context, 4, 440*4, 30, WIDTH),
                 ];
 
-                function animLoop() {
-                    requestAnimFrame(animLoop);
+
+                function drawFrame() {
                     for(i = 0; i < waves.length; i++) {
                         waves[i].draw();
                     }
                 }
-                animLoop();
+                function animLoop() {
+                    if(run) {
+                        requestAnimFrame(animLoop);
+                        drawFrame();
+                    }
+                }
+                drawFrame();
+
+                $('.start').click(function(e){
+                    e.preventDefault();
+                    run = true;
+                    animLoop();
+                });
+                $('.stop').click(function(e){
+                    e.preventDefault();
+                    run = false;
+                });
             });
+
+            run = true;
 
         </script>
         <style type='text/css'>
         
-            html, body { margin: 0; padding: 0; background: #000; }
-            #canvas-container {  }
-            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 100px auto; border: 2px solid #fff; box-shadow: 0 0 10px 1px rgba(100, 166, 0, 0.9), 0 0 35px 5px rgba(255,255,255,0.4); }
+            html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: Georgia; }
+            a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
+            #canvas-container { width: 1028px; margin: 50px auto;  }
+            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
             
         </style>
     </head>
     <body>
-        <div id='canvas-container'></div>
+        <div id='canvas-container'>
+            <div class='controls'><a href='#' class='start'>start</a> / <a href='#' class='stop'>stop</a></div>
+        </div>
     </body>
 </html>
