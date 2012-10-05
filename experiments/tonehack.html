@@ -5,6 +5,60 @@
         <meta charset='utf-8' />
         <script type='text/javascript' src='jquery.min.js'></script>
         <script type='text/javascript'>
+
+            window.requestAnimFrame = (function(){
+                return  window.requestAnimationFrame || 
+                  window.webkitRequestAnimationFrame || 
+                  window.mozRequestAnimationFrame || 
+                  window.oRequestAnimationFrame || 
+                  window.msRequestAnimationFrame || 
+                  function(callback, element){
+                      window.setTimeout(callback, 1000 / 60);
+                };
+            })();
+
+            debug = false;
+            
+            function standingWave(context, index, freq, amplitude, width) {
+                var amplitude = amplitude;
+                var step = 0.0;
+                var standing = Math.PI / width;
+                var freq = freq;
+                var freq_diff = standing / (440/freq);
+                var step_diff = freq/5000;
+                var position = index * (HEIGHT / 5);
+                this.draw = function() {
+                    step += step_diff;
+                    if(step >= Math.PI*2) {
+                        step = 0.0;
+                    }
+                    current_amplitude = Math.sin(step) * amplitude;
+                    //context.clearRect(0,0,WIDTH,HEIGHT);
+                    if(debug) {
+                        context.fillStyle = "rgba(30, 30, 30, 0.3)";
+                    } else {
+                        context.fillStyle = "rgba(0, 0, 0, 0.3)";
+                    }
+                    context.fillRect(0, position-amplitude-10, WIDTH, amplitude*2+20);
+
+                    context.lineWidth = 2;
+                    context.strokeStyle = "#fff";
+                
+                    var x = -6, y = this.sin(x, freq_diff, current_amplitude);
+                    while(x < WIDTH) {
+                        context.beginPath();
+                        context.moveTo(x + 0.5, y + position);
+                        y = this.sin(x, freq_diff, current_amplitude);
+                        x += 4;
+                        context.lineTo(x + 0.5, y + position);
+                        context.stroke();
+                    }
+                };
+                this.sin = function(x, rad_diff, amplitude) {
+                    return -amplitude * Math.sin(rad_diff * x);
+                };
+            }
+                    
         
             $(document).ready(function(){
                 var canvas = $('<canvas>');
@@ -16,42 +70,21 @@
                 canvas.width = WIDTH;
                 context = canvas.getContext("2d");
 
-                var standing = Math.PI / WIDTH;
 
-                function sin(x, freq, amplitude) {
-                    if(amplitude==undefined) amplitude = 50;
-                    return -amplitude * Math.sin(freq * x) + (HEIGHT/2);
-                }
+                var waves = [
+                    new standingWave(context, 1, 440, 30, WIDTH),
+                    new standingWave(context, 2, 440*2, 30, WIDTH),
+                    new standingWave(context, 3, 440*3, 30, WIDTH),
+                    new standingWave(context, 4, 440*4, 30, WIDTH),
+                ];
 
-                function animateWave(freq, amplitude) {
-                    step = 0;
-                    current_amplitude = amplitude;
-                    var timeout = setInterval(function(){
-                        drawWave(freq, current_amplitude);
-                        current_amplitude = Math.sin(step * 0.05) * amplitude;
-                        step += freq*100;
-                    }, 10);
-                }
-
-                function drawWave(freq, amplitude) {
-                    context.clearRect(0,0,WIDTH,HEIGHT);
-                    context.fillStyle = "rgb(30, 30, 30)";
-                    context.fillRect (0, 0, WIDTH, HEIGHT);
-
-                    context.lineWidth = 2;
-                    context.strokeStyle = "#fff";
-                
-                    var x = -6, y = sin(x);
-                    while(x < WIDTH) {
-                        context.beginPath();
-                        context.moveTo(x + 0.5, y);
-                        y = sin(x, freq, amplitude);
-                        x += 2;
-                        context.lineTo(x + 0.5, y);
-                        context.stroke();
+                function animLoop() {
+                    requestAnimFrame(animLoop);
+                    for(i = 0; i < waves.length; i++) {
+                        waves[i].draw();
                     }
                 }
-                animateWave(standing*3, 50);
+                animLoop();
             });
 
         </script>
@@ -59,7 +92,7 @@
         
             html, body { margin: 0; padding: 0; background: #000; }
             #canvas-container {  }
-            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 100px auto; border: 2px solid #fff; }
+            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 100px auto; border: 2px solid #fff; box-shadow: 0 0 10px 1px rgba(100, 166, 0, 0.9), 0 0 35px 5px rgba(255,255,255,0.4); }
             
         </style>
     </head>
