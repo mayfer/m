@@ -6,24 +6,12 @@
         <script type='text/javascript' src='jquery.min.js'></script>
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
-function gcd(text1,text2){
-var gcd=1;
-if (text1>text2) {text1=text1+text2; text2=text1-text2; text1=text1-text2;}
-if ((text2==(Math.round(text2/text1))*text1)) {gcd=text1}else {
-for (var i = Math.round(text1/2) ; i > 1; i=i-1) {
-if ((text1==(Math.round(text1/i))*i))
-if ((text2==(Math.round(text2/i))*i)) {gcd=i; i=-1;}
-}
-}
-return gcd;
-}
 
-function lcm(t1,t2){
-var cm=1;
-var f=gcd(t1,t2);
-cm=t1*t2/f;
-return cm;
-}
+            debug = false;
+            start_time = new Date().getTime();
+            state = 'stopped';
+
+            X_INCREMENT = 4;
 
             window.requestAnimFrame = (function(){
                 return  window.requestAnimationFrame || 
@@ -36,9 +24,6 @@ return cm;
                 };
             })();
 
-            debug = false;
-            start_time = new Date().getTime();
-            
             function standingWave(context, index, freq, amplitude) {
                 var amplitude = amplitude;
                 var step = 0.0;
@@ -46,7 +31,11 @@ return cm;
                 var freq = freq;
                 var freq_diff = freq * standing / 440; // calculate relative wavelength
                 var speed = 3;
-                var position = index * (context.height / (wavelengths.length+1));
+                var wave_height = (context.height / (wavelengths.length+2));
+                var current_amplitude = 0;
+                var current_plot_coordinates = null;
+                var position = index * wave_height;// - (wave_height/2);
+
                 this.changeSpeed = function(change) {
                     if(change > 0) {
                         speed *= 2;
@@ -54,32 +43,48 @@ return cm;
                         speed /= 2;
                     }
                 };
+                this.sin = function(x, rad_diff, amplitude) {
+                    return -amplitude * Math.sin(rad_diff * x);
+                };
+                this.getPlotCoordinates = function() {
+                    var x = 0, y = this.sin(x, freq_diff, current_amplitude);
+                    var points = [];
+                    while(x < context.width) {
+                        var from = {
+                            x: x,
+                            y: y,
+                        };
+                        x += X_INCREMENT;
+                        y = this.sin(x, freq_diff, current_amplitude);
+                        var to = {
+                            x: x,
+                            y: y,
+                        };
+                        points.push({from: from, to: to});
+                    }
+                    return points;
+                };
+                // public
                 this.draw = function(time_diff) {
                     if(time_diff == undefined) {
                         time_diff = new Date().getTime() - start_time;
                     }
                     step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
                     current_amplitude = Math.sin(step) * amplitude;
-                    if(debug) {
-                        context.fillStyle = "rgba(30, 30, 30, 0.3)";
-                    } else {
-                        context.fillStyle = "rgba(0, 0, 0, 0.5)";
-                    }
                     context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
 
-                    context.lineWidth = 4;
-                    context.strokeStyle = "#fff";
-                
                     var x = 0, y = this.sin(x, freq_diff, current_amplitude);
-                    while(x < context.width) {
+                    current_plot_coordinates = this.getPlotCoordinates();
+                    this.current_plot_coordinates = current_plot_coordinates;
+                    for(var i = 0; i < current_plot_coordinates.length; i++) {
+                        coord = current_plot_coordinates[i];
                         context.beginPath();
-                        context.moveTo(x, y + position);
-                        x += 4;
-                        y = this.sin(x, freq_diff, current_amplitude);
-                        context.lineTo(x, y + position);
+                        context.moveTo(coord.from.x, coord.from.y + position);
+                        context.lineTo(coord.to.x, coord.to.y + position);
                         context.stroke();
                     }
                 };
+                // public
                 this.reset = function() {
                     context.fillStyle = "rgba(0, 0, 0, 1)";
                     context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
@@ -87,11 +92,49 @@ return cm;
                     time_diff = 0;
                     this.draw(time_diff);
                 }
-                this.sin = function(x, rad_diff, amplitude) {
-                    return -amplitude * Math.sin(rad_diff * x);
-                };
             }
                     
+            function superposedWave(context, index, standing_waves) {
+                var wave_height = (context.height / (wavelengths.length+2));
+                var position = index * wave_height;
+                this.draw = function() {
+                    var superposed_coordinates = [];
+                    var num_steps = Math.round(context.width / X_INCREMENT)
+                    for(var i = 0; i < num_steps; i++) {
+                        var coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
+                        for(var j = 0; j < standing_waves.length; j++) {
+                            var current_coords = standing_waves[j].current_plot_coordinates;
+                            // x is same for all anyways
+                            coords.from.x = current_coords[i].from.x;
+                            coords.from.y += current_coords[i].from.y / wavelengths.length;
+                            coords.to.x = current_coords[i].to.x;
+                            coords.to.y += current_coords[i].to.y / wavelengths.length;
+                        }
+                        superposed_coordinates.push(coords);
+                    }
+                    context.fillRect(0, position-(wave_height/2)-10, context.width, (wave_height/2)*2+20);
+                    for(var i = 0; i < superposed_coordinates.length; i++) {
+                        var coord = superposed_coordinates[i];
+                        context.beginPath();
+                        context.moveTo(coord.from.x, coord.from.y + position);
+                        context.lineTo(coord.to.x, coord.to.y + position);
+                        context.stroke();
+                    }
+                };
+                this.reset = function() {
+                    context.fillStyle = "rgba(0, 0, 0, 1)";
+                    amplitude = 0;
+                    for(var j = 0; j < standing_waves.length; j++) {
+                        if(standing_waves[j].amplitude > amplitude) {
+                            amplitude = standing_waves[j].amplitude;
+                        }
+                    }
+                    context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
+                    speed = 3;
+                    time_diff = 0;
+                    this.draw(time_diff);
+                }
+            }
         
             $(document).ready(function(){
                 var canvas_jq = $('<canvas>');
@@ -103,18 +146,27 @@ return cm;
                 // just to be able to access directly from context object
                 context.width = canvas.width;
                 context.height = canvas.height;
+                if(debug) {
+                    context.fillStyle = "rgba(30, 30, 30, 0.3)";
+                } else {
+                    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+                }
+                context.lineWidth = 4;
+                context.strokeStyle = "#fff";
+                
+                wavelengths = [440, 440*2, 440*3, 440*4];
 
-                wavelengths = [440, 440*2, 440*3];
-
-                var waves = [];
+                waves = [];
                 for(i = 0; i < wavelengths.length; i++) {
                     var amplitude = (context.height / wavelengths.length) / 3;
+                    amplitude = amplitude / (i+1);
                     waves.push(new standingWave(context, i+1, wavelengths[i], amplitude));
                 }
+                waves.push(new superposedWave(context, wavelengths.length+1, waves.slice(0,wavelengths.length)));
 
-                function drawFrame() {
+                function drawFrame(time_diff) {
                     for(i = 0; i < waves.length; i++) {
-                        waves[i].draw();
+                        waves[i].draw(time_diff);
                     }
                 }
                 function animLoop() {
@@ -123,7 +175,7 @@ return cm;
                         drawFrame();
                     }
                 }
-                drawFrame();
+                drawFrame(0);
 
                 var pause_time_diff;
                 $('.start, .pause, .stop').click(function(e){
@@ -177,20 +229,27 @@ return cm;
                 });
             });
 
-            state = 'stopped';
 
         </script>
         <style type='text/css'>
         
-            html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: Georgia; }
+            html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: courier, courier new, monaco, monospace;; }
             a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
             #canvas-container { width: 1028px; margin: 50px auto;  }
             #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
             
+            .controls a { display: inline-block; min-width: 15px; text-align: center; }
+
+            h1, h2 { padding: 0; margin: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
+            h1 { font-size: 25px; line-height: 28px; text-align: right; }
+            h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
+            h2 span { font-size: 25px; }
         </style>
     </head>
     <body>
         <div id='canvas-container'>
+            <h1>tonehack<span> &lt;</span></h1>
+            <h2>a visual explanation of sound<span> &lt;</span></h2>
             <div class='controls'>
                 <a href='#' class='start icon-play'></a> /
                 <a href='#' class='stop icon-stop'></a> /
