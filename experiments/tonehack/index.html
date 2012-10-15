@@ -4,6 +4,7 @@
         <title>Tonehack</title>
         <meta charset='utf-8' />
         <script type='text/javascript' src='jquery.min.js'></script>
+        <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
 function gcd(text1,text2){
 var gcd=1;
@@ -36,20 +37,28 @@ return cm;
             })();
 
             debug = false;
+            start_time = new Date().getTime();
             
             function standingWave(context, index, freq, amplitude) {
                 var amplitude = amplitude;
                 var step = 0.0;
-                var standing = Math.PI / context.width;
+                var standing = Math.PI / context.width; // resonant wavelength for canvas width
                 var freq = freq;
                 var freq_diff = freq * standing / 440; // calculate relative wavelength
-                var step_diff = freq * (1/3000); // calculate relative frequency
+                var speed = 3;
                 var position = index * (context.height / (wavelengths.length+1));
-                this.draw = function() {
-                    step += step_diff;
-                    if(step >= Math.PI*2) {
-                        step = 0.0;
+                this.changeSpeed = function(change) {
+                    if(change > 0) {
+                        speed *= 2;
+                    } else {
+                        speed /= 2;
                     }
+                };
+                this.draw = function(time_diff) {
+                    if(time_diff == undefined) {
+                        time_diff = new Date().getTime() - start_time;
+                    }
+                    step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
                     current_amplitude = Math.sin(step) * amplitude;
                     if(debug) {
                         context.fillStyle = "rgba(30, 30, 30, 0.3)";
@@ -71,6 +80,13 @@ return cm;
                         context.stroke();
                     }
                 };
+                this.reset = function() {
+                    context.fillStyle = "rgba(0, 0, 0, 1)";
+                    context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
+                    speed = 3;
+                    time_diff = 0;
+                    this.draw(time_diff);
+                }
                 this.sin = function(x, rad_diff, amplitude) {
                     return -amplitude * Math.sin(rad_diff * x);
                 };
@@ -102,25 +118,66 @@ return cm;
                     }
                 }
                 function animLoop() {
-                    if(run) {
+                    if(state == 'running') {
                         requestAnimFrame(animLoop);
                         drawFrame();
                     }
                 }
                 drawFrame();
 
-                $('.start').click(function(e){
+                var pause_time_diff;
+                $('.start, .pause, .stop').click(function(e){
                     e.preventDefault();
-                    run = true;
-                    animLoop();
+                    if($(this).hasClass('start')) {
+                        if(state != 'running') {
+                            if(state == 'stopped') {
+                                start_time = new Date().getTime();
+                            } else if(state == 'paused') {
+                                start_time = new Date().getTime() - pause_time_diff;
+                            }
+                            state = 'running';
+                            animLoop();
+                        }
+                        $(this).removeClass('start')
+                            .removeClass('icon-play')
+                            .addClass('pause')
+                            .addClass('icon-pause');
+                    } else if($(this).hasClass('pause')) {
+                        state = 'paused';
+                        pause_time_diff = new Date().getTime() - start_time;
+                        $(this).removeClass('pause')
+                            .removeClass('icon-pause')
+                            .addClass('start')
+                            .addClass('icon-play');
+                    } else if($(this).hasClass('stop')) {
+                        state = 'stopped';
+                        for(i = 0; i < waves.length; i++) {
+                            waves[i].reset();
+                        }
+                        $('.pause').removeClass('pause')
+                            .removeClass('icon-pause')
+                            .addClass('start')
+                            .addClass('icon-play');
+                    }
                 });
                 $('.stop').click(function(e){
                     e.preventDefault();
-                    run = false;
+                    state = 'stopped';
+                });
+                $('.faster, .slower').click(function(e){
+                    e.preventDefault();
+                    var diff = 0;
+                    if($(this).hasClass('faster')) diff = 1;
+                    else diff = -1;
+                    
+                    for(i = 0; i < waves.length; i++) {
+                        waves[i].changeSpeed(diff);
+                    }
+                    start_time = new Date().getTime();
                 });
             });
 
-            run = true;
+            state = 'stopped';
 
         </script>
         <style type='text/css'>
@@ -134,7 +191,12 @@ return cm;
     </head>
     <body>
         <div id='canvas-container'>
-            <div class='controls'><a href='#' class='start'>start</a> / <a href='#' class='stop'>stop</a></div>
+            <div class='controls'>
+                <a href='#' class='start icon-play'></a> /
+                <a href='#' class='stop icon-stop'></a> /
+                <a href='#' class='faster'>faster</a> /
+                <a href='#' class='slower'>slower</a> 
+            </div>
         </div>
     </body>
 </html>
