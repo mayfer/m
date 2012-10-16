@@ -194,6 +194,11 @@
                     this.reset()
                 };
 
+                this.restart = function() {
+                    // graceful
+                    start_time = new Date().getTime();
+                }
+
                 this.reset = function() {
                     context.fillStyle = "rgba(0, 0, 0, 1)";
                     context.fillRect(0, 0, context.width, context.height);
@@ -252,7 +257,7 @@
                         for(i = 0; i < overtones.length; i++) {
                             overtones[i].changeSpeed(diff);
                         }
-                        start_time = new Date().getTime();
+                        wave_canvas.restart();
                     });
                 };
             }
