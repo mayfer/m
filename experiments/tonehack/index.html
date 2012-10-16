@@ -7,7 +7,6 @@
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
 
-            debug = false;
             start_time = new Date().getTime();
             state = 'stopped';
 
@@ -24,14 +23,14 @@
                 };
             })();
 
-            function standingWave(context, index, freq, amplitude) {
+            function standingWave(context, index, num_waves, freq, amplitude) {
                 var amplitude = amplitude;
                 var step = 0.0;
                 var standing = Math.PI / context.width; // resonant wavelength for canvas width
                 var freq = freq;
                 var freq_diff = freq * standing / 440; // calculate relative wavelength
                 var speed = 3;
-                var wave_height = (context.height / (wavelengths.length+2));
+                var wave_height = (context.height / (num_waves+1));
                 var current_amplitude = 0;
                 var current_plot_coordinates = null;
                 var position = index * wave_height;// - (wave_height/2);
@@ -46,7 +45,12 @@
                 this.sin = function(x, rad_diff, amplitude) {
                     return -amplitude * Math.sin(rad_diff * x);
                 };
-                this.getPlotCoordinates = function() {
+                this.getPlotCoordinates = function(time_diff) {
+                    if(time_diff == undefined) {
+                        time_diff = new Date().getTime() - start_time;
+                    }
+                    step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
+                    current_amplitude = Math.sin(step) * amplitude;
                     var x = 0, y = this.sin(x, freq_diff, current_amplitude);
                     var points = [];
                     while(x < context.width) {
@@ -66,18 +70,10 @@
                 };
                 // public
                 this.draw = function(time_diff) {
-                    if(time_diff == undefined) {
-                        time_diff = new Date().getTime() - start_time;
-                    }
-                    step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
-                    current_amplitude = Math.sin(step) * amplitude;
                     context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
-
-                    var x = 0, y = this.sin(x, freq_diff, current_amplitude);
-                    current_plot_coordinates = this.getPlotCoordinates();
-                    this.current_plot_coordinates = current_plot_coordinates;
-                    for(var i = 0; i < current_plot_coordinates.length; i++) {
-                        coord = current_plot_coordinates[i];
+                    this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
+                    for(var i = 0; i < this.current_plot_coordinates.length; i++) {
+                        coord = this.current_plot_coordinates[i];
                         context.beginPath();
                         context.moveTo(coord.from.x, coord.from.y + position);
                         context.lineTo(coord.to.x, coord.to.y + position);
@@ -91,11 +87,12 @@
                     speed = 3;
                     time_diff = 0;
                     this.draw(time_diff);
+                    drawWaveMode(context);
                 }
             }
                     
-            function superposedWave(context, index, standing_waves) {
-                var wave_height = (context.height / (wavelengths.length+2));
+            function superposedWave(context, index, num_waves, standing_waves) {
+                var wave_height = (context.height / (num_waves+1));
                 var position = index * wave_height;
                 this.draw = function() {
                     var superposed_coordinates = [];
@@ -103,16 +100,21 @@
                     for(var i = 0; i < num_steps; i++) {
                         var coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
                         for(var j = 0; j < standing_waves.length; j++) {
-                            var current_coords = standing_waves[j].current_plot_coordinates;
+                            var current_coords;
+                            if(standing_waves[j].current_plot_coordinates == null) {
+                                current_coords = standing_waves[j].getPlotCoordinates();
+                            } else {
+                                current_coords = standing_waves[j].current_plot_coordinates;
+                            }
                             // x is same for all anyways
                             coords.from.x = current_coords[i].from.x;
-                            coords.from.y += current_coords[i].from.y / wavelengths.length;
+                            coords.from.y += current_coords[i].from.y;
                             coords.to.x = current_coords[i].to.x;
-                            coords.to.y += current_coords[i].to.y / wavelengths.length;
+                            coords.to.y += current_coords[i].to.y;
                         }
                         superposed_coordinates.push(coords);
                     }
-                    context.fillRect(0, position-(wave_height/2)-10, context.width, (wave_height/2)*2+20);
+                    context.fillRect(0, 0, context.width, context.height);
                     for(var i = 0; i < superposed_coordinates.length; i++) {
                         var coord = superposed_coordinates[i];
                         context.beginPath();
@@ -129,11 +131,21 @@
                             amplitude = standing_waves[j].amplitude;
                         }
                     }
-                    context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
+                    context.fillRect(0, 0, context.width, context.height);
                     speed = 3;
                     time_diff = 0;
                     this.draw(time_diff);
+                    drawWaveMode(context);
                 }
+            }
+
+            function drawWaveMode(context) {
+                context.fillStyle = "rgba(0, 0, 0, 0.5)";
+                context.lineWidth = 4;
+                context.strokeStyle = "#fff";
+            }
+
+            function waveCanvas(jq_elem) {
             }
         
             $(document).ready(function(){
@@ -146,23 +158,18 @@
                 // just to be able to access directly from context object
                 context.width = canvas.width;
                 context.height = canvas.height;
-                if(debug) {
-                    context.fillStyle = "rgba(30, 30, 30, 0.3)";
-                } else {
-                    context.fillStyle = "rgba(0, 0, 0, 0.5)";
-                }
-                context.lineWidth = 4;
-                context.strokeStyle = "#fff";
+                drawWaveMode(context);
                 
                 wavelengths = [440, 440*2, 440*3, 440*4];
 
-                waves = [];
+                overtones = [];
                 for(i = 0; i < wavelengths.length; i++) {
                     var amplitude = (context.height / wavelengths.length) / 3;
                     amplitude = amplitude / (i+1);
-                    waves.push(new standingWave(context, i+1, wavelengths[i], amplitude));
+                    overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude));
                 }
-                waves.push(new superposedWave(context, wavelengths.length+1, waves.slice(0,wavelengths.length)));
+                waves = [];
+                waves.push(new superposedWave(context, 1, 1, overtones));
 
                 function drawFrame(time_diff) {
                     for(i = 0; i < waves.length; i++) {
@@ -222,8 +229,8 @@
                     if($(this).hasClass('faster')) diff = 1;
                     else diff = -1;
                     
-                    for(i = 0; i < waves.length; i++) {
-                        waves[i].changeSpeed(diff);
+                    for(i = 0; i < overtones.length; i++) {
+                        overtones[i].changeSpeed(diff);
                     }
                     start_time = new Date().getTime();
                 });
@@ -249,12 +256,13 @@
     <body>
         <div id='canvas-container'>
             <h1>tonehack<span> &lt;</span></h1>
-            <h2>a visual explanation of sound<span> &lt;</span></h2>
             <div class='controls'>
                 <a href='#' class='start icon-play'></a> /
                 <a href='#' class='stop icon-stop'></a> /
                 <a href='#' class='faster'>faster</a> /
-                <a href='#' class='slower'>slower</a> 
+                <a href='#' class='slower'>slower</a> /
+                <a href='#' class='superpose'>superpose</a> /
+                <a href='#' class='split'>split</a> 
             </div>
         </div>
     </body>
