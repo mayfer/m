@@ -75,21 +75,12 @@
                         context.stroke();
                     }
                 };
-                // public
-                this.reset = function() {
-                    context.fillStyle = "rgba(0, 0, 0, 1)";
-                    context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
-                    speed = 3;
-                    time_diff = 0;
-                    this.draw(time_diff);
-                    drawWaveMode(context);
-                }
             }
                     
             function superposedWave(context, index, num_waves, standing_waves) {
                 var wave_height = (context.height / (num_waves+1));
                 var position = index * wave_height;
-                this.draw = function() {
+                this.draw = function(time_diff) {
                     var superposed_coordinates = [];
                     var num_steps = Math.round(context.width / X_INCREMENT)
                     for(var i = 0; i < num_steps; i++) {
@@ -97,7 +88,7 @@
                         for(var j = 0; j < standing_waves.length; j++) {
                             var current_coords;
                             if(standing_waves[j].current_plot_coordinates == null) {
-                                current_coords = standing_waves[j].getPlotCoordinates();
+                                current_coords = standing_waves[j].getPlotCoordinates(time_diff);
                             } else {
                                 current_coords = standing_waves[j].current_plot_coordinates;
                             }
@@ -118,20 +109,6 @@
                         context.stroke();
                     }
                 };
-                this.reset = function() {
-                    context.fillStyle = "rgba(0, 0, 0, 1)";
-                    amplitude = 0;
-                    for(var j = 0; j < standing_waves.length; j++) {
-                        if(standing_waves[j].amplitude > amplitude) {
-                            amplitude = standing_waves[j].amplitude;
-                        }
-                    }
-                    context.fillRect(0, 0, context.width, context.height);
-                    speed = 3;
-                    time_diff = 0;
-                    this.draw(time_diff);
-                    drawWaveMode(context);
-                }
             }
 
 
@@ -141,6 +118,7 @@
                 var overtones = [];
                 var waves = [];
                 var start_time = new Date().getTime();
+                var time_diff = 0;
                 var pause_time_diff = 0;
                 var state = 'stopped';
                 var context;
@@ -157,7 +135,7 @@
                     context.height = canvas.height;
                     this.makeControls();
                     
-                    this.drawWaveMode(context);
+                    this.drawWaveMode();
                 
                     wavelengths = [440, 440*2, 440*3, 440*4];
 
@@ -170,18 +148,7 @@
                     waves = [];
                     waves.push(new superposedWave(context, 1, 1, overtones));
 
-                    function drawFrame(time_diff) {
-                        for(i = 0; i < waves.length; i++) {
-                            waves[i].draw(time_diff);
-                        }
-                    }
-                    function animLoop() {
-                        if(state == 'running') {
-                            requestAnimFrame(animLoop);
-                            drawFrame();
-                        }
-                    }
-                    drawFrame(0);
+                    this.drawFrame();
 
                 };
 
@@ -191,19 +158,52 @@
                     context.strokeStyle = "#fff";
                 };
 
-                this.start = function() {
+                this.drawFrame = function() {
+                    for(i = 0; i < waves.length; i++) {
+                        waves[i].draw(time_diff);
+                    }
                     time_diff = new Date().getTime() - start_time;
+                }
+
+                this.animLoop = function() {
+                    if(state == 'running') {
+                        requestAnimFrame(this.animLoop.bind(this));
+                        this.drawFrame();
+                    }
+                }
+
+                this.start = function() {
+                    if(state != 'running') {
+                        if(state == 'stopped') {
+                            start_time = new Date().getTime();
+                        } else if(state == 'paused') {
+                            start_time = new Date().getTime() - pause_time_diff;
+                        }
+                        state = 'running';
+                        this.animLoop();
+                    }
                 };
 
                 this.pause = function() {
+                    state = 'paused';
+                    pause_time_diff = new Date().getTime() - start_time;
                 };
 
                 this.stop = function() {
+                    state = 'stopped';
+                    this.reset()
+                };
+
+                this.reset = function() {
+                    context.fillStyle = "rgba(0, 0, 0, 1)";
+                    context.fillRect(0, 0, context.width, context.height);
+                    time_diff = 0;
+                    this.drawFrame();
                 };
 
                 this.makeControls = function(){
+                    var wave_canvas = this;
                     var controls = $('<div>').addClass('controls');
-                    console.log('good', jq_elem);
                     $.each([
                         $('<a>').addClass('start icon-play'),
                         $('<a>').addClass('stop icon-stop'),
@@ -216,36 +216,23 @@
                         $(this).appendTo(controls);
                     });
                     controls.prependTo(jq_elem);
-                    console.log('good 2');
 
                     controls.on('click', '.start, .pause, .stop', function(e){
                         e.preventDefault();
                         if($(this).hasClass('start')) {
-                            if(state != 'running') {
-                                if(state == 'stopped') {
-                                    start_time = new Date().getTime();
-                                } else if(state == 'paused') {
-                                    start_time = new Date().getTime() - pause_time_diff;
-                                }
-                                state = 'running';
-                                animLoop();
-                            }
+                            wave_canvas.start();
                             $(this).removeClass('start')
                                 .removeClass('icon-play')
                                 .addClass('pause')
                                 .addClass('icon-pause');
                         } else if($(this).hasClass('pause')) {
-                            state = 'paused';
-                            pause_time_diff = new Date().getTime() - start_time;
+                            wave_canvas.pause();
                             $(this).removeClass('pause')
                                 .removeClass('icon-pause')
                                 .addClass('start')
                                 .addClass('icon-play');
                         } else if($(this).hasClass('stop')) {
-                            state = 'stopped';
-                            for(i = 0; i < waves.length; i++) {
-                                waves[i].reset();
-                            }
+                            wave_canvas.stop();
                             $('.pause').removeClass('pause')
                                 .removeClass('icon-pause')
                                 .addClass('start')
