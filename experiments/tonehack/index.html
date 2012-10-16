@@ -115,12 +115,13 @@
                 var jq_elem = jq_elem;
                 var wavelengths = [];
                 var overtones = [];
-                var waves = [];
+                var superposed = [];
                 var start_time = new Date().getTime();
                 var time_diff = 0;
                 var pause_time_diff = 0;
                 var state = 'stopped';
                 var context;
+                var waves = [];
 
                 this.init = function() {
                     var canvas_jq = $('<canvas>');
@@ -144,11 +145,15 @@
                         amplitude = amplitude / (i+1);
                         overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude));
                     }
-                    waves = [];
-                    waves.push(new superposedWave(context, 1, 1, overtones));
+                    superposed = [new superposedWave(context, 1, 1, overtones)];
+                    waves = overtones;
 
                     this.drawFrame();
 
+                };
+
+                this.setWaves = function(input_waves) {
+                    waves = input_waves;
                 };
 
                 this.drawWaveMode = function() {
@@ -213,8 +218,8 @@
                         $('<a>').addClass('stop icon-stop'),
                         $('<a>').addClass('faster').html('faster'),
                         $('<a>').addClass('slower').html('slower'),
-                        $('<a>').addClass('superpose tab').html('superpose'),
-                        $('<a>').addClass('split tab selected').html('split'),
+                        $('<a>').addClass('superpose tab').html('resulting sound wave'),
+                        $('<a>').addClass('split tab selected').html('breakdown of overtones'),
                     ], function() {
                         $(this).attr('href', '#');
                         $(this).appendTo(controls);
@@ -258,6 +263,20 @@
                         }
                         wave_canvas.restart();
                     });
+                    controls.on('click', '.split', function(e) {
+                        e.preventDefault();
+                        wave_canvas.reset();
+                        $('.superpose').removeClass('selected');
+                        $('.split').addClass('selected');
+                        wave_canvas.setWaves(overtones);
+                    });
+                    controls.on('click', '.superpose', function(e) {
+                        e.preventDefault();
+                        wave_canvas.reset();
+                        $('.split').removeClass('selected');
+                        $('.superpose').addClass('selected');
+                        wave_canvas.setWaves(superposed);
+                    });
                 };
             }
         
@@ -276,8 +295,8 @@
             
             a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
             .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; }
-            .controls a.tab { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: none; margin-bottom: -3px; padding: 3px 10px; color: #999; }
-            .controls a.tab.selected { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #fff; border-bottom: 3px solid #000; margin-bottom: -3px; padding: 3px 10px; color: #fff; }
+            .controls a.tab { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: none; margin-bottom: -3px; padding: 3px 15px; color: #999; }
+            .controls a.tab.selected { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #fff; border-bottom: 3px solid #000; margin-bottom: -3px; padding: 3px 15px; color: #fff; }
 
             h1, h2 { padding: 0; margin: 40px 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
             h1 { font-size: 25px; line-height: 28px; text-align: right; }
