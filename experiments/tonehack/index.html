@@ -63,7 +63,6 @@
                     }
                     return points;
                 };
-                // public
                 this.draw = function(time_diff) {
                     context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
                     this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
@@ -214,8 +213,8 @@
                         $('<a>').addClass('stop icon-stop'),
                         $('<a>').addClass('faster').html('faster'),
                         $('<a>').addClass('slower').html('slower'),
-                        $('<a>').addClass('superpose').html('superpose'),
-                        $('<a>').addClass('split').html('split'),
+                        $('<a>').addClass('superpose tab').html('superpose'),
+                        $('<a>').addClass('split tab selected').html('split'),
                     ], function() {
                         $(this).attr('href', '#');
                         $(this).appendTo(controls);
@@ -272,13 +271,15 @@
         <style type='text/css'>
         
             html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: courier, courier new, monaco, monospace;; }
-            a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
-            .container { width: 1028px; margin: 50px auto;  }
+            .container { width: 1028px; margin: 0 auto;  }
             canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
             
-            .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; }
+            a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
+            .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; }
+            .controls a.tab { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: none; margin-bottom: -3px; padding: 3px 10px; color: #999; }
+            .controls a.tab.selected { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #fff; border-bottom: 3px solid #000; margin-bottom: -3px; padding: 3px 10px; color: #fff; }
 
-            h1, h2 { padding: 0; margin: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
+            h1, h2 { padding: 0; margin: 40px 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
             h1 { font-size: 25px; line-height: 28px; text-align: right; }
             h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
             h2 span { font-size: 25px; }
