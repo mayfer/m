@@ -7,11 +7,6 @@
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
 
-            start_time = new Date().getTime();
-            state = 'stopped';
-
-            X_INCREMENT = 4;
-
             window.requestAnimFrame = (function(){
                 return  window.requestAnimationFrame || 
                   window.webkitRequestAnimationFrame || 
@@ -23,13 +18,16 @@
                 };
             })();
 
+            var X_INCREMENT = 4;
+            var DEFAULT_SPEED = 3;
+
             function standingWave(context, index, num_waves, freq, amplitude) {
                 var amplitude = amplitude;
                 var step = 0.0;
                 var standing = Math.PI / context.width; // resonant wavelength for canvas width
                 var freq = freq;
                 var freq_diff = freq * standing / 440; // calculate relative wavelength
-                var speed = 3;
+                var speed = DEFAULT_SPEED;
                 var wave_height = (context.height / (num_waves+1));
                 var current_amplitude = 0;
                 var current_plot_coordinates = null;
@@ -46,9 +44,6 @@
                     return -amplitude * Math.sin(rad_diff * x);
                 };
                 this.getPlotCoordinates = function(time_diff) {
-                    if(time_diff == undefined) {
-                        time_diff = new Date().getTime() - start_time;
-                    }
                     step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
                     current_amplitude = Math.sin(step) * amplitude;
                     var x = 0, y = this.sin(x, freq_diff, current_amplitude);
@@ -139,101 +134,145 @@
                 }
             }
 
-            function drawWaveMode(context) {
-                context.fillStyle = "rgba(0, 0, 0, 0.5)";
-                context.lineWidth = 4;
-                context.strokeStyle = "#fff";
-            }
 
             function waveCanvas(jq_elem) {
+                var jq_elem = jq_elem;
+                var wavelengths = [];
+                var overtones = [];
+                var waves = [];
+                var start_time = new Date().getTime();
+                var pause_time_diff = 0;
+                var state = 'stopped';
+                var context;
+
+                this.init = function() {
+                    var canvas_jq = $('<canvas>');
+                    $(jq_elem).append(canvas_jq);
+                    var canvas = canvas_jq.get(0);
+                    canvas.height = canvas_jq.innerWidth();
+                    canvas.width = canvas_jq.innerHeight();
+                    context = canvas.getContext("2d");
+                    // just to be able to access directly from context object
+                    context.width = canvas.width;
+                    context.height = canvas.height;
+                    this.makeControls();
+                    
+                    this.drawWaveMode(context);
+                
+                    wavelengths = [440, 440*2, 440*3, 440*4];
+
+                    overtones = [];
+                    for(i = 0; i < wavelengths.length; i++) {
+                        var amplitude = (context.height / wavelengths.length) / 3;
+                        amplitude = amplitude / (i+1);
+                        overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude));
+                    }
+                    waves = [];
+                    waves.push(new superposedWave(context, 1, 1, overtones));
+
+                    function drawFrame(time_diff) {
+                        for(i = 0; i < waves.length; i++) {
+                            waves[i].draw(time_diff);
+                        }
+                    }
+                    function animLoop() {
+                        if(state == 'running') {
+                            requestAnimFrame(animLoop);
+                            drawFrame();
+                        }
+                    }
+                    drawFrame(0);
+
+                };
+
+                this.drawWaveMode = function() {
+                    context.fillStyle = "rgba(0, 0, 0, 0.5)";
+                    context.lineWidth = 4;
+                    context.strokeStyle = "#fff";
+                };
+
+                this.start = function() {
+                    time_diff = new Date().getTime() - start_time;
+                };
+
+                this.pause = function() {
+                };
+
+                this.stop = function() {
+                };
+
+                this.makeControls = function(){
+                    var controls = $('<div>').addClass('controls');
+                    console.log('good', jq_elem);
+                    $.each([
+                        $('<a>').addClass('start icon-play'),
+                        $('<a>').addClass('stop icon-stop'),
+                        $('<a>').addClass('faster').html('faster'),
+                        $('<a>').addClass('slower').html('slower'),
+                        $('<a>').addClass('superpose').html('superpose'),
+                        $('<a>').addClass('split').html('split'),
+                    ], function() {
+                        $(this).attr('href', '#');
+                        $(this).appendTo(controls);
+                    });
+                    controls.prependTo(jq_elem);
+                    console.log('good 2');
+
+                    controls.on('click', '.start, .pause, .stop', function(e){
+                        e.preventDefault();
+                        if($(this).hasClass('start')) {
+                            if(state != 'running') {
+                                if(state == 'stopped') {
+                                    start_time = new Date().getTime();
+                                } else if(state == 'paused') {
+                                    start_time = new Date().getTime() - pause_time_diff;
+                                }
+                                state = 'running';
+                                animLoop();
+                            }
+                            $(this).removeClass('start')
+                                .removeClass('icon-play')
+                                .addClass('pause')
+                                .addClass('icon-pause');
+                        } else if($(this).hasClass('pause')) {
+                            state = 'paused';
+                            pause_time_diff = new Date().getTime() - start_time;
+                            $(this).removeClass('pause')
+                                .removeClass('icon-pause')
+                                .addClass('start')
+                                .addClass('icon-play');
+                        } else if($(this).hasClass('stop')) {
+                            state = 'stopped';
+                            for(i = 0; i < waves.length; i++) {
+                                waves[i].reset();
+                            }
+                            $('.pause').removeClass('pause')
+                                .removeClass('icon-pause')
+                                .addClass('start')
+                                .addClass('icon-play');
+                        }
+                    });
+                    controls.on('click', '.stop', function(e){
+                        e.preventDefault();
+                        state = 'stopped';
+                    });
+                    controls.on('click', '.faster, .slower', function(e){
+                        e.preventDefault();
+                        var diff = 0;
+                        if($(this).hasClass('faster')) diff = 1;
+                        else diff = -1;
+                    
+                        for(i = 0; i < overtones.length; i++) {
+                            overtones[i].changeSpeed(diff);
+                        }
+                        start_time = new Date().getTime();
+                    });
+                };
             }
         
             $(document).ready(function(){
-                var canvas_jq = $('<canvas>');
-                $('#canvas-container').append(canvas_jq);
-                canvas = canvas_jq.get(0);
-                canvas.height = canvas_jq.innerWidth();
-                canvas.width = canvas_jq.innerHeight();
-                context = canvas.getContext("2d");
-                // just to be able to access directly from context object
-                context.width = canvas.width;
-                context.height = canvas.height;
-                drawWaveMode(context);
-                
-                wavelengths = [440, 440*2, 440*3, 440*4];
-
-                overtones = [];
-                for(i = 0; i < wavelengths.length; i++) {
-                    var amplitude = (context.height / wavelengths.length) / 3;
-                    amplitude = amplitude / (i+1);
-                    overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude));
-                }
-                waves = [];
-                waves.push(new superposedWave(context, 1, 1, overtones));
-
-                function drawFrame(time_diff) {
-                    for(i = 0; i < waves.length; i++) {
-                        waves[i].draw(time_diff);
-                    }
-                }
-                function animLoop() {
-                    if(state == 'running') {
-                        requestAnimFrame(animLoop);
-                        drawFrame();
-                    }
-                }
-                drawFrame(0);
-
-                var pause_time_diff;
-                $('.start, .pause, .stop').click(function(e){
-                    e.preventDefault();
-                    if($(this).hasClass('start')) {
-                        if(state != 'running') {
-                            if(state == 'stopped') {
-                                start_time = new Date().getTime();
-                            } else if(state == 'paused') {
-                                start_time = new Date().getTime() - pause_time_diff;
-                            }
-                            state = 'running';
-                            animLoop();
-                        }
-                        $(this).removeClass('start')
-                            .removeClass('icon-play')
-                            .addClass('pause')
-                            .addClass('icon-pause');
-                    } else if($(this).hasClass('pause')) {
-                        state = 'paused';
-                        pause_time_diff = new Date().getTime() - start_time;
-                        $(this).removeClass('pause')
-                            .removeClass('icon-pause')
-                            .addClass('start')
-                            .addClass('icon-play');
-                    } else if($(this).hasClass('stop')) {
-                        state = 'stopped';
-                        for(i = 0; i < waves.length; i++) {
-                            waves[i].reset();
-                        }
-                        $('.pause').removeClass('pause')
-                            .removeClass('icon-pause')
-                            .addClass('start')
-                            .addClass('icon-play');
-                    }
-                });
-                $('.stop').click(function(e){
-                    e.preventDefault();
-                    state = 'stopped';
-                });
-                $('.faster, .slower').click(function(e){
-                    e.preventDefault();
-                    var diff = 0;
-                    if($(this).hasClass('faster')) diff = 1;
-                    else diff = -1;
-                    
-                    for(i = 0; i < overtones.length; i++) {
-                        overtones[i].changeSpeed(diff);
-                    }
-                    start_time = new Date().getTime();
-                });
+                var wave_canvas = new waveCanvas($('#canvas-container'));
+                wave_canvas.init();
             });
 
 
@@ -242,10 +281,10 @@
         
             html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: courier, courier new, monaco, monospace;; }
             a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
-            #canvas-container { width: 1028px; margin: 50px auto;  }
-            #canvas-container canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
+            .container { width: 1028px; margin: 50px auto;  }
+            canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
             
-            .controls a { display: inline-block; min-width: 15px; text-align: center; }
+            .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; }
 
             h1, h2 { padding: 0; margin: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
             h1 { font-size: 25px; line-height: 28px; text-align: right; }
@@ -254,15 +293,9 @@
         </style>
     </head>
     <body>
-        <div id='canvas-container'>
+        <div class='container'>
             <h1>tonehack<span> &lt;</span></h1>
-            <div class='controls'>
-                <a href='#' class='start icon-play'></a> /
-                <a href='#' class='stop icon-stop'></a> /
-                <a href='#' class='faster'>faster</a> /
-                <a href='#' class='slower'>slower</a> /
-                <a href='#' class='superpose'>superpose</a> /
-                <a href='#' class='split'>split</a> 
+            <div id='canvas-container'>
             </div>
         </div>
     </body>
