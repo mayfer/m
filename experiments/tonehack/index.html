@@ -170,7 +170,7 @@
                 };
 
                 this.drawWaveMode = function() {
-                    context.fillStyle = "rgba(0, 0, 0, 0.4)";
+                    context.fillStyle = "rgba(0, 0, 0, 0.3)";
                     context.lineWidth = 2;
                     context.strokeStyle = "#fff";
                 };
@@ -299,6 +299,7 @@
                         $('.split').addClass('selected');
                         wave_canvas.clear();
                         wave_canvas.setWaves(overtones);
+                        wave_canvas.drawFrame();
                     });
                     controls.on('click', '.superpose', function(e) {
                         e.preventDefault();
@@ -306,6 +307,7 @@
                         $('.superpose').addClass('selected');
                         wave_canvas.clear();
                         wave_canvas.setWaves(superposed);
+                        wave_canvas.drawFrame();
                     });
                 };
             }
@@ -321,8 +323,9 @@
         <style type='text/css'>
         
             html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: courier, courier new, monaco, monospace;; }
-            .container { width: 1028px; margin: 0 auto;  }
-            canvas { display: block; width: 1024px; height: 480px; margin: 0 auto; border: 2px solid #fff; }
+            .container { width: 1000px; margin: 0 auto;  }
+            .wave-canvas { position: relative; width: 996px; }
+            canvas { display: block; width: 100%; height: 380px; margin: 0 auto; border: 2px solid #fff; }
             
             a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
             .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; }
@@ -339,7 +342,7 @@
         <div class='container'>
             <h1>tonehack<span> &lt;</span></h1>
             <h2>fps: <span id='fps'>0</span><span class='lt'> &lt;</span></h2>
-            <div id='canvas-container'>
+            <div id='canvas-container' class='wave-canvas'>
             </div>
         </div>
     </body>
