@@ -33,8 +33,12 @@
                     };
             })();
 
-            var X_INCREMENT = 4;
+            var X_INCREMENT = 10;
             var DEFAULT_SPEED = 3;
+
+            var lastCalledTime;
+            var fps;
+
 
             function standingWave(context, index, num_waves, freq, amplitude) {
                 var amplitude = amplitude;
@@ -94,13 +98,13 @@
             function superposedWave(context, index, num_waves, standing_waves) {
                 var wave_height = (context.height / (num_waves+1));
                 var position = index * wave_height;
+                var num_steps = Math.round(context.width / X_INCREMENT);
+                var coords, current_coords;
                 this.draw = function(time_diff) {
-                    var superposed_coordinates = [];
-                    var num_steps = Math.round(context.width / X_INCREMENT)
+                    context.fillRect(0, 0, context.width, context.height);
                     for(var i = 0; i < num_steps; i++) {
-                        var coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
+                        coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
                         for(var j = 0; j < standing_waves.length; j++) {
-                            var current_coords;
                             current_coords = standing_waves[j].getPlotCoordinates(time_diff);
                             // x is same for all anyways
                             coords.from.x = current_coords[i].from.x;
@@ -108,14 +112,9 @@
                             coords.to.x = current_coords[i].to.x;
                             coords.to.y += current_coords[i].to.y;
                         }
-                        superposed_coordinates.push(coords);
-                    }
-                    context.fillRect(0, 0, context.width, context.height);
-                    for(var i = 0; i < superposed_coordinates.length; i++) {
-                        var coord = superposed_coordinates[i];
                         context.beginPath();
-                        context.moveTo(coord.from.x, coord.from.y + position);
-                        context.lineTo(coord.to.x, coord.to.y + position);
+                        context.moveTo(coords.from.x, coords.from.y + position);
+                        context.lineTo(coords.to.x, coords.to.y + position);
                         context.stroke();
                     }
                 };
@@ -139,9 +138,12 @@
                     var canvas_jq = $('<canvas>');
                     $(jq_elem).append(canvas_jq);
                     var canvas = canvas_jq.get(0);
-                    canvas.height = canvas_jq.innerWidth();
-                    canvas.width = canvas_jq.innerHeight();
+                    canvas.height = canvas_jq.innerHeight();
+                    canvas.width = canvas_jq.innerWidth();
+                    canvas_jq.attr('height', canvas.height);
+                    canvas_jq.attr('width', canvas.width);
                     context = canvas.getContext("2d");
+                    context.translate(0.5, 0.5); // unblur lines
                     // just to be able to access directly from context object
                     context.width = canvas.width;
                     context.height = canvas.height;
@@ -161,7 +163,6 @@
                     waves = overtones;
 
                     this.drawFrame();
-
                 };
 
                 this.setWaves = function(input_waves) {
@@ -169,8 +170,8 @@
                 };
 
                 this.drawWaveMode = function() {
-                    context.fillStyle = "rgba(0, 0, 0, 0.5)";
-                    context.lineWidth = 4;
+                    context.fillStyle = "rgba(0, 0, 0, 0.4)";
+                    context.lineWidth = 2;
                     context.strokeStyle = "#fff";
                 };
 
@@ -186,6 +187,17 @@
                         anim_frame = requestAnimFrame(this.animLoop.bind(this));
                         this.drawFrame();
                     }
+
+                    
+                    if(!lastCalledTime) {
+                        lastCalledTime = new Date().getTime();
+                        fps = 0;
+                        return;
+                    }
+                    delta = (new Date().getTime() - lastCalledTime)/1000;
+                    lastCalledTime = new Date().getTime();
+                    fps = Math.round(1/delta);
+                    fps_elem.html(fps);
                 }
 
                 this.start = function() {
@@ -219,6 +231,7 @@
                 this.clear = function() {
                     context.fillStyle = "rgba(0, 0, 0, 1)";
                     context.fillRect(0, 0, context.width, context.height);
+                    this.drawWaveMode();
                 }
 
                 this.reset = function() {
@@ -300,6 +313,7 @@
             $(document).ready(function(){
                 var wave_canvas = new waveCanvas($('#canvas-container'));
                 wave_canvas.init();
+                fps_elem = $('#fps');
             });
 
 
@@ -315,15 +329,16 @@
             .controls a.tab { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: none; margin-bottom: -3px; padding: 3px 15px; color: #999; }
             .controls a.tab.selected { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #fff; border-bottom: 3px solid #000; margin-bottom: -3px; padding: 3px 15px; color: #fff; }
 
-            h1, h2 { padding: 0; margin: 40px 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
-            h1 { font-size: 25px; line-height: 28px; text-align: right; }
+            h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
+            h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
             h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
-            h2 span { font-size: 25px; }
+            h2 span.lt { font-size: 25px; }
         </style>
     </head>
     <body>
         <div class='container'>
             <h1>tonehack<span> &lt;</span></h1>
+            <h2>fps: <span id='fps'>0</span><span class='lt'> &lt;</span></h2>
             <div id='canvas-container'>
             </div>
         </div>
