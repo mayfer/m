@@ -8,14 +8,29 @@
         <script type='text/javascript'>
 
             window.requestAnimFrame = (function(){
-                return  window.requestAnimationFrame || 
-                  window.webkitRequestAnimationFrame || 
-                  window.mozRequestAnimationFrame || 
-                  window.oRequestAnimationFrame || 
-                  window.msRequestAnimationFrame || 
-                  function(callback, element){
-                      window.setTimeout(callback, 1000 / 60);
-                };
+                return window.requestAnimationFrame || 
+                    window.webkitRequestAnimationFrame || 
+                    window.mozRequestAnimationFrame || 
+                    window.oRequestAnimationFrame || 
+                    window.msRequestAnimationFrame || 
+                    function(callback, element){
+                        return window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
+            window.cancelAnimFrame = (function(){
+                return window.cancelAnimationFrame || 
+                    window.cancelRequestAnimationFrame || 
+                    window.webkitCancelAnimationFrame || 
+                    window.webkitCancelRequestFrame || 
+                    window.mozCancelAnimationFrame || 
+                    window.mozCancelRequestAnimationFrame || 
+                    window.oCancelAnimationFrame || 
+                    window.oCancelRequestAnimationFrame || 
+                    window.msCancelAnimationFrame || 
+                    window.msCancelRequestAnimationFrame || 
+                    function(handler){
+                        clearTimeout(handler);
+                    };
             })();
 
             var X_INCREMENT = 4;
@@ -86,11 +101,7 @@
                         var coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
                         for(var j = 0; j < standing_waves.length; j++) {
                             var current_coords;
-                            if(standing_waves[j].current_plot_coordinates == null) {
-                                current_coords = standing_waves[j].getPlotCoordinates(time_diff);
-                            } else {
-                                current_coords = standing_waves[j].current_plot_coordinates;
-                            }
+                            current_coords = standing_waves[j].getPlotCoordinates(time_diff);
                             // x is same for all anyways
                             coords.from.x = current_coords[i].from.x;
                             coords.from.y += current_coords[i].from.y;
@@ -121,6 +132,7 @@
                 var pause_time_diff = 0;
                 var state = 'stopped';
                 var context;
+                var anim_frame;
                 var waves = [];
 
                 this.init = function() {
@@ -171,7 +183,7 @@
 
                 this.animLoop = function() {
                     if(state == 'running') {
-                        requestAnimFrame(this.animLoop.bind(this));
+                        anim_frame = requestAnimFrame(this.animLoop.bind(this));
                         this.drawFrame();
                     }
                 }
@@ -195,6 +207,7 @@
 
                 this.stop = function() {
                     state = 'stopped';
+                    cancelAnimFrame(anim_frame);
                     this.reset()
                 };
 
@@ -203,9 +216,13 @@
                     start_time = new Date().getTime();
                 }
 
-                this.reset = function() {
+                this.clear = function() {
                     context.fillStyle = "rgba(0, 0, 0, 1)";
                     context.fillRect(0, 0, context.width, context.height);
+                }
+
+                this.reset = function() {
+                    this.clear();
                     time_diff = 0;
                     this.drawFrame();
                 };
@@ -218,7 +235,7 @@
                         $('<a>').addClass('stop icon-stop'),
                         $('<a>').addClass('faster').html('faster'),
                         $('<a>').addClass('slower').html('slower'),
-                        $('<a>').addClass('superpose tab').html('resulting sound wave'),
+                        $('<a>').addClass('superpose tab').html('resulting vibration'),
                         $('<a>').addClass('split tab selected').html('breakdown of overtones'),
                     ], function() {
                         $(this).attr('href', '#');
@@ -265,16 +282,16 @@
                     });
                     controls.on('click', '.split', function(e) {
                         e.preventDefault();
-                        wave_canvas.reset();
                         $('.superpose').removeClass('selected');
                         $('.split').addClass('selected');
+                        wave_canvas.clear();
                         wave_canvas.setWaves(overtones);
                     });
                     controls.on('click', '.superpose', function(e) {
                         e.preventDefault();
-                        wave_canvas.reset();
                         $('.split').removeClass('selected');
                         $('.superpose').addClass('selected');
+                        wave_canvas.clear();
                         wave_canvas.setWaves(superposed);
                     });
                 };
