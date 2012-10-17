@@ -1,0 +1,227 @@
+@import "bootstrap/mixins.less";
+@import "bootstrap/reset.less";
+
+html {
+    height: 100%;
+
+    background-color:#ebebeb;
+    background-image:
+    	-webkit-radial-gradient(100% 150%, circle, #ebebeb 24%, #eee 25%, #eee 28%, #ebebeb 29%, #ebebeb 36%, #eee 36%, #eee 40%, transparent 40%, transparent),
+    	-webkit-radial-gradient(0    150%, circle, #ebebeb 24%, #eee 25%, #eee 28%, #ebebeb 29%, #ebebeb 36%, #eee 36%, #eee 40%, transparent 40%, transparent),
+    	-webkit-radial-gradient(50%  100%, circle, #eee 10%, #ebebeb 11%, #ebebeb 23%, #eee 24%, #eee 30%, #ebebeb 31%, #ebebeb 43%, #eee 44%, #eee 50%, #ebebeb 51%, #ebebeb 63%, #eee 64%, #eee 71%, transparent 71%, transparent),
+    	-webkit-radial-gradient(100% 50%,  circle, #eee 5%, #ebebeb 6%, #ebebeb 15%, #eee 16%, #eee 20%, #ebebeb 21%, #ebebeb 30%, #eee 31%, #eee 35%, #ebebeb 36%, #ebebeb 45%, #eee 46%, #eee 49%, transparent 50%, transparent),
+    	-webkit-radial-gradient(0    50%,  circle, #eee 5%, #ebebeb 6%, #ebebeb 15%, #eee 16%, #eee 20%, #ebebeb 21%, #ebebeb 30%, #eee 31%, #eee 35%, #ebebeb 36%, #ebebeb 45%, #eee 46%, #eee 49%, transparent 50%, transparent);
+    background-size:100px 50px;
+}
+
+body { margin: 0; padding: 0; }
+
+#wrapper {
+    font: 12px sans-serif;
+    border-radius: 20px;
+    background: #fff;
+    max-width: 800px;
+    margin: 30px auto;
+    height: 800px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.edit-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    
+    .edit {
+        background: #fff;
+        border-radius: 20px;
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 20px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        
+        textarea {
+            height: 200px;
+            width: 600px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    }
+}
+
+#header {
+    
+    h1, h2 {
+        margin: 0;
+    }
+
+    h2 {
+        font-size: 14px;
+    }
+}
+
+h4 {
+    margin: 1em 0 0.5em;
+}
+
+hr {
+    background: #eee;
+    height: 1px;
+    border: none;
+    margin: 1.5em -20px 2em;
+}
+
+.chords {
+    width: 150px;
+    display: inline-block;
+}
+.progressions {
+    visibility: hidden;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #eee;
+    border: 1px solid #aaa;
+    padding: 20px;
+    border-radius: 20px;
+    .progression, .chord {
+        margin-bottom: 12px;
+        button {
+            margin-right: 15px;
+        }
+        .chord-names {
+            margin-left: 62px;
+        }
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+    .no-match {
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+}
+
+.clearfix {
+    &:before, &:after { content: ""; display: table; }
+    &:after { clear: both; }
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.picker {
+    .row {
+        .clearfix;
+
+        line-height: 28px;
+
+        & > * {
+            float: left;
+            margin-right: 5px;
+        }
+    }
+
+    .octave {
+        width: 50px;
+    }
+
+    input[type="radio"] {
+        margin-right: 5px;
+    }
+}
+
+.btn {
+    color: #484848;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    font: bold 100% Helvetica, Arial, sans-serif;
+    line-height: 2em;
+    height: 2em;
+    display: inline-block;
+    padding: 0 0.9em;
+    background: #f0f0f0;
+    background: -webkit-linear-gradient(top, #f7f7f7, #d1d1d1);
+    background: -moz-linear-gradient(top, #f7f7f7, #d1d1d1);
+    background: -ms-linear-gradient(top, #f7f7f7, #d1d1d1);
+    background: -o-linear-gradient(top, #f7f7f7, #d1d1d1);
+    border: solid 1px #7f7f7f;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+     border-radius: 4px;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    -webkit-transition: border-color .218s;
+    -moz-transition: border .218s;
+    -o-transition: border-color .218s;
+    transition: border-color .218s;
+
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    /* -o-user-select:none; */
+    user-select:none;
+
+    cursor:pointer;
+
+    * {
+        cursor: pointer;
+    }
+
+    &:hover {
+        border: solid 1px #333;
+        color: #282828;
+        background: -webkit-linear-gradient(top, #ffffff, #dfdfdf);
+        background: -moz-linear-gradient(top, #ffffff, #dfdfdf);
+        background: -ms-linear-gradient(top, #ffffff, #dfdfdf);
+        background: -o-linear-gradient(top, #ffffff, #dfdfdf);
+    }
+    &.active, &:active {
+        border: solid 1px #7f7f7f;
+        background: #d0d0d0;
+        background: -webkit-gradient(linear, left top, left bottom, from(#a8a8a8), color-stop(0.15, #c6c6c6), to(#d8d8d8));
+        background: -webkit-linear-gradient(top, #a8a8a8, #c6c6c6 15%, #d8d8d8);
+        background: -moz-linear-gradient(top, #a8a8a8, #c6c6c6 15%, #d8d8d8);
+        background: -ms-linear-gradient(top, #a8a8a8, #c6c6c6 15%, #d8d8d8);
+        background: -o-linear-gradient(top, #a8a8a8, #c6c6c6 15%, #d8d8d8);
+    }
+
+}
+
+.btn-group > .btn {
+    position: relative;
+    float: left;
+    margin-left: -1px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+
+    &:first-child {
+        margin-left: 0;
+        -webkit-border-top-left-radius: 4px;
+        -moz-border-radius-topleft: 4px;
+        border-top-left-radius: 4px;
+        -webkit-border-bottom-left-radius: 4px;
+        -moz-border-radius-bottomleft: 4px;
+        border-bottom-left-radius: 4px;
+    }
+    &:last-child {
+        -webkit-border-top-right-radius: 4px;
+        -moz-border-radius-topright: 4px;
+        border-top-right-radius: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        -moz-border-radius-bottomright: 4px;
+        border-bottom-right-radius: 4px;
+    }
+}
+
+#progress-container { color: #555; float: right; text-align: right; }
+progress { width: 250px; }

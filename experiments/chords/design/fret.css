@@ -1,0 +1,63 @@
+
+.frets {
+    margin: 10px 10px 20px 20px; 
+    position: relative;
+    height: 130px;
+    border-left: 2px solid #000;
+    background: url('images/frets.jpeg');
+    margin-left: 40px;
+}
+.fret {
+    position: relative;
+    float: left;
+    height: 100%;
+}
+.fret-divider {
+    width: 0;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #555;
+    background: #aaa;
+    float: left;
+    height: 100%;
+}
+.fret.marked {
+    background: center center url('images/fretmark.png') no-repeat;
+}
+.strings {
+    position: absolute;
+    height: 130px;
+    pointer-events: none;
+}
+.string-slice { height: 22px; margin: 0 10%; border-radius: 10px; cursor: pointer; }
+.string-slice:first-child { margin-top: -1px; }
+.string-slice:last-child { margin-bottom: -1px; }
+.string-slice:hover { background: rgba(255,255,255,0.2); box-shadow: 0 0 5px 5px rgba(255,255,255,0.2) }
+.string-slice.active {  background: center center url('images/string_active.png') no-repeat; }
+.string-slice.active:hover { background: rgba(255,255,255,0.2) center center url('images/string_active.png') no-repeat; }
+
+.string {
+    height: 1px;
+    background: #ddd url('images/string.png');
+    border-bottom: 1px solid #000;
+    width: 100%;
+    box-shadow: 0 1px 2px 1px rgba(0,0,0,0.5);
+    margin-top: 20px;
+}
+
+.string:first-child {
+    margin-top: 9px;
+}
+.string:last-child {
+    margin-bottom: 9px;
+}
+.string:before {
+    position: relative;
+    top: -0.5em;
+    left: -1em;
+    font-size: 16px;
+}
+.string-label { position: relative; top: -0.5em; left: -40px; height: 0; overflow: visible; }
+.string-label .string-name { width: 2em; float: left; position: relative; top: -0.2em; }
+.string-label .string-toggle { float: left; pointer-events: all; }
+.string.G3, .string.B4, .string.E4 { background: rgba(200,200,200,0.6); }
+ 

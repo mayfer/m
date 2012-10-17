@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Korde</title>
+  <link rel="stylesheet/less" href="design/style.less">
+  <link rel="stylesheet" tyle="text/css" href="design/fret.css">
+  <script src="js/libs/less.min.js"></script>
+</head>
+
+<body>
+<div id='wrapper'>
+  <div id='header'>
+    <div id='progress-container'>
+        Change instrument &nbsp;
+        <select id='instruments'>
+        </select>
+        <button id='edit'>Edit</button>
+        <br />
+        <progress id='progress' value='0' min='0' max='100' />
+    </div>
+    <div id='titles'>
+      <h1>Korde</h1>
+      <h2>Simple chord progressions</h2>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class='frets'>
+      Fret
+    </div>
+
+  <div class="picker">
+    <div class="row">
+      <b>Key:</b>
+      <div class="notes"></div>
+    </div>
+    <h4>Chords:</h4>
+    <div class="chords"></div>
+    <div class="progressions"> The progressions go here.</div>
+  </div>
+  
+  <div class='edit-modal'>
+    <div class='edit'>
+      <h2>Edit Instrument</h2>
+      <textarea></textarea>
+      <p><button class='save btn'>Save</button></p>
+    </div>
+  </div>
+
+  <script src="js/libs/jquery.min.js"></script>
+  <script src="js/libs/jquery.dataSelector.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
+
+  <script src="js/chords.js"></script>
+  <script src="js/fret.js"></script>
+  <script src="js/playsound.js"></script>
+  <script src="js/ui.js"></script>
+</div>
+</body>
+</html>
