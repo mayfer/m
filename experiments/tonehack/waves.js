@@ -1,22 +1,26 @@
 
 var X_INCREMENT = 10;
 var DEFAULT_SPEED = 3;
+var BASE_FREQ = 110;
 
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude) {
+function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude) {
     var amplitude = amplitude;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvas width
     var freq = freq;
-    var freq_diff = freq * standing / 440; // calculate relative wavelength
+    var freq_diff = freq * standing / BASE_FREQ; // calculate relative wavelength
     var speed = DEFAULT_SPEED;
     var wave_height = (context.height / (num_waves+1));
     var current_amplitude = 0;
     var current_plot_coordinates = null;
     var position = index * wave_height;// - (wave_height/2);
 
+    this.freq = freq;
+    this.audio_amplitude = audio_amplitude;
+    
     this.changeSpeed = function(change) {
         if(change > 0) {
             speed *= 2;
@@ -31,7 +35,7 @@ function standingWave(context, index, num_waves, freq, amplitude) {
         return -amplitude * Math.sin(rad_diff * x);
     };
     this.getPlotCoordinates = function(time_diff) {
-        step = speed * time_diff * (Math.PI/20) * freq * (standing / 440) % Math.PI*2;
+        step = speed * time_diff * (Math.PI/20) * freq * (standing / BASE_FREQ) % Math.PI*2;
         current_amplitude = Math.sin(step) * amplitude;
         var x = 0, y = this.sin(x, freq_diff, current_amplitude);
         var points = [];
@@ -102,6 +106,8 @@ function waveCanvas(jq_elem) {
     var anim_frame;
     var waves = [];
 
+    var soundwave;
+
     this.init = function() {
         var canvas_jq = $('<canvas>');
         $(jq_elem).append(canvas_jq);
@@ -119,18 +125,20 @@ function waveCanvas(jq_elem) {
                     
         this.drawWaveMode();
                 
-        wavelengths = [440, 440*2, 440*3, 440*4];
+        wavelengths = [220, 330, 440];
 
         overtones = [];
         for(i = 0; i < wavelengths.length; i++) {
             var amplitude = (context.height / wavelengths.length) / 3;
             amplitude = amplitude / (i+1);
-            overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude));
+            var audio_amplitude = 1 / ((i + 1) * wavelengths.length);
+            overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude, audio_amplitude));
         }
         superposed = [new superposedWave(context, 1, 1, overtones)];
         waves = overtones;
 
         this.drawFrame();
+        soundwave = new soundWave(new webkitAudioContext(), overtones);
     };
 
     this.setWaves = function(input_waves) {
@@ -168,17 +176,20 @@ function waveCanvas(jq_elem) {
             state = 'running';
             this.animLoop();
         }
+        soundwave.play();
     };
 
     this.pause = function() {
         state = 'paused';
         pause_time_diff = new Date().getTime() - start_time;
+        soundwave.pause();
     };
 
     this.stop = function() {
         state = 'stopped';
         cancelAnimFrame(anim_frame);
         this.reset()
+        soundwave.pause();
     };
 
     this.restart = function() {
@@ -266,8 +277,11 @@ function waveCanvas(jq_elem) {
         
 $(document).ready(function(){
     fps_elem = $('#fps');
-    setInterval(function(){
-        fps_elem.html(frames);
-        frames = 0;
-    }, 1000);
+    showfps = false;
+    if(showfps){
+        setInterval(function(){
+            fps_elem.html(frames);
+            frames = 0;
+        }, 1000);
+    }
 });
