@@ -2,8 +2,7 @@
 var X_INCREMENT = 10;
 var DEFAULT_SPEED = 3;
 
-var lastCalledTime;
-var fps;
+var frames = 0;
 
 
 function standingWave(context, index, num_waves, freq, amplitude) {
@@ -54,13 +53,13 @@ function standingWave(context, index, num_waves, freq, amplitude) {
     this.draw = function(time_diff) {
         context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
-        for(var i = 0; i < this.current_plot_coordinates.length; i++) {
+        context.beginPath();
+        context.moveTo(0, position);
+        for(var i = 1; i < this.current_plot_coordinates.length; i++) {
             coord = this.current_plot_coordinates[i];
-            context.beginPath();
-            context.moveTo(coord.from.x, coord.from.y + position);
             context.lineTo(coord.to.x, coord.to.y + position);
-            context.stroke();
         }
+        context.stroke();
     };
 }
                     
@@ -71,6 +70,8 @@ function superposedWave(context, index, num_waves, standing_waves) {
     var coords, current_coords;
     this.draw = function(time_diff) {
         context.fillRect(0, 0, context.width, context.height);
+        context.beginPath();
+        context.moveTo(0, position);
         for(var i = 0; i < num_steps; i++) {
             coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
             for(var j = 0; j < standing_waves.length; j++) {
@@ -81,11 +82,9 @@ function superposedWave(context, index, num_waves, standing_waves) {
                 coords.to.x = current_coords[i].to.x;
                 coords.to.y += current_coords[i].to.y;
             }
-            context.beginPath();
-            context.moveTo(coords.from.x, coords.from.y + position);
             context.lineTo(coords.to.x, coords.to.y + position);
-            context.stroke();
         }
+        context.stroke();
     };
 }
 
@@ -156,17 +155,7 @@ function waveCanvas(jq_elem) {
             anim_frame = requestAnimFrame(this.animLoop.bind(this));
             this.drawFrame();
         }
-
-                    
-        if(!lastCalledTime) {
-            lastCalledTime = new Date().getTime();
-            fps = 0;
-            return;
-        }
-        delta = (new Date().getTime() - lastCalledTime)/1000;
-        lastCalledTime = new Date().getTime();
-        fps = Math.round(1/delta);
-        fps_elem.html(fps);
+        frames++;
     }
 
     this.start = function() {
@@ -277,4 +266,8 @@ function waveCanvas(jq_elem) {
         
 $(document).ready(function(){
     fps_elem = $('#fps');
+    setInterval(function(){
+        fps_elem.html(frames);
+        frames = 0;
+    }, 1000);
 });
