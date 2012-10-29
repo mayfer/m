@@ -52,38 +52,31 @@ soundWave.prototype.process = function(e) {
     // We need to be careful about filling up the entire buffer and not
     // overflowing.
     var wave;
+    var phase = 0;
+    var step;
+    var current_amplitude;
+    var y;
+
     for (var i = 0; i < right.length; ++i) {
         right[i] = 0;
         left[i] = 0;
         for (var j = 0; j < this.standing_waves.length; j++) {
             wave = this.standing_waves[j];
-            right[i] += wave.audio_amplitude * Math.sin( this.x / (this.sampleRate / (wave.freq * 2 * Math.PI)));
-            left[i] += wave.audio_amplitude * Math.sin( this.x / (this.sampleRate / (wave.freq * 2 * Math.PI)));
-            this.x++;
 
-            // A vile low-pass-filter approximation begins here.
-            //
-            // This reduces high-frequency blips while switching frequencies. It works
-            // by waiting for the sine wave to hit 0 (on it's way to positive territory)
-            // before switching frequencies.
-            if (this.next_frequency != this.frequency) {
-                if (this.nr) {
-                    // Figure out what the next point is.
-                    next_data = this.amplitude * Math.sin(
-                        this.x / (this.sampleRate / (this.frequency * 2 * Math.PI)));
+            current_amplitude = wave.audio_amplitude;
+            y = current_amplitude * Math.sin(this.x * wave.freq);
+            right[i] += y;
+            left[i] += y;
 
-                    // If the current point approximates 0, and the direction is positive,
-                    // switch frequencies.
-                    if (right[i] < 0.001 && right[i] > -0.001 && right[i] < next_data) {
-                        this.frequency = this.next_frequency;
-                        this.x = 0;
-                    }
-                } else {
-                    this.frequency = this.next_frequency;
-                    this.x = 0;
-                }
-            }
+
+            /* // If the current point approximates 0, and the direction is positive,
+            // switch frequencies.
+            if (right[i] < 0.001 && right[i] > -0.001 && right[i] < next_data) {
+                this.frequency = this.next_frequency;
+                this.x = 0;
+            }*/
         }
+        this.x += Math.PI * 2 / this.sampleRate;
     }
 }
 

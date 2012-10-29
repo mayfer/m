@@ -11,8 +11,15 @@
         <script type='text/javascript'>
 
             $(document).ready(function() {
-                var wave_canvas = new waveCanvas($('#canvas-container'));
-                wave_canvas.init();
+                var overtones = {
+                    220: 1,
+                    440: 1,
+                };
+                var single = {
+                    440: 1,
+                };
+                var canvas_otones = new waveCanvas($('#overtones'), overtones).init();
+                var canvas_single = new waveCanvas($('#single'), single).init();
             });
 
         </script>
@@ -38,8 +45,8 @@
         <div class='container'>
             <h1>tonehack<span> &lt;</span></h1>
             <h2>fps: <span id='fps'>0</span><span class='lt'> &lt;</span></h2>
-            <div id='canvas-container' class='wave-canvas'>
-            </div>
+            <div id='overtones' class='wave-canvas'> </div>
+            <div id='single' class='wave-canvas'> </div>
         </div>
     </body>
 </html>

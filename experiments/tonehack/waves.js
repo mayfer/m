@@ -16,7 +16,8 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var wave_height = (context.height / (num_waves+1));
     var current_amplitude = 0;
     var current_plot_coordinates = null;
-    var position = index * wave_height;// - (wave_height/2);
+    var position = index * wave_height;
+    var phase = 0;
 
     this.freq = freq;
     this.audio_amplitude = audio_amplitude;
@@ -35,8 +36,8 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         return -amplitude * Math.sin(rad_diff * x);
     };
     this.getPlotCoordinates = function(time_diff) {
-        step = speed * time_diff * (Math.PI/20) * freq * (standing / BASE_FREQ) % Math.PI*2;
-        current_amplitude = Math.sin(step) * amplitude;
+        step = speed * time_diff * (Math.PI/20) * freq_diff % Math.PI*2;
+        current_amplitude = Math.sin(step + phase) * amplitude;
         var x = 0, y = this.sin(x, freq_diff, current_amplitude);
         var points = [];
         while(x < context.width) {
@@ -55,7 +56,6 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         return points;
     };
     this.draw = function(time_diff) {
-        context.fillRect(0, position-amplitude-10, context.width, amplitude*2+20);
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
         context.beginPath();
         context.moveTo(0, position);
@@ -93,9 +93,8 @@ function superposedWave(context, index, num_waves, standing_waves) {
 }
 
 
-function waveCanvas(jq_elem) {
+function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
-    var wavelengths = [];
     var overtones = [];
     var superposed = [];
     var start_time = new Date().getTime();
@@ -117,7 +116,7 @@ function waveCanvas(jq_elem) {
         canvas_jq.attr('height', canvas.height);
         canvas_jq.attr('width', canvas.width);
         context = canvas.getContext("2d");
-        context.translate(0.5, 0.5); // unblur lines
+        context.translate(0.5, 0.5); // antialias lines
         // just to be able to access directly from context object
         context.width = canvas.width;
         context.height = canvas.height;
@@ -125,20 +124,22 @@ function waveCanvas(jq_elem) {
                     
         this.drawWaveMode();
                 
-        wavelengths = [220, 330, 440];
+        num_overtones = Object.keys(freqs).length;
 
         overtones = [];
-        for(i = 0; i < wavelengths.length; i++) {
-            var amplitude = (context.height / wavelengths.length) / 3;
-            amplitude = amplitude / (i+1);
-            var audio_amplitude = 1 / ((i + 1) * wavelengths.length);
-            overtones.push(new standingWave(context, i+1, wavelengths.length, wavelengths[i], amplitude, audio_amplitude));
-        }
+        var index = 1;
+        $.each(freqs, function(frequency, amplitude_ratio) {
+            var amplitude = ((context.height / num_overtones) / 3) * amplitude_ratio;
+            var audio_amplitude = 1 * amplitude_ratio;
+            overtones.push(new standingWave(context, index, num_overtones, frequency, amplitude, audio_amplitude));
+            index++;
+        });
         superposed = [new superposedWave(context, 1, 1, overtones)];
         waves = overtones;
 
         this.drawFrame();
         soundwave = new soundWave(new webkitAudioContext(), overtones);
+        return this;
     };
 
     this.setWaves = function(input_waves) {
@@ -152,6 +153,7 @@ function waveCanvas(jq_elem) {
     };
 
     this.drawFrame = function() {
+        context.fillRect(0, 0, context.width, context.height    );
         for(i = 0; i < waves.length; i++) {
             waves[i].draw(time_diff);
         }
