@@ -14,6 +14,7 @@ soundWave = function(context, standing_waves) {
     this.next_frequency = this.frequency;
     this.playing = false;
     this.nr = true; // noise reduction
+    console.log(this.sampleRate);
 
     this.standing_waves = standing_waves;
 
@@ -46,8 +47,7 @@ soundWave.prototype.setFrequency = function(freq) {
 
 soundWave.prototype.process = function(e) {
     // Get a reference to the output buffer and fill it up.
-    var right = e.outputBuffer.getChannelData(0),
-            left = e.outputBuffer.getChannelData(1);
+    var channels = [ e.outputBuffer.getChannelData(0), e.outputBuffer.getChannelData(1) ];
 
     // We need to be careful about filling up the entire buffer and not
     // overflowing.
@@ -57,17 +57,19 @@ soundWave.prototype.process = function(e) {
     var current_amplitude;
     var y;
 
-    for (var i = 0; i < right.length; ++i) {
-        right[i] = 0;
-        left[i] = 0;
+    for (var i = 0; i < channels[0].length; i++) {
+        for(var k = 0; k < channels.length; k++) {
+            channels[k][i] = 0;
+        }
         for (var j = 0; j < this.standing_waves.length; j++) {
             wave = this.standing_waves[j];
 
             current_amplitude = wave.audio_amplitude;
             y = current_amplitude * Math.sin(this.x * wave.freq);
-            right[i] += y;
-            left[i] += y;
-
+            
+            for(var k = 0; k < channels.length; k++) {
+                channels[k][i] += y / this.standing_waves.length;
+            }
 
             /* // If the current point approximates 0, and the direction is positive,
             // switch frequencies.

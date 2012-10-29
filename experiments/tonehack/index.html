@@ -12,11 +12,13 @@
 
             $(document).ready(function() {
                 var overtones = {
-                    220: 1,
                     440: 1,
+                    880: 1/2,
+                    1320: 1/16,
+                    1760: 1/8,
                 };
                 var single = {
-                    440: 1,
+                    440: 1/4,
                 };
                 var canvas_otones = new waveCanvas($('#overtones'), overtones).init();
                 var canvas_single = new waveCanvas($('#single'), single).init();
