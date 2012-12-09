@@ -9,7 +9,7 @@ var frames = 0;
 function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude) {
     var amplitude = amplitude;
     var step = 0.0;
-    var standing = Math.PI / context.width; // resonant wavelength for canvas width
+    var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
     var freq = freq;
     var freq_diff = freq * standing / BASE_FREQ; // calculate relative wavelength
     var speed = DEFAULT_SPEED;
@@ -21,6 +21,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
 
     this.freq = freq;
     this.audio_amplitude = audio_amplitude;
+    this.position = position;
     
     this.changeSpeed = function(change) {
         if(change > 0) {
@@ -101,25 +102,44 @@ function waveCanvas(jq_elem, freqs) {
     var time_diff = 0;
     var pause_time_diff = 0;
     var state = 'stopped';
-    var context;
+    var contexts = {};
     var anim_frame;
     var waves = [];
 
     var soundwave;
 
     this.init = function() {
-        var canvas_jq = $('<canvas>');
-        $(jq_elem).append(canvas_jq);
-        var canvas = canvas_jq.get(0);
-        canvas.height = canvas_jq.innerHeight();
-        canvas.width = canvas_jq.innerWidth();
-        canvas_jq.attr('height', canvas.height);
-        canvas_jq.attr('width', canvas.width);
-        context = canvas.getContext("2d");
-        context.translate(0.5, 0.5); // antialias lines
+        var parent = $('<div class="parent-canvas">');
+        $(jq_elem).append(parent);
+
+        var waves_jq = $('<canvas class="waves">');
+        $(parent).append(waves_jq);
+        var adsr_jq = $('<canvas class="adsr">');
+        $(parent).append(adsr_jq);
+        
+        var canvases = {};
+        canvases['waves'] = waves_jq.get(0);
+        canvases['adsr'] = adsr_jq.get(0);
+
+        canvases['waves'].height = waves_jq.innerHeight();
+        canvases['waves'].width = waves_jq.innerWidth();
+        waves_jq.attr('height', canvases['waves'].height);
+        waves_jq.attr('width', canvases['waves'].width);
+
+        canvases['adsr'].height = adsr_jq.innerHeight();
+        canvases['adsr'].width = adsr_jq.innerWidth();
+        adsr_jq.attr('height', canvases['adsr'].height);
+        adsr_jq.attr('width', canvases['adsr'].width);
+
+        contexts['waves'] = canvases['waves'].getContext("2d");
+        contexts['adsr'] = canvases['adsr'].getContext("2d");
+        
+        contexts['waves'].translate(0.5, 0.5); // antialias lines
         // just to be able to access directly from context object
-        context.width = canvas.width;
-        context.height = canvas.height;
+        contexts['waves'].width = canvases['waves'].width;
+        contexts['waves'].height = canvases['waves'].height;
+        contexts['adsr'].width = canvases['adsr'].width;
+        contexts['adsr'].height = canvases['adsr'].height;
         this.makeControls();
                     
         this.drawWaveMode();
@@ -129,16 +149,17 @@ function waveCanvas(jq_elem, freqs) {
         overtones = [];
         var index = 1;
         $.each(freqs, function(frequency, amplitude_ratio) {
-            var amplitude = ((context.height / num_overtones) / 3) * amplitude_ratio;
+            var amplitude = ((contexts['waves'].height / num_overtones) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            overtones.push(new standingWave(context, index, num_overtones, frequency, amplitude, audio_amplitude));
+            overtones.push(new standingWave(contexts['waves'], index, num_overtones, frequency, amplitude, audio_amplitude));
             index++;
         });
-        superposed = [new superposedWave(context, 1, 1, overtones)];
+        superposed = [new superposedWave(contexts['waves'], 1, 1, overtones)];
         waves = overtones;
 
         this.drawFrame();
         soundwave = new soundWave(new webkitAudioContext(), overtones);
+        this.makeADSR();
         return this;
     };
 
@@ -147,12 +168,14 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.drawWaveMode = function() {
-        context.fillStyle = "rgba(0, 0, 0, 0.3)";
+        context = contexts['waves'];
+        context.fillStyle = "rgba(255,255,255, 0.3)";
         context.lineWidth = 2;
-        context.strokeStyle = "#fff";
+        context.strokeStyle = "#000";
     };
 
     this.drawFrame = function() {
+        context = contexts['waves'];
         context.fillRect(0, 0, context.width, context.height    );
         for(i = 0; i < waves.length; i++) {
             waves[i].draw(time_diff);
@@ -200,7 +223,8 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.clear = function() {
-        context.fillStyle = "rgba(0, 0, 0, 1)";
+        context = contexts['waves'];
+        context.fillStyle = "rgba(255,255,255, 1)";
         context.fillRect(0, 0, context.width, context.height);
         this.drawWaveMode();
     }
@@ -211,8 +235,21 @@ function waveCanvas(jq_elem, freqs) {
         this.drawFrame();
     };
 
+    this.makeADSR = function() {
+        var context = contexts['adsr'];
+        var box_height = context.height / (waves.length + 1) - 5;
+        var box_width = 100;
+        context.fillStyle = "rgba(200, 200, 200, 1)";
+        context.fillRect(0, 0, context.width, context.height);
+        context.fillStyle = "rgba(255, 255, 255, 1)";
+        for(var i = 0; i < waves.length; i++) {
+            context.fillRect(20, waves[i].position - (box_height/2), box_width, box_height);
+            console.log(waves[i], waves[i].position);
+        }
+    }
+
     this.makeControls = function(){
-        var wave_canvas = this;
+        var parent = this;
         var controls = $('<div>').addClass('controls');
         $.each([
             $('<a>').addClass('start icon-play'),
@@ -230,15 +267,15 @@ function waveCanvas(jq_elem, freqs) {
         controls.on('click', '.start, .pause, .stop', function(e){
             e.preventDefault();
             if($(this).hasClass('start')) {
-                wave_canvas.start();
+                parent.start();
                 $(this).removeClass('start icon-play')
                     .addClass('pause icon-pause');
             } else if($(this).hasClass('pause')) {
-                wave_canvas.pause();
+                parent.pause();
                 $(this).removeClass('pause icon-pause')
                     .addClass('start icon-play');
             } else if($(this).hasClass('stop')) {
-                wave_canvas.stop();
+                parent.stop();
                 $('.pause').removeClass('pause icon-pause')
                     .addClass('start icon-play');
             }
@@ -256,23 +293,23 @@ function waveCanvas(jq_elem, freqs) {
             for(i = 0; i < overtones.length; i++) {
                 overtones[i].changeSpeed(diff);
             }
-            wave_canvas.restart();
+            parent.restart();
         });
         controls.on('click', '.split', function(e) {
             e.preventDefault();
             $('.superpose').removeClass('selected');
             $('.split').addClass('selected');
-            wave_canvas.clear();
-            wave_canvas.setWaves(overtones);
-            wave_canvas.drawFrame();
+            parent.clear();
+            parent.setWaves(overtones);
+            parent.drawFrame();
         });
         controls.on('click', '.superpose', function(e) {
             e.preventDefault();
             $('.split').removeClass('selected');
             $('.superpose').addClass('selected');
-            wave_canvas.clear();
-            wave_canvas.setWaves(superposed);
-            wave_canvas.drawFrame();
+            parent.clear();
+            parent.setWaves(superposed);
+            parent.drawFrame();
         });
     };
 }

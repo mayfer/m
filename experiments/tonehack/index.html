@@ -21,23 +21,27 @@
                     440: 1/4,
                 };
                 var canvas_otones = new waveCanvas($('#overtones'), overtones).init();
-                var canvas_single = new waveCanvas($('#single'), single).init();
             });
 
         </script>
         <style type='text/css'>
         
-            html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: courier, courier new, monaco, monospace;; }
-            .container { width: 1000px; margin: 0 auto;  }
-            .wave-canvas { position: relative; width: 996px; }
-            canvas { display: block; width: 100%; height: 380px; margin: 0 auto; border: 2px solid #fff; }
+            html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff; font-family: courier, courier new, monaco, monospace; }
+            .container { width: 1000px; margin: 0 auto; position: relative; }
+            .wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
+            .parent-canvas { display: block; width: 100%; height: 380px; margin: 0 auto; border: 1px solid #fff; background: #fff; border-radius: 2px; z-index: 10; position: relative; }
+            .parent-canvas canvas { position: absolute; top: 0; left: 0; }
+            canvas.waves { height: 100%; width: 80%; margin-left: 20%; }
+            canvas.adsr { height: 100%; width: 20%; margin-right: 80%; }
             
-            a { color: #fff; border-bottom: 3px solid #fff; display: inline-block; text-decoration: none;}
-            .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; }
-            .controls a.tab { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: none; margin-bottom: -3px; padding: 3px 15px; color: #999; }
-            .controls a.tab.selected { float: right; margin-right: 20px;  background: #000; position: relative; z-index: 1000; border: 2px solid #fff; border-bottom: 3px solid #000; margin-bottom: -3px; padding: 3px 15px; color: #fff; }
+            a { color: #ccc; border-bottom: 3px solid #ccc; display: inline-block; text-decoration: none;}
+            a:hover { color: #fff; border-color: #fff; position: relative; top: -1px; }
+            .controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; border-top-right-radius: 2px; border-top-left-radius: 2px; }
+            .controls a.tab { float: right; margin-right: 20px;  background: #ddd; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: 1px solid #888; padding: 3px 15px; color: #000; z-index: 5; box-shadow: 0 0 10px 0px #000; }
+            .controls a.tab:hover { top: 0; box-shadow: 0 0 10px 0px #ffaa55; }
+            .controls a.tab.selected { float: right; margin-right: 20px;  background: #fff; border: 2px solid #ddd; border-bottom: 3px solid #fff; margin-bottom: -3px; color: #000; box-shadow: 0 0 10px 0 #ff8000; }
 
-            h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #00ffde, 0 0 70px #00ffde, 0 0 80px #00ffde, 0 0 100px #00ffde, 0 0 150px #00ffde; color: #fff; }
+            h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
             h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
             h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
             h2 span.lt { font-size: 25px; }
@@ -48,7 +52,6 @@
             <h1>tonehack<span> &lt;</span></h1>
             <h2>fps: <span id='fps'>0</span><span class='lt'> &lt;</span></h2>
             <div id='overtones' class='wave-canvas'> </div>
-            <div id='single' class='wave-canvas'> </div>
         </div>
     </body>
 </html>
