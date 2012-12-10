@@ -93,6 +93,19 @@ function superposedWave(context, index, num_waves, standing_waves) {
     };
 }
 
+function Canvas(jq_elem) {
+    var canvas_jq = $('<canvas>');
+    var canvas = canvas_jq.get(0);
+    canvas.width = jq_elem.innerWidth();
+    canvas.height = jq_elem.innerHeight();
+    canvas_jq.attr('width', canvas.width);
+    canvas_jq.attr('height', canvas.height);
+    var context = canvas.getContext("2d");
+    context.width = canvas.width;
+    context.height = canvas.height;
+    canvas_jq.appendTo(jq_elem);
+    return canvas_jq;
+}
 
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
@@ -102,80 +115,62 @@ function waveCanvas(jq_elem, freqs) {
     var time_diff = 0;
     var pause_time_diff = 0;
     var state = 'stopped';
-    var contexts = {};
     var anim_frame;
     var waves = [];
-
+    var parent;
+    var waves_canvas;
     var soundwave;
 
     this.init = function() {
-        var parent = $('<div class="parent-canvas">');
+        soundwave = new soundWave(new webkitAudioContext(), overtones);
+
+        this.setup();
+        return this;
+    };
+
+    this.setup = function() {
+        parent = $('<div class="parent-canvas">').css('height', (freqs.length*75 + 80) + "px");
         $(jq_elem).append(parent);
 
-        var waves_jq = $('<canvas class="waves">');
-        $(parent).append(waves_jq);
-        var adsr_jq = $('<canvas class="adsr">');
-        $(parent).append(adsr_jq);
-        
-        var canvases = {};
-        canvases['waves'] = waves_jq.get(0);
-        canvases['adsr'] = adsr_jq.get(0);
+        waves_canvas = new Canvas(parent).addClass('waves').get(0);
+        waves_context = waves_canvas.getContext("2d");
 
-        canvases['waves'].height = waves_jq.innerHeight();
-        canvases['waves'].width = waves_jq.innerWidth();
-        waves_jq.attr('height', canvases['waves'].height);
-        waves_jq.attr('width', canvases['waves'].width);
-
-        canvases['adsr'].height = adsr_jq.innerHeight();
-        canvases['adsr'].width = adsr_jq.innerWidth();
-        adsr_jq.attr('height', canvases['adsr'].height);
-        adsr_jq.attr('width', canvases['adsr'].width);
-
-        contexts['waves'] = canvases['waves'].getContext("2d");
-        contexts['adsr'] = canvases['adsr'].getContext("2d");
-        
-        contexts['waves'].translate(0.5, 0.5); // antialias lines
-        // just to be able to access directly from context object
-        contexts['waves'].width = canvases['waves'].width;
-        contexts['waves'].height = canvases['waves'].height;
-        contexts['adsr'].width = canvases['adsr'].width;
-        contexts['adsr'].height = canvases['adsr'].height;
-        this.makeControls();
-                    
         this.drawWaveMode();
-                
-        num_overtones = Object.keys(freqs).length;
+        this.initControls();
+        this.initWaves();
+        this.initADSR();
+    }
 
+    this.initWaves = function() {
         overtones = [];
         var index = 1;
-        $.each(freqs, function(frequency, amplitude_ratio) {
-            var amplitude = ((contexts['waves'].height / num_overtones) / 3) * amplitude_ratio;
+        $.each(freqs, function(i, freqobj) {
+            var amplitude_ratio = freqobj['amplitude'];
+            var frequency = freqobj['freq'];
+            var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            overtones.push(new standingWave(contexts['waves'], index, num_overtones, frequency, amplitude, audio_amplitude));
+            overtones.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude));
             index++;
         });
-        superposed = [new superposedWave(contexts['waves'], 1, 1, overtones)];
+        superposed = [new superposedWave(waves_context, 1, 1, overtones)];
         waves = overtones;
 
         this.drawFrame();
-        soundwave = new soundWave(new webkitAudioContext(), overtones);
-        this.makeADSR();
-        return this;
-    };
+    }
 
     this.setWaves = function(input_waves) {
         waves = input_waves;
     };
 
     this.drawWaveMode = function() {
-        context = contexts['waves'];
+        context = waves_context;
         context.fillStyle = "rgba(255,255,255, 0.3)";
         context.lineWidth = 2;
         context.strokeStyle = "#000";
     };
 
     this.drawFrame = function() {
-        context = contexts['waves'];
+        context = waves_context;
         context.fillRect(0, 0, context.width, context.height    );
         for(i = 0; i < waves.length; i++) {
             waves[i].draw(time_diff);
@@ -223,7 +218,7 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.clear = function() {
-        context = contexts['waves'];
+        context = waves_context;
         context.fillStyle = "rgba(255,255,255, 1)";
         context.fillRect(0, 0, context.width, context.height);
         this.drawWaveMode();
@@ -235,20 +230,47 @@ function waveCanvas(jq_elem, freqs) {
         this.drawFrame();
     };
 
-    this.makeADSR = function() {
-        var context = contexts['adsr'];
-        var box_height = context.height / (waves.length + 1) - 5;
-        var box_width = 100;
-        context.fillStyle = "rgba(200, 200, 200, 1)";
-        context.fillRect(0, 0, context.width, context.height);
-        context.fillStyle = "rgba(255, 255, 255, 1)";
+    this.initADSR = function() {
+        var adsr_container = $('<div>').addClass('adsr').appendTo(parent);
+        var box_height = adsr_container.height() / (waves.length + 1) - 10;
+        var box_width = adsr_container.width() - 40;
+        var that = this;
+        $.each([
+            $('<div>').addClass('adsr-title').html('ADSR envelopes<br /><span class="tip">(click to edit)</span>'),
+        ], function() {
+            $(this).appendTo(adsr_container);
+        });
+
         for(var i = 0; i < waves.length; i++) {
-            context.fillRect(20, waves[i].position - (box_height/2), box_width, box_height);
-            console.log(waves[i], waves[i].position);
+            //context.fillRect(20, waves[i].position - (box_height/2), box_width, box_height);
+            var box = $('<a>').addClass('adsr-link')
+                .attr('href', '#')
+                .width(box_width)
+                .height(box_height)
+                .css('top', (waves[i].position - (box_height/2)) + 'px')
+                .css('left', 20)
+                .appendTo(adsr_container);
+            $('<div>').addClass('freq').html(waves[i].freq + " Hz").appendTo(box);
+            var adsr_canvas = new Canvas(box);
+            box.on('click', function(e) {
+                e.preventDefault();
+            });
         }
+
+        var add_tone = $('<a>')
+            .addClass('add-tone')
+            .attr('href', '#')
+            .html('[+] Add a tone')
+            .appendTo(adsr_container)
+            .on('click', function(e){
+                e.preventDefault();
+                parent.parent().html('');
+                freqs.push({freq: 220, amplitude: 1/2});
+                that.setup();
+            });
     }
 
-    this.makeControls = function(){
+    this.initControls = function(){
         var parent = this;
         var controls = $('<div>').addClass('controls');
         $.each([

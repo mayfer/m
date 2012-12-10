@@ -14,7 +14,6 @@ soundWave = function(context, standing_waves) {
     this.next_frequency = this.frequency;
     this.playing = false;
     this.nr = true; // noise reduction
-    console.log(this.sampleRate);
 
     this.standing_waves = standing_waves;
 
