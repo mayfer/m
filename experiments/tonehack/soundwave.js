@@ -3,6 +3,7 @@
      Currently works on Chrome.
 
      Mohit Cheppudira - http://0xfe.blogspot.com
+     modified by murat - muratayfer.com
 */
 
 /* Create a generator for the given AudioContext. */

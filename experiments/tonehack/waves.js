@@ -6,8 +6,9 @@ var BASE_FREQ = 440;
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude) {
+function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope) {
     var amplitude = amplitude;
+    var envelope = envelope;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
     var freq = freq;
@@ -122,7 +123,7 @@ function waveCanvas(jq_elem, freqs) {
     var soundwave;
 
     this.init = function() {
-        soundwave = new soundWave(new webkitAudioContext(), overtones);
+        audio_context = new webkitAudioContext();
 
         this.setup();
         return this;
@@ -135,10 +136,30 @@ function waveCanvas(jq_elem, freqs) {
         waves_canvas = new Canvas(parent).addClass('waves').get(0);
         waves_context = waves_canvas.getContext("2d");
 
+        function compare(a, b) {
+          if (a.freq < b.freq)
+             return -1;
+          if (a.freq > b.freq)
+            return 1;
+          return 0;
+        }
+        freqs.sort(compare);
+
+        $.each(freqs, function(i, freq){
+            if(freq.envelope === undefined) {
+                freq.envelope = [1];
+            }
+        });
+
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
         this.initADSR();
+    }
+
+    this.reSetup = function() {
+        parent.parent().html('');
+        this.setup();
     }
 
     this.initWaves = function() {
@@ -147,13 +168,17 @@ function waveCanvas(jq_elem, freqs) {
         $.each(freqs, function(i, freqobj) {
             var amplitude_ratio = freqobj['amplitude'];
             var frequency = freqobj['freq'];
+            var envelope = freqobj['envelope'];
+            // precision is an integer, 1 is full precision, higher is less.
+            var envelope_precision = freqobj['envelope_precision'];
             var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            overtones.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude));
+            overtones.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope));
             index++;
         });
         superposed = [new superposedWave(waves_context, 1, 1, overtones)];
         waves = overtones;
+        soundwave = new soundWave(audio_context, overtones);
 
         this.drawFrame();
     }
@@ -254,20 +279,39 @@ function waveCanvas(jq_elem, freqs) {
             var adsr_canvas = new Canvas(box);
             box.on('click', function(e) {
                 e.preventDefault();
+                that.editEnvelope(waves[i]);
             });
         }
 
         var add_tone = $('<a>')
             .addClass('add-tone')
             .attr('href', '#')
-            .html('[+] Add a tone')
+            .html('Add a tone [+]')
             .appendTo(adsr_container)
             .on('click', function(e){
                 e.preventDefault();
-                parent.parent().html('');
                 freqs.push({freq: 220, amplitude: 1/2});
-                that.setup();
+                that.reSetup();
             });
+    }
+
+    this.editEnvelope = function(wave) {
+        var modal = $('<div>')
+            .addClass('modal-adsr')
+            .width((parent.innerWidth() - 44) + 'px')
+            .height((parent.innerHeight() - 44) + 'px')
+            .appendTo(parent);
+        $('<div>')
+            .addClass('title')
+            .appendTo(modal);
+        $('<canvas>')
+            .addClass('draw-adsr')
+            .css('height', (modal.innerHeight() - 64) + "px")
+            .css('width', (modal.innerWidth()) + "px")
+            .appendTo(modal);
+        $('<div>')
+            .addClass('controls')
+            .appendTo(modal);
     }
 
     this.initControls = function(){

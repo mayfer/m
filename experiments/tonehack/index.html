@@ -4,6 +4,7 @@
         <title>Tonehack</title>
         <meta charset='utf-8' />
         <script type='text/javascript' src='jquery.min.js'></script>
+        <script type='text/javascript' src='draw.js'></script>
         <script type='text/javascript' src='animframe.js'></script>
         <script type='text/javascript' src='soundwave.js'></script>
         <script type='text/javascript' src='waves.js'></script>
@@ -26,9 +27,9 @@
             .container { width: 1000px; margin: 0 auto; position: relative; }
             .wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
             .parent-canvas { display: block; width: 100%; margin: 0 auto; border: 1px solid #fff; background: #fff; border-radius: 2px; z-index: 10; position: relative; }
-            .parent-canvas canvas { position: absolute; top: 0; left: 0; }
+            .parent-canvas > canvas { position: absolute; top: 0; left: 0; }
             .waves { height: 100%; width: 80%; margin-left: 20%; }
-            .adsr { height: 100%; width: 20%; margin-right: 80%; background: #ddd; }
+            .adsr { height: 100%; width: 20%; margin-right: 80%; background: #ddd; position: relative; }
             
             a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
             a:hover { color: #05a; border-bottom: 1px solid #08f; }
@@ -47,7 +48,11 @@
             .adsr-link:hover { background: #fff; }
             .adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; }
             
-            .add-tone { position: absolute; bottom: 15px; left: 15px; font-size: 12px; }
+            .add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
+
+            .modal-adsr { position: absolute; top: 20px; left: 20px; border: 2px solid #888; background: #fff; }
+            .modal-adsr .title { height: 30px; background: #eee; width: 100%; }
+            .modal-adsr .controls { height: 30px; background: #eee; width: 100%; }
 
             h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
             h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
