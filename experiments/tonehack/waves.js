@@ -94,20 +94,6 @@ function superposedWave(context, index, num_waves, standing_waves) {
     };
 }
 
-function Canvas(jq_elem) {
-    var canvas_jq = $('<canvas>');
-    var canvas = canvas_jq.get(0);
-    canvas.width = jq_elem.innerWidth();
-    canvas.height = jq_elem.innerHeight();
-    canvas_jq.attr('width', canvas.width);
-    canvas_jq.attr('height', canvas.height);
-    var context = canvas.getContext("2d");
-    context.width = canvas.width;
-    context.height = canvas.height;
-    canvas_jq.appendTo(jq_elem);
-    return canvas_jq;
-}
-
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
     var overtones = [];
@@ -274,12 +260,13 @@ function waveCanvas(jq_elem, freqs) {
                 .height(box_height)
                 .css('top', (waves[i].position - (box_height/2)) + 'px')
                 .css('left', 20)
-                .appendTo(adsr_container);
+                .appendTo(adsr_container)
+                .data('wave_index', i);
             $('<div>').addClass('freq').html(waves[i].freq + " Hz").appendTo(box);
             var adsr_canvas = new Canvas(box);
             box.on('click', function(e) {
                 e.preventDefault();
-                that.editEnvelope(waves[i]);
+                that.editEnvelope($(this).data('wave_index'));
             });
         }
 
@@ -295,23 +282,39 @@ function waveCanvas(jq_elem, freqs) {
             });
     }
 
-    this.editEnvelope = function(wave) {
+    this.editEnvelope = function(wave_index) {
+        var wave = freqs[wave_index];
+        var that = this;
         var modal = $('<div>')
             .addClass('modal-adsr')
             .width((parent.innerWidth() - 44) + 'px')
             .height((parent.innerHeight() - 44) + 'px')
             .appendTo(parent);
+        var freq = $('<input type="text" />').val(wave.freq);
         $('<div>')
             .addClass('title')
-            .appendTo(modal);
-        $('<canvas>')
+            .appendTo(modal)
+            .append($('<a>').addClass('close').html('x').attr('href', '#').click(function(e){
+                e.preventDefault;
+                modal.remove();
+            }))
+            .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
+        var draw_area = $('<div>')
             .addClass('draw-adsr')
-            .css('height', (modal.innerHeight() - 64) + "px")
+            .css('height', (modal.innerHeight() - 60) + "px")
             .css('width', (modal.innerWidth()) + "px")
             .appendTo(modal);
         $('<div>')
-            .addClass('controls')
-            .appendTo(modal);
+            .addClass('actions')
+            .appendTo(modal)
+            .append($('<a>').addClass('save').attr('href', '#').html('Save').click(function(e){
+                e.preventDefault();
+                freqs[wave_index].freq = parseInt(freq.val());
+                modal.remove();
+                that.reSetup();
+            }));
+        var draw_canvas = new drawingCanvas(draw_area);
+        draw_canvas.init();
     }
 
     this.initControls = function(){

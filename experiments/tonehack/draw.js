@@ -15,14 +15,14 @@ function Canvas(jq_elem) {
 function drawingCanvas(jq_elem) {
     var jq_elem = jq_elem;
     var canvas_jq = new Canvas(jq_elem);
-    var canvas = document.getElementById("canvas");
+    var canvas = canvas_jq.get(0);
+    var ctx = canvas.getContext("2d");
     var that = this;
 
     this.init = function() {
-        resetLineHistory();
-        var ctx = canvas.getContext("2d");
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 5;
+        this.resetLineHistory();
+        ctx.strokeStyle = '#aa6000';
+        ctx.lineWidth = 2;
         ctx.lineCap = "round";
 
         canvas_jq.mousedown(function(e) {
@@ -40,8 +40,8 @@ function drawingCanvas(jq_elem) {
             canvas_jq.data("draw_when_entering", false);
         }).mouseout(function(e) {
             canvas_jq.data("draw_when_entering", true);
-            if($(canvas_jq.data("draw") == true) {
-                drawLine(ctx, canvas_jq.data("prev_position"), getCursorPosition(e));
+            if($(canvas_jq.data("draw") == true)) {
+                that.drawLine(ctx, canvas_jq.data("prev_position"), that.getCursorPosition(e));
                 $("*").one("mouseup", function() {
                     that.stopDrawing();
                 });
@@ -56,10 +56,10 @@ function drawingCanvas(jq_elem) {
     }
     this.stopDrawing = function() {
         canvas_jq.data("draw", false);
-        resetLineHistory();
+        this.resetLineHistory();
     }
     this.resetLineHistory = function() {
-        cavnas_jq.data("prev_position", { x: null, y: null });
+        canvas_jq.data("prev_position", { x: null, y: null });
     }
     this.drawLine = function(ctx, prev_position, current_position) {
         ctx.beginPath();
@@ -83,30 +83,3 @@ function drawingCanvas(jq_elem) {
     }
 }
 
-$(document).ready(function() {
-
-
-	//code for color pallete
-	$("#colors > div").click( function(){
-		ctx.strokeStyle = $(this).css("background-color");
-	});
-
-	//Eraser
-	$("#eraser").click(function(){
-		ctx.strokeStyle = '#fff';
-	});
-
-	//Code for save the image
-	$("#save").click(function(){
-		$("#result").append("<br /><br /><img src="+ canvas.toDataURL()+ " /><br /><a href="+canvas.toDataURL()+ " target='_blank'>show</a>");
-	});
-
-	//Clear
-	$("#clear").click(function(){
-			var tmp_fillStyle = ctx.fillStyle;
-			ctx.fillStyle = "#fff";
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.fillStyle = tmp_fillStyle;
-		}
-	);
-});
