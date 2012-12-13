@@ -301,8 +301,8 @@ function waveCanvas(jq_elem, freqs) {
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
         var draw_area = $('<div>')
             .addClass('draw-adsr')
-            .css('height', (modal.innerHeight() - 60) + "px")
-            .css('width', (modal.innerWidth()) + "px")
+            .css('height', (modal.innerHeight() - 90) + "px")
+            .css('width', (modal.innerWidth() - 30 - 15) + "px")
             .appendTo(modal);
         $('<div>')
             .addClass('actions')

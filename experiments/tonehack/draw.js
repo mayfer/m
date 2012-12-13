@@ -18,6 +18,10 @@ function drawingCanvas(jq_elem) {
     var canvas = canvas_jq.get(0);
     var ctx = canvas.getContext("2d");
     var that = this;
+    var points = new Float32Array(512);
+    for(var j=0; j<points.length; j++) {
+        points[j] = 0;
+    }
 
     this.init = function() {
         this.resetLineHistory();
@@ -41,7 +45,10 @@ function drawingCanvas(jq_elem) {
         }).mouseout(function(e) {
             canvas_jq.data("draw_when_entering", true);
             if($(canvas_jq.data("draw") == true)) {
-                that.drawLine(ctx, canvas_jq.data("prev_position"), that.getCursorPosition(e));
+                var current_position = that.getCursorPosition(e);
+                canvas_jq.data("prev_position", current_position);
+
+                that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
                 $("*").one("mouseup", function() {
                     that.stopDrawing();
                 });
@@ -62,11 +69,31 @@ function drawingCanvas(jq_elem) {
         canvas_jq.data("prev_position", { x: null, y: null });
     }
     this.drawLine = function(ctx, prev_position, current_position) {
-        ctx.beginPath();
-        if(prev_position.x!=null && prev_position.y!=null) {
-            ctx.moveTo(prev_position.x, prev_position.y);
+        if(prev_position.x==null || prev_position.y==null) {
+            prev_position.x = current_position.x;
+            prev_position.y = current_position.y;
         }
-        ctx.lineTo(current_position.x, current_position.y);
+            
+        var adjusted_px = parseInt((prev_position.x / ctx.width) * 512);
+        var adjusted_cx = parseInt((current_position.x / ctx.width) * 512);
+        ctx.clearRect(0, 0, ctx.width, ctx.height);
+        var from, to;
+        if(adjusted_px < adjusted_cx) {
+            from = adjusted_px;
+            to = adjusted_cx;
+        } else {
+            from = adjusted_cx;
+            to = adjusted_px;
+        }
+        var y_diff = current_position.y - prev_position.y;
+        for(var i = from; i <= to; i++) {
+            // linear values between from and to coordinates
+            points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
+        }
+        ctx.beginPath();
+        for(var i=0; i<points.length; i++) {
+            ctx.lineTo(i*(ctx.width/512), points[i]*ctx.height);
+        }
         ctx.stroke();
     }
     this.getCursorPosition = function(e) {
