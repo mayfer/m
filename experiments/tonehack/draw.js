@@ -1,4 +1,6 @@
 function Canvas(jq_elem) {
+    // create a canvas inside another element
+    // and set the height&width to fill the element
     var canvas_jq = $('<canvas>');
     var canvas = canvas_jq.get(0);
     canvas.width = jq_elem.innerWidth();
@@ -6,6 +8,7 @@ function Canvas(jq_elem) {
     canvas_jq.attr('width', canvas.width);
     canvas_jq.attr('height', canvas.height);
     var context = canvas.getContext("2d");
+    // make the h/w accessible from context obj as well
     context.width = canvas.width;
     context.height = canvas.height;
     canvas_jq.appendTo(jq_elem);
@@ -19,6 +22,8 @@ function drawingCanvas(jq_elem) {
     var ctx = canvas.getContext("2d");
     var that = this;
     var points = new Float32Array(512);
+    var draw = false;
+    var prev_position = null;
     for(var j=0; j<points.length; j++) {
         points[j] = 0;
     }
@@ -41,14 +46,19 @@ function drawingCanvas(jq_elem) {
                 canvas_jq.data("prev_position", current_position);
             }
         }).mouseover(function(e){
+            if(canvas_jq.data("draw_when_entering")) {
+                var current_position = that.getCursorPosition(e);
+                canvas_jq.data("prev_position", current_position);
+                that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
+            }
             canvas_jq.data("draw_when_entering", false);
         }).mouseout(function(e) {
             canvas_jq.data("draw_when_entering", true);
             if($(canvas_jq.data("draw") == true)) {
                 var current_position = that.getCursorPosition(e);
                 canvas_jq.data("prev_position", current_position);
-
                 that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
+                console.log("drawing out:", current_position);
                 $("*").one("mouseup", function() {
                     that.stopDrawing();
                 });
