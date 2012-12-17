@@ -24,6 +24,7 @@ function drawingCanvas(jq_elem) {
     var points = new Float32Array(512);
     var draw = false;
     var prev_position = null;
+    
     for(var j=0; j<points.length; j++) {
         points[j] = 0;
     }
@@ -34,49 +35,34 @@ function drawingCanvas(jq_elem) {
         ctx.lineWidth = 2;
         ctx.lineCap = "round";
 
+        $("*").on("mousemove", function(e) {
+            if(draw == true) {
+                var current_position = that.getCursorPosition(e);
+                that.drawLine(ctx, prev_position, current_position);
+                prev_position = current_position;
+            }
+        });
+        $("*").on("mouseup", function() {
+            that.stopDrawing();
+        });
+
         canvas_jq.mousedown(function(e) {
             e.preventDefault();
             that.startDrawing();
         }).mouseup(function() {
             that.stopDrawing();
-        }).mousemove(function(e) {
-            if(canvas_jq.data("draw") == true) {
-                var current_position = that.getCursorPosition(e);
-                that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
-                canvas_jq.data("prev_position", current_position);
-            }
-        }).mouseover(function(e){
-            if(canvas_jq.data("draw_when_entering")) {
-                var current_position = that.getCursorPosition(e);
-                canvas_jq.data("prev_position", current_position);
-                that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
-            }
-            canvas_jq.data("draw_when_entering", false);
-        }).mouseout(function(e) {
-            canvas_jq.data("draw_when_entering", true);
-            if($(canvas_jq.data("draw") == true)) {
-                var current_position = that.getCursorPosition(e);
-                canvas_jq.data("prev_position", current_position);
-                that.drawLine(ctx, canvas_jq.data("prev_position"), current_position);
-                console.log("drawing out:", current_position);
-                $("*").one("mouseup", function() {
-                    that.stopDrawing();
-                });
-            }
-            that.resetLineHistory();
-            // when user mouseups outside the canvas
         });
     }
 
     this.startDrawing = function() {
-        canvas_jq.data("draw", true);
+        draw = true;
     }
     this.stopDrawing = function() {
-        canvas_jq.data("draw", false);
+        draw = false;
         this.resetLineHistory();
     }
     this.resetLineHistory = function() {
-        canvas_jq.data("prev_position", { x: null, y: null });
+        prev_position = { x: null, y: null };
     }
     this.drawLine = function(ctx, prev_position, current_position) {
         if(prev_position.x==null || prev_position.y==null) {
@@ -107,15 +93,10 @@ function drawingCanvas(jq_elem) {
         ctx.stroke();
     }
     this.getCursorPosition = function(e) {
-        var x, y;
-
-        if (e.layerX || e.layerX == 0) { // Firefox
-            x = e.layerX;
-            y = e.layerY;
-        } else if (e.offsetX || e.offsetX == 0) { // Opera
-            x = e.offsetX;
-            y = e.offsetY;
-        }
+        var x = e.pageX - canvas_jq.offset().left
+        var y = e.pageY - canvas_jq.offset().top
+        if(x < 0) x = 0;
+        if(y < 0) y = 0;
         return {x: x, y: y};
     }
 }
