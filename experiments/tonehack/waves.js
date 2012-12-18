@@ -8,7 +8,6 @@ var frames = 0;
 
 function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope) {
     var amplitude = amplitude;
-    var envelope = envelope;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
     var freq = freq;
@@ -19,10 +18,17 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var current_plot_coordinates = null;
     var position = index * wave_height;
     var phase = 0;
+    var duration = 400;
+    if(envelope === undefined) {
+        envelope = [];
+        for(var i=0; i<512; i++) envelope[i] =  0.5;
+    }
 
     this.freq = freq;
     this.audio_amplitude = audio_amplitude;
     this.position = position;
+    this.duration = duration;
+    this.envelope = envelope;
     
     this.changeSpeed = function(change) {
         if(change > 0) {
@@ -96,7 +102,6 @@ function superposedWave(context, index, num_waves, standing_waves) {
 
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
-    var overtones = [];
     var superposed = [];
     var start_time = new Date().getTime();
     var time_diff = 0;
@@ -131,12 +136,6 @@ function waveCanvas(jq_elem, freqs) {
         }
         freqs.sort(compare);
 
-        $.each(freqs, function(i, freq){
-            if(freq.envelope === undefined) {
-                freq.envelope = [1];
-            }
-        });
-
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
@@ -149,22 +148,19 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.initWaves = function() {
-        overtones = [];
+        waves = [];
         var index = 1;
         $.each(freqs, function(i, freqobj) {
             var amplitude_ratio = freqobj['amplitude'];
             var frequency = freqobj['freq'];
             var envelope = freqobj['envelope'];
-            // precision is an integer, 1 is full precision, higher is less.
-            var envelope_precision = freqobj['envelope_precision'];
             var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            overtones.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope));
+            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope));
             index++;
         });
-        superposed = [new superposedWave(waves_context, 1, 1, overtones)];
-        waves = overtones;
-        soundwave = new soundWave(audio_context, overtones);
+        superposed = [new superposedWave(waves_context, 1, 1, waves)];
+        soundwave = new soundWave(audio_context, waves);
 
         this.drawFrame();
     }
@@ -268,6 +264,7 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
+            that.drawADSR(adsr_canvas, waves[i].envelope);
         }
 
         var add_tone = $('<a>')
@@ -285,6 +282,7 @@ function waveCanvas(jq_elem, freqs) {
     this.editEnvelope = function(wave_index) {
         var wave = freqs[wave_index];
         var that = this;
+        var draw_canvas;
         var modal = $('<div>')
             .addClass('modal-adsr')
             .width((parent.innerWidth() - 44) + 'px')
@@ -310,11 +308,31 @@ function waveCanvas(jq_elem, freqs) {
             .append($('<a>').addClass('save').attr('href', '#').html('Save').click(function(e){
                 e.preventDefault();
                 freqs[wave_index].freq = parseInt(freq.val());
+                freqs[wave_index].envelope = draw_canvas.getPoints();
+                freqs[wave_index].duration = 400; // ms
                 modal.remove();
                 that.reSetup();
             }));
-        var draw_canvas = new drawingCanvas(draw_area);
+        draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
+    }
+
+    this.drawADSR = function(canvas_jq, envelope) {
+        // fills the given canvas elem with the adsr drawing
+        var canvas = canvas_jq.get(0);
+        var context = canvas.getContext("2d");
+
+        context.strokeStyle = '#aa6000';
+        context.lineWidth = 2;
+        context.lineCap = "round";
+        context.clearRect(0, 0, context.width, context.height);
+        
+        context.beginPath();
+        for(var i=0; i<envelope.length; i++) {
+            // the 1-envelope[i] is to inverse y axis for the canvas
+            context.lineTo(i*(context.width/envelope.length), (1-envelope[i])*context.height);
+        }
+        context.stroke();
     }
 
     this.initControls = function(){
