@@ -59,6 +59,7 @@ soundWave.prototype.process = function(e) {
     var y;
 
     var getWaveAmplitude = function(freq, adsr_points, duration, timeticks) {
+        var amplitude;
         
         return amplitude;
     }
@@ -75,10 +76,10 @@ soundWave.prototype.process = function(e) {
             wave = this.standing_waves[j];
 
             var sample_length = 1 / this.sampleRate;
-            var amp_point_length = (wave.duration / 100) / wave.amplitude_points.length;
-            var index = Math.floor(this.counter * (amp_point_length / sample_length)) % wave.amplitude_points.length;
-            current_amplitude = wave.amplitude_points[index];
-            if(this.counter < (10/this.sampleRate)) console.log(sample_length, amp_point_length, index,current_amplitude);
+            var amp_point_length = (wave.duration / 100) / wave.envelope.length;
+            var index = Math.floor(this.counter * (amp_point_length / sample_length)) % wave.envelope.length;
+            current_amplitude = wave.envelope[index];
+            if(this.counter < (10/this.sampleRate)) console.log(j, sample_length, amp_point_length, index,current_amplitude);
             
             y = current_amplitude * Math.sin(this.x * wave.freq);
             
