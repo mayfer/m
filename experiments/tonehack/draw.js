@@ -29,6 +29,19 @@ function drawingCanvas(jq_elem) {
         points[j] = 0;
     }
 
+    this.getPoints = function() {
+        var amp_points = [];
+        for(var i=0; i<points.length; i++) {
+            // y is inverted on the canvas, so 1 - val.
+            // also, limit to between 0 and 1
+            amp_points[i] = Math.min(1, Math.max(0, 1 - points[i]));
+            // ignore screwy values
+            if(isNaN(amp_points[i]) && i==0) amp_points[i] = 0;
+            else if(isNaN(amp_points[i])) amp_points[i] = amp_points[i-1];
+        }
+        return amp_points;
+    }
+
     this.init = function() {
         this.resetLineHistory();
         ctx.strokeStyle = '#aa6000';
