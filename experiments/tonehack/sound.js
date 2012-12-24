@@ -77,10 +77,16 @@ soundWave.prototype.process = function(e) {
 
             var sample_length = 1 / this.sampleRate;
             var amp_point_length = (wave.duration / 100) / wave.envelope.length;
-            var index = Math.floor(this.counter * (amp_point_length / sample_length)) % wave.envelope.length;
-            current_amplitude = wave.envelope[index];
-            if(this.counter < (10/this.sampleRate)) console.log(j, sample_length, amp_point_length, index,current_amplitude);
+            var index;
+            if(false) { //wave.envelope_options.repeat) {
+                index = Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)) % wave.envelope.length;
+            } else {
+                index = Math.min(wave.envelope.length, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
+            }
+            // current_amplitude = wave.envelope[index];
+            // if(this.counter < (10/this.sampleRate)) console.log(j, sample_length, amp_point_length, index,current_amplitude);
             
+            current_amplitude = wave.audio_amplitude * wave.envelope[index];
             y = current_amplitude * Math.sin(this.x * wave.freq);
             
             for(var k = 0; k < channels.length; k++) {
@@ -94,8 +100,8 @@ soundWave.prototype.process = function(e) {
                 this.x = 0;
             }*/
         }
-        this.counter += 1 / this.sampleRate;
-        this.x += Math.PI * this.counter;
+        this.counter += 1;
+        this.x += Math.PI * 2 / this.sampleRate;
     }
 }
 
@@ -109,4 +115,5 @@ soundWave.prototype.pause = function() {
     // Unplug the node.
     this.node.disconnect();
     this.playing = false;
+    this.counter = 0;
 }
