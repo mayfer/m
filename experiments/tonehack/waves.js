@@ -1,7 +1,7 @@
 
 var X_INCREMENT = 10;
 var DEFAULT_SPEED = 7;
-var BASE_FREQ = 440;
+var BASE_FREQ = 220;
 
 var frames = 0;
 
