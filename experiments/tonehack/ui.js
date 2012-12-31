@@ -187,7 +187,7 @@ function waveCanvas(jq_elem, freqs) {
         var modal = $('<div>')
             .addClass('modal-adsr')
             .width((parent.innerWidth() - 44) + 'px')
-            .height((parent.innerHeight() - 44) + 'px')
+            .height((400) + 'px')
             .appendTo(parent);
         var freq = $('<input type="text" />').val(wave.freq);
         $('<div>')
@@ -200,7 +200,7 @@ function waveCanvas(jq_elem, freqs) {
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
         var draw_area = $('<div>')
             .addClass('draw-adsr')
-            .css('height', (modal.innerHeight() - 90) + "px")
+            .css('height', (modal.innerHeight() - 116) + "px")
             .css('width', (modal.innerWidth() - 30 - 15) + "px")
             .appendTo(modal);
         $('<div>')
@@ -214,6 +214,14 @@ function waveCanvas(jq_elem, freqs) {
                 modal.remove();
                 that.reSetup();
             }));
+
+        $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
+        $('<div>').addClass('graph-label x-min').html('0').appendTo(modal);
+        $('<div>').addClass('graph-label x-max').html('4 seconds').appendTo(modal);
+        $('<div>').addClass('graph-label y').html('Amplitude').appendTo(modal);
+        $('<div>').addClass('graph-label y-min').html('0%').appendTo(modal);
+        $('<div>').addClass('graph-label y-max').html('100%').appendTo(modal);
+
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
         draw_canvas.setPoints(wave.envelope);
