@@ -51,7 +51,7 @@ function waveCanvas(jq_elem, freqs) {
         waves = [];
         var index = 1;
         $.each(freqs, function(i, freqobj) {
-            var amplitude_ratio = freqobj['amplitude'];
+            var amplitude_ratio = freqobj['audio_amplitude'];
             var frequency = freqobj['freq'];
             var envelope = freqobj['envelope'];
             var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
@@ -174,7 +174,7 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(adsr_container)
             .on('click', function(e){
                 e.preventDefault();
-                freqs.push({freq: 220, amplitude: 1/2});
+                freqs.push({freq: 220, audio_amplitude: 1/2});
                 that.reSetup();
             });
     }

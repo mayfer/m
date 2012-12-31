@@ -68,7 +68,7 @@ soundWave.prototype.process = function(e) {
             var sample_length = 1 / this.sampleRate;
             var amp_point_length = (wave.duration / 100) / wave.envelope.length;
             var index;
-            if(false) { //wave.envelope_options.repeat) {
+            if(true) { //wave.envelope_options.repeat) {
                 index = Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)) % wave.envelope.length;
             } else {
                 index = Math.min(wave.envelope.length-1, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
