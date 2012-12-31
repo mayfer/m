@@ -81,7 +81,7 @@ soundWave.prototype.process = function(e) {
             if(false) { //wave.envelope_options.repeat) {
                 index = Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)) % wave.envelope.length;
             } else {
-                index = Math.min(wave.envelope.length, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
+                index = Math.min(wave.envelope.length-1, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
             }
             // current_amplitude = wave.envelope[index];
             // if(this.counter < (10/this.sampleRate)) console.log(j, sample_length, amp_point_length, index,current_amplitude);

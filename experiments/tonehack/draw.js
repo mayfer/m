@@ -29,6 +29,16 @@ function drawingCanvas(jq_elem) {
         points[j] = 0;
     }
 
+    this.getCanvasElement = function() {
+        return canvas_jq;
+    }
+
+    this.setPoints = function(envelope) {
+        for(var j=0; j<points.length; j++) {
+            points[j] = 1 - envelope[j];
+        }
+    }
+
     this.getPoints = function() {
         var amp_points = [];
         for(var i=0; i<points.length; i++) {
