@@ -58,16 +58,6 @@ soundWave.prototype.process = function(e) {
     var current_amplitude;
     var y;
 
-    var getWaveAmplitude = function(freq, adsr_points, duration, timeticks) {
-        var amplitude;
-        
-        return amplitude;
-    }
-
-    for (var j = 0; j < this.standing_waves.length; j++) {
-        
-    }
-
     for (var i = 0; i < channels[0].length; i++) {
         for(var k = 0; k < channels.length; k++) {
             channels[k][i] = 0;

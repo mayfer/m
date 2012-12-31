@@ -14,11 +14,16 @@
         <script type='text/javascript'>
 
             $(document).ready(function() {
-                var overtones = [
-                    {freq: 440, amplitude: 1},
-                    {freq: 880, amplitude: 1},
-                    {freq: 1320, amplitude: 1},
-                ];
+                var overtones;
+                if(window.localStorage['waves']) {
+                    overtones = JSON.parse(window.localStorage['waves']);
+                } else {
+                    overtones = [
+                        {freq: 440, amplitude: 1},
+                        {freq: 880, amplitude: 1},
+                        {freq: 1320, amplitude: 1},
+                    ];
+                }
                 var canvas_otones = new waveCanvas($('#overtones'), overtones).init();
             });
 

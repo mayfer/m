@@ -38,6 +38,8 @@ function waveCanvas(jq_elem, freqs) {
         this.initControls();
         this.initWaves();
         this.initADSR();
+
+        window.localStorage['waves'] = JSON.stringify(waves);
     }
 
     this.reSetup = function() {
