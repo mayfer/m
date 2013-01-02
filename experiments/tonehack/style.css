@@ -33,6 +33,8 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
 .modal-adsr .close:hover { background: rgba(255,200,200,0.3); color: #a00; }
 .modal-adsr .save { display: block; height: 37px; line-height: 37px; padding: 0 25px; background: rgba(255, 200, 155, 0.7); border: none; float: right; font-weight: bold; color: #a50; cursor: pointer; font-size: 14px; }
 .modal-adsr .save:hover { color: #05a; background: #fff; }
+.modal-adsr .delete { line-height: 37px; margin-left: 15px; font-size: 14px; }
+.modal-adsr .freq { font-size: 18px; }
 
 .draw-adsr{ margin: 15px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; }
 

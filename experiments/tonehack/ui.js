@@ -1,6 +1,7 @@
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
     var superposed = [];
+    var overtones = [];
     var start_time = new Date().getTime();
     var time_diff = 0;
     var pause_time_diff = 0;
@@ -39,7 +40,17 @@ function waveCanvas(jq_elem, freqs) {
         this.initWaves();
         this.initADSR();
 
-        window.localStorage['waves'] = JSON.stringify(waves);
+        var wave_data = [];
+        for(var j=0; j<waves.length; j++) {
+            wave_struct = {
+                freq: waves[j].freq,
+                audio_amplitude: waves[j].audio_amplitude,
+                envelope: waves[j].envelope,
+                duration: waves[j].duration,
+            };
+            wave_data.push(wave_struct);
+        }
+        window.localStorage['waves'] = JSON.stringify(wave_data);
     }
 
     this.reSetup = function() {
@@ -63,6 +74,7 @@ function waveCanvas(jq_elem, freqs) {
         soundwave = new soundWave(audio_context, waves);
 
         this.drawFrame();
+        overtones = waves;
     }
 
     this.setWaves = function(input_waves) {
@@ -94,6 +106,7 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.start = function() {
+        jq_elem.find('.controls .start').removeClass('start icon-play').addClass('pause icon-pause');
         if(state != 'running') {
             if(state == 'stopped') {
                 start_time = new Date().getTime();
@@ -107,12 +120,14 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.pause = function() {
+        jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
         state = 'paused';
         pause_time_diff = new Date().getTime() - start_time;
         soundwave.pause();
     };
 
     this.stop = function() {
+        jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
         state = 'stopped';
         cancelAnimFrame(anim_frame);
         this.reset()
@@ -208,11 +223,33 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(modal)
             .append($('<a>').addClass('save').attr('href', '#').html('Save').click(function(e){
                 e.preventDefault();
+                var autostart = false;
+                if(state == 'running') {
+                    that.stop();
+                    autostart = true;
+                }
                 freqs[wave_index].freq = parseInt(freq.val());
                 freqs[wave_index].envelope = draw_canvas.getPoints();
                 freqs[wave_index].duration = 400; // ms
                 modal.remove();
                 that.reSetup();
+                if(autostart) {
+                    that.start();
+                }
+            }))
+            .append($('<a>').addClass('delete').attr('href', '#').html('Delete overtone').click(function(e) {
+                e.preventDefault();
+                var autostart = false;
+                if(state == 'running') {
+                    that.stop();
+                    autostart = true;
+                }
+                freqs.splice(wave_index, 1);
+                modal.remove();
+                that.reSetup();
+                if(autostart) {
+                    that.start();
+                }
             }));
 
         $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
@@ -247,7 +284,7 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.initControls = function(){
-        var parent = this;
+        var that = this;
         var controls = $('<div>').addClass('controls');
         $.each([
             $('<a>').addClass('start icon-play'),
@@ -265,17 +302,11 @@ function waveCanvas(jq_elem, freqs) {
         controls.on('click', '.start, .pause, .stop', function(e){
             e.preventDefault();
             if($(this).hasClass('start')) {
-                parent.start();
-                $(this).removeClass('start icon-play')
-                    .addClass('pause icon-pause');
+                that.start();
             } else if($(this).hasClass('pause')) {
-                parent.pause();
-                $(this).removeClass('pause icon-pause')
-                    .addClass('start icon-play');
+                that.pause();
             } else if($(this).hasClass('stop')) {
-                parent.stop();
-                $('.pause').removeClass('pause icon-pause')
-                    .addClass('start icon-play');
+                that.stop();
             }
         });
         controls.on('click', '.stop', function(e){
@@ -288,26 +319,26 @@ function waveCanvas(jq_elem, freqs) {
             if($(this).hasClass('faster')) diff = 1;
             else diff = -1;
                     
-            for(i = 0; i < overtones.length; i++) {
-                overtones[i].changeSpeed(diff);
+            for(i = 0; i < waves.length; i++) {
+                waves[i].changeSpeed(diff);
             }
-            parent.restart();
+            that.restart();
         });
         controls.on('click', '.split', function(e) {
             e.preventDefault();
             $('.superpose').removeClass('selected');
             $('.split').addClass('selected');
-            parent.clear();
-            parent.setWaves(overtones);
-            parent.drawFrame();
+            that.clear();
+            that.setWaves(overtones);
+            that.drawFrame();
         });
         controls.on('click', '.superpose', function(e) {
             e.preventDefault();
             $('.split').removeClass('selected');
             $('.superpose').addClass('selected');
-            parent.clear();
-            parent.setWaves(superposed);
-            parent.drawFrame();
+            that.clear();
+            that.setWaves(superposed);
+            that.drawFrame();
         });
     };
 }

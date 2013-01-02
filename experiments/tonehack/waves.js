@@ -63,6 +63,15 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         }
         return points;
     };
+    this.getCurrentEnvelopeValue = function(time_diff) {
+        var amp_point_length = (duration / 100) / envelope.length;
+        var index;
+        if(true) { //wave.envelope_options.repeat) {
+            index = Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)) % wave.envelope.length;
+        } else {
+            index = Math.min(wave.envelope.length-1, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
+        }
+    };
     this.draw = function(time_diff) {
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
         context.beginPath();
