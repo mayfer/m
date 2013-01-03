@@ -291,6 +291,7 @@ function waveCanvas(jq_elem, freqs) {
             $('<a>').addClass('stop icon-stop'),
             $('<a>').addClass('faster').html('faster'),
             $('<a>').addClass('slower').html('slower'),
+            $('<a>').addClass('reset').html('reset'),
             $('<a>').addClass('superpose tab').html('resulting vibration'),
             $('<a>').addClass('split tab selected').html('breakdown of overtones'),
         ], function() {
@@ -339,6 +340,12 @@ function waveCanvas(jq_elem, freqs) {
             that.clear();
             that.setWaves(superposed);
             that.drawFrame();
+        });
+        controls.on('click', '.reset', function(e) {
+            e.preventDefault();
+            that.stop();
+            freqs = JSON.parse(preset);
+            that.reSetup();
         });
     };
 }
