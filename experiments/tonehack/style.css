@@ -25,7 +25,7 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
             
 .add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
 
-.modal-adsr { position: absolute; top: 20px; left: 20px; border: 2px solid #888; background: #fff; box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5); }
+.modal-adsr { position: absolute; top: 20px; left: 20px; border: 2px solid #888; background: #fff; box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.8); }
 .modal-adsr .title { height: 30px; background: #eee; width: 100%; }
 .modal-adsr .actions { height: 37px; background: #eee; width: 100%; border-top: 3px solid #ddd; }
 .modal-adsr h3 { line-height: 30px; margin: 0 0 0 15px; padding: 0; color: #444; font-size: 16px; }
