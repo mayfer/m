@@ -1,12 +1,6 @@
-/*
-     Sine Wave Generator for Web Audio API.
-     Currently works on Chrome.
+// Built from Mohit Cheppudira's sine wave generator - http://0xfe.blogspot.com
+// Modified by Murat Ayfer - http://muratayfer.com
 
-     Mohit Cheppudira - http://0xfe.blogspot.com
-     modified by murat - muratayfer.com
-*/
-
-/* Create a generator for the given AudioContext. */
 soundWave = function(context, standing_waves) {
     this.x = 0;
     this.counter = 0;
@@ -19,31 +13,10 @@ soundWave = function(context, standing_waves) {
 
     this.standing_waves = standing_waves;
 
-    // Create an audio node for the tone generator
     this.node = context.createJavaScriptNode(1024, 0, 2);
 
-    // Setup audio data callback for this node. The callback is called
-    // when the node is connected and expects a buffer full of audio data
-    // in return.
     var that = this;
     this.node.onaudioprocess = function(e) { that.process(e) };
-}
-
-soundWave.prototype.setAmplitude = function(amplitude) {
-    this.amplitude = amplitude;
-}
-
-// Enable/Disable Noise Reduction
-soundWave.prototype.setNR = function(nr) {
-    this.nr = nr;
-}
-
-soundWave.prototype.setFrequency = function(freq) {
-    this.next_frequency = freq;
-
-    // Only change the frequency if not currently playing. This
-    // is to minimize noise.
-    if (!this.playing) this.frequency = freq;
 }
 
 soundWave.prototype.process = function(e) {
@@ -96,13 +69,11 @@ soundWave.prototype.process = function(e) {
 }
 
 soundWave.prototype.play = function() {
-    // Plug the node into the output.
     this.node.connect(this.context.destination);
     this.playing = true;
 }
 
 soundWave.prototype.pause = function() {
-    // Unplug the node.
     this.node.disconnect();
     this.playing = false;
     this.counter = 0;
