@@ -192,6 +192,13 @@ function waveCanvas(jq_elem, freqs) {
                 freqs.push({freq: 220, audio_amplitude: 1/2});
                 that.reSetup();
             });
+
+        $(document).bind('keyup', function(e) {
+            if(e.keyCode == 27) {
+                // escape pressed
+                that.closeEnvelopeEditor();
+            }
+        });
     }
 
     this.editEnvelope = function(wave_index) {
@@ -210,7 +217,7 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(modal)
             .append($('<a>').addClass('close').html('x').attr('href', '#').click(function(e){
                 e.preventDefault;
-                modal.remove();
+                that.closeEnvelopeEditor();
             }))
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
         var draw_area = $('<div>')
@@ -231,7 +238,7 @@ function waveCanvas(jq_elem, freqs) {
                 freqs[wave_index].freq = parseInt(freq.val());
                 freqs[wave_index].envelope = draw_canvas.getPoints();
                 freqs[wave_index].duration = 400; // ms
-                modal.remove();
+                that.closeEnvelopeEditor();
                 that.reSetup();
                 if(autostart) {
                     that.start();
@@ -245,7 +252,7 @@ function waveCanvas(jq_elem, freqs) {
                     autostart = true;
                 }
                 freqs.splice(wave_index, 1);
-                modal.remove();
+                that.closeEnvelopeEditor();
                 that.reSetup();
                 if(autostart) {
                     that.start();
@@ -263,6 +270,18 @@ function waveCanvas(jq_elem, freqs) {
         draw_canvas.init();
         draw_canvas.setPoints(wave.envelope);
         this.drawADSR(draw_canvas.getCanvasElement(), wave.envelope);
+        freq.focus();
+        freq.on('keyup', function(e){
+            if(e.keyCode==13) {
+                // enter pressed
+                modal.find('.save').click();
+            }
+        });
+    }
+
+    this.closeEnvelopeEditor = function() {
+        var modal = $('.modal-adsr');
+        modal.remove();
     }
 
     this.drawADSR = function(canvas_jq, envelope) {
