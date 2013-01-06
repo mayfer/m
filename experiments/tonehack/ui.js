@@ -58,6 +58,11 @@ function waveCanvas(jq_elem, freqs) {
         this.setup();
     }
 
+    this.loadPreset = function(preset) {
+        freqs = preset;
+        this.reSetup();
+    }
+
     this.initWaves = function() {
         waves = [];
         var index = 1;

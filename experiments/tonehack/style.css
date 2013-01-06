@@ -50,3 +50,5 @@ h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 1
 h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
 h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
 h2 span.lt { font-size: 25px; }
+
+#presets { float: left; }

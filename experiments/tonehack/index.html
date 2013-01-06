@@ -3,13 +3,20 @@
     <head>
         <title>tonehack</title>
         <meta charset='utf-8' />
+        <!-- libs -->
         <script type='text/javascript' src='jquery.min.js'></script>
+        <script type='text/javascript' src='require.min.js'></script>
+
+        <!-- hand-written js -->
         <script type='text/javascript' src='draw.js'></script>
         <script type='text/javascript' src='animframe.js'></script>
         <script type='text/javascript' src='sound.js'></script>
         <script type='text/javascript' src='waves.js'></script>
-        <script type='text/javascript' src='preset.js'></script>
         <script type='text/javascript' src='ui.js'></script>
+
+        <!-- default waves to load -->
+        <script type='text/javascript' src='presets/00.js'></script>
+
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="style.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
@@ -19,24 +26,32 @@
                 if(window.localStorage['waves']) {
                     overtones = JSON.parse(window.localStorage['waves']);
                 } else {
-                    overtones = JSON.parse(preset);
-                    /*
-                    overtones = [
-                        {freq: 440, audio_amplitude: 1},
-                        {freq: 880, audio_amplitude: 1},
-                        {freq: 1320, audio_amplitude: 1},
-                    ];
-                    */
+                    overtones = presets['00'];
                 }
                 var canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
+
+                // load the other presets asynchronously
+                var preset_paths = ["presets/01.js", "presets/jm.js"];
+                require(preset_paths, function() {
+                    var presets_form = $('<select>').appendTo($('#presets'));
+                    var preset_names = Object.keys(presets);
+                    for(var i=0; i<preset_names.length; i++) {
+                        $('<option>').html(preset_names[i]).appendTo(presets_form);
+                    }
+                    presets_form.on('change', function(e){
+                        var preset = $(this).val();
+                        canvas_overtones.loadPreset(presets[preset]);
+                    });
+                });
             });
 
         </script>
     </head>
     <body>
         <div class='container'>
+            <div id='presets'>Load preset: </div>
             <h1>tonehack<span> &lt;</span></h1>
-            <h2>fps: <span id='fps'>0</span><span class='lt'> &lt;</span></h2>
+            <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
             <div id='overtones' class='wave-canvas'> </div>
         </div>
     </body>
