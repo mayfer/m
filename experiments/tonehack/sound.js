@@ -6,10 +6,7 @@ soundWave = function(context, standing_waves) {
     this.counter = 0;
     this.context = context;
     this.sampleRate = this.context.sampleRate;
-    this.frequency = 330;
-    this.next_frequency = this.frequency;
     this.playing = false;
-    this.nr = true; // noise reduction
 
     this.standing_waves = standing_waves;
 
@@ -23,8 +20,6 @@ soundWave.prototype.process = function(e) {
     // Get a reference to the output buffer and fill it up.
     var channels = [ e.outputBuffer.getChannelData(0), e.outputBuffer.getChannelData(1) ];
 
-    // We need to be careful about filling up the entire buffer and not
-    // overflowing.
     var wave;
     var phase = 0;
     var step;
@@ -46,8 +41,6 @@ soundWave.prototype.process = function(e) {
             } else {
                 index = Math.min(wave.envelope.length-1, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
             }
-            // current_amplitude = wave.envelope[index];
-            // if(this.counter < (10/this.sampleRate)) console.log(j, sample_length, amp_point_length, index,current_amplitude);
             
             current_amplitude = wave.audio_amplitude * wave.envelope[index];
             y = current_amplitude * Math.sin(this.x * wave.freq);
@@ -55,13 +48,6 @@ soundWave.prototype.process = function(e) {
             for(var k = 0; k < channels.length; k++) {
                 channels[k][i] += y / this.standing_waves.length;
             }
-
-            // If the current point approximates 0, and the direction is positive,
-            // switch frequencies.
-            /*if (channels[0][i] < 0.001 && channels[0][i] > -0.001 && channels[0][i] < next_data) {
-                this.frequency = this.next_frequency;
-                this.x = 0;
-            }*/
         }
         this.counter += 1;
         this.x += Math.PI * 2 / this.sampleRate;
