@@ -313,8 +313,9 @@ function waveCanvas(jq_elem, freqs) {
         $.each([
             $('<a>').addClass('start icon-play'),
             $('<a>').addClass('stop icon-stop'),
-            $('<a>').addClass('faster').html('faster'),
-            $('<a>').addClass('slower').html('slower'),
+            //$('<a>').addClass('faster').html('faster'),
+            //$('<a>').addClass('slower').html('slower'),
+            $('<span>').addClass('duration').html('Tone duration: <input type="text" value="'+freqs[0].duration+'" />ms'),
             $('<a>').addClass('superpose tab').html('resulting vibration'),
             $('<a>').addClass('split tab selected').html('breakdown of overtones'),
         ], function() {
