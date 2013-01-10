@@ -64,8 +64,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         return points;
     };
     this.getCurrentEnvelopeValue = function(time_diff) {
-        // this code is currently unused and actually lives in sound.js
-        
+        var step = ( (time_diff / 1000) * (Math.PI*2) ) % (Math.PI*2);
         var amp_point_length = (duration / 100) / envelope.length;
         var index;
         if(true) { //wave.envelope_options.repeat) {
