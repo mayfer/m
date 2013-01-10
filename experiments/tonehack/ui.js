@@ -35,6 +35,8 @@ function waveCanvas(jq_elem, freqs) {
         }
         freqs.sort(compare);
 
+        BASE_FREQ = freqs[0].freq;
+
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
@@ -312,10 +314,10 @@ function waveCanvas(jq_elem, freqs) {
         var controls = $('<div>').addClass('controls');
         $.each([
             $('<a>').addClass('start icon-play'),
-            $('<a>').addClass('stop icon-stop'),
+            //$('<a>').addClass('stop icon-stop'),
             //$('<a>').addClass('faster').html('faster'),
             //$('<a>').addClass('slower').html('slower'),
-            $('<span>').addClass('duration').html('Tone duration: <input type="text" value="'+freqs[0].duration+'" />ms'),
+            $('<span>').addClass('duration').html('Tone duration: <input type="text" />ms'),
             $('<a>').addClass('superpose tab').html('resulting vibration'),
             $('<a>').addClass('split tab selected').html('breakdown of overtones'),
         ], function() {
@@ -329,7 +331,7 @@ function waveCanvas(jq_elem, freqs) {
             if($(this).hasClass('start')) {
                 that.start();
             } else if($(this).hasClass('pause')) {
-                that.pause();
+                that.stop();
             } else if($(this).hasClass('stop')) {
                 that.stop();
             }
