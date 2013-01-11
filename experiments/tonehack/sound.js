@@ -11,7 +11,7 @@ soundWave = function(context, standing_waves) {
 
     this.standing_waves = standing_waves;
 
-    this.node = context.createJavaScriptNode(1024, 0, 2);
+    this.node = context.createJavaScriptNode(4096, 0, 2);
 
     var that = this;
     this.node.onaudioprocess = function(e) { that.process(e) };
@@ -36,7 +36,8 @@ soundWave.prototype.process = function(e) {
 
             var envelope_amplitude = wave.getCurrentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration));
             
-            current_amplitude = wave.audio_amplitude * envelope_amplitude;
+            // square env. amplitude to convert it to a logarithmic scale which better suits our perception
+            current_amplitude = wave.audio_amplitude * envelope_amplitude * envelope_amplitude;
             y = current_amplitude * Math.sin(this.x * wave.freq);
             
             for(var k = 0; k < channels.length; k++) {

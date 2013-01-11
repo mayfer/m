@@ -205,7 +205,7 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(adsr_container)
             .on('click', function(e){
                 e.preventDefault();
-                freqs.push({freq: 220, audio_amplitude: 1/2});
+                freqs.push({freq: 220, audio_amplitude: 1, duration: 1000});
                 that.reSetup();
             });
 
@@ -236,6 +236,14 @@ function waveCanvas(jq_elem, freqs) {
                 that.closeEnvelopeEditor();
             }))
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
+
+        $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
+        $('<div>').addClass('graph-label x-min').html('0').appendTo(modal);
+        $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(modal);
+        $('<div>').addClass('graph-label y').html('Amplitude').appendTo(modal);
+        $('<div>').addClass('graph-label y-min').html('0%').appendTo(modal);
+        $('<div>').addClass('graph-label y-max').html('100%').appendTo(modal);
+        
         var draw_area = $('<div>')
             .addClass('draw-adsr')
             .css('height', (modal.innerHeight() - 116) + "px")
@@ -275,19 +283,12 @@ function waveCanvas(jq_elem, freqs) {
                 }
             }));
 
-        $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
-        $('<div>').addClass('graph-label x-min').html('0').appendTo(modal);
-        $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(modal);
-        $('<div>').addClass('graph-label y').html('Amplitude').appendTo(modal);
-        $('<div>').addClass('graph-label y-min').html('0%').appendTo(modal);
-        $('<div>').addClass('graph-label y-max').html('100%').appendTo(modal);
-
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
         draw_canvas.setPoints(wave.envelope);
         this.drawADSR(draw_canvas.getCanvasElement(), wave.envelope);
         freq.focus();
-        freq.on('keyup', function(e){
+        modal.on('keypress', function(e){
             if(e.keyCode==13) {
                 // enter pressed
                 modal.find('.save').click();
@@ -311,7 +312,8 @@ function waveCanvas(jq_elem, freqs) {
         context.clearRect(0, 0, context.width, context.height);
         
         context.beginPath();
-        for(var i=0; i<envelope.length; i++) {
+        context.moveTo(0, (1-envelope[0])*context.height);
+        for(var i=1; i<envelope.length; i++) {
             // the 1-envelope[i] is to inverse y axis for the canvas
             context.lineTo(i*(context.width/envelope.length), (1-envelope[i])*context.height);
         }
@@ -326,7 +328,7 @@ function waveCanvas(jq_elem, freqs) {
             //$('<a>').addClass('stop icon-stop'),
             //$('<a>').addClass('faster').html('faster'),
             //$('<a>').addClass('slower').html('slower'),
-            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input type="text" />ms</label>'),
+            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>'),
             $('<a>').addClass('superpose tab').html('resulting vibration'),
             $('<a>').addClass('split tab selected').html('breakdown of overtones'),
         ], function() {
@@ -335,6 +337,16 @@ function waveCanvas(jq_elem, freqs) {
         });
         controls.prependTo(jq_elem);
 
+        controls.find('.durations').keypress(function(e) {
+            if(e.which == 13) {
+                var duration = parseInt($(this).val());
+                for(var i=0; i<freqs.length; i++) {
+                    freqs[i].duration = duration;
+                }
+                that.stop();
+                that.reSetup();
+            }
+        });
         controls.on('click', '.start, .pause, .stop', function(e){
             e.preventDefault();
             if($(this).hasClass('start')) {

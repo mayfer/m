@@ -38,7 +38,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         this.jq_progress = jq_elem;
         progress_canvas = this.jq_progress.get(0);
         progress_context = progress_canvas.getContext("2d");
-        progress_context.strokeStyle = '#00ff00';
+        progress_context.strokeStyle = '#a00';
     };
     this.changeSpeed = function(change) {
         if(change > 0) {
