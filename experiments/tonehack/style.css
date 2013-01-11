@@ -26,7 +26,7 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
 .add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
 
 .duration { margin-left: 20px; font-size: 14px; color: rgba(255,255,255,0.8); }
-.duration input { width: 50px; background: rgba(255,255,255,0.8); border: none; margin: 0 2px; padding: 2px 3px; border-bottom: 2px solid #fff; text-align: right; }
+input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.3); margin: 0 2px; padding: 2px 3px; text-align: right; color: #333; }
 .duration input:focus { background: #fff; }
 
 .modal-adsr { position: absolute; top: 20px; left: 20px; border: 2px solid #888; background: #fff; box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.8); }

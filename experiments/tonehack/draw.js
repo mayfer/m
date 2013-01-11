@@ -88,7 +88,7 @@ function drawingCanvas(jq_elem) {
         prev_position = { x: null, y: null };
     }
     this.drawLine = function(ctx, prev_position, current_position) {
-        if(prev_position.x==null || prev_position.y==null) {
+        if(prev_position == null || prev_position.x==null || prev_position.y==null) {
             prev_position.x = current_position.x;
             prev_position.y = current_position.y;
         }
@@ -106,8 +106,10 @@ function drawingCanvas(jq_elem) {
         }
         var y_diff = current_position.y - prev_position.y;
         for(var i = from; i <= to; i++) {
-            // linear values between from and to coordinates
-            points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
+            if(from != to) {
+                // linear values between from and to coordinates
+                points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
+            }
         }
         ctx.beginPath();
         for(var i=0; i<points.length; i++) {
