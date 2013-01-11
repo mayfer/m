@@ -41,7 +41,7 @@ function waveCanvas(jq_elem, freqs) {
         this.initControls();
         this.initWaves();
         this.initADSR();
-        this.drawFrame();
+        this.reset();
 
         var wave_data = [];
         for(var j=0; j<waves.length; j++) {
@@ -73,9 +73,10 @@ function waveCanvas(jq_elem, freqs) {
             var amplitude_ratio = freqobj['audio_amplitude'];
             var frequency = freqobj['freq'];
             var envelope = freqobj['envelope'];
+            var duration = freqobj['duration'];
             var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope));
+            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope, duration));
             index++;
         });
         superposed = [new superposedWave(waves_context, 1, 1, waves)];
@@ -181,14 +182,14 @@ function waveCanvas(jq_elem, freqs) {
                 .css('left', 20)
                 .appendTo(adsr_container)
                 .data('wave_index', i);
-            $('<div>').addClass('freq').html(waves[i].freq + " Hz").appendTo(box);
+            $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+waves[i].duration+"ms").appendTo(box);
             var adsr_canvas = new Canvas(box);
             
             var progress_canvas = new Canvas(box)
                 .css('position', 'absolute')
                 .css('top', 0)
                 .css('left', 0);
-                
+
             box.on('click', function(e) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
@@ -252,7 +253,7 @@ function waveCanvas(jq_elem, freqs) {
                 }
                 freqs[wave_index].freq = parseInt(freq.val());
                 freqs[wave_index].envelope = draw_canvas.getPoints();
-                freqs[wave_index].duration = 400; // ms
+                freqs[wave_index].duration = modal.find('.duration').val();
                 that.closeEnvelopeEditor();
                 that.reSetup();
                 if(autostart) {

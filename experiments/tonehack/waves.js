@@ -6,7 +6,7 @@ var BASE_FREQ = 220;
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope) {
+function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope, duration) {
     var amplitude = amplitude;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
@@ -18,7 +18,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var current_plot_coordinates = null;
     var position = index * wave_height;
     var phase = 0;
-    var duration = 1000;
+    var duration = duration;
     if(envelope === undefined) {
         envelope = [];
         for(var i=0; i<512; i++) envelope[i] =  0.5;
