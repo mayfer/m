@@ -268,7 +268,7 @@ function waveCanvas(jq_elem, freqs) {
 
         $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
         $('<div>').addClass('graph-label x-min').html('0').appendTo(modal);
-        $('<div>').addClass('graph-label x-max').html('4 seconds').appendTo(modal);
+        $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(modal);
         $('<div>').addClass('graph-label y').html('Amplitude').appendTo(modal);
         $('<div>').addClass('graph-label y-min').html('0%').appendTo(modal);
         $('<div>').addClass('graph-label y-max').html('100%').appendTo(modal);
@@ -317,7 +317,7 @@ function waveCanvas(jq_elem, freqs) {
             //$('<a>').addClass('stop icon-stop'),
             //$('<a>').addClass('faster').html('faster'),
             //$('<a>').addClass('slower').html('slower'),
-            $('<span>').addClass('duration').html('Tone duration: <input type="text" />ms'),
+            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input type="text" />ms</label>'),
             $('<a>').addClass('superpose tab').html('resulting vibration'),
             $('<a>').addClass('split tab selected').html('breakdown of overtones'),
         ], function() {

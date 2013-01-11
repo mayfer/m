@@ -1,6 +1,6 @@
 
 var X_INCREMENT = 10;
-var DEFAULT_SPEED = 7;
+var DEFAULT_SPEED = 14;
 var BASE_FREQ = 220;
 
 var frames = 0;
@@ -18,7 +18,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var current_plot_coordinates = null;
     var position = index * wave_height;
     var phase = 0;
-    var duration = 100;
+    var duration = 1000;
     if(envelope === undefined) {
         envelope = [];
         for(var i=0; i<512; i++) envelope[i] =  0.5;
@@ -45,7 +45,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     };
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * freq_diff % Math.PI*2;
-        var envelope_amplitude = this.getCurrentEnvelopeValue(time_diff / (this.duration * 10));
+        var envelope_amplitude = this.getCurrentEnvelopeValue(time_diff / (this.duration));
         current_amplitude = Math.sin(step + phase) * amplitude * envelope_amplitude * 2;
         var x = 0, y = this.sin(x, freq_diff, current_amplitude);
         var points = [];

@@ -6,7 +6,7 @@ soundWave = function(context, standing_waves) {
     this.counter = 0;
     this.context = context;
     this.sampleRate = this.context.sampleRate; // 44100 by default
-    this.sampleRateCentisecond = this.sampleRate / 100;
+    this.sampleRateMillisecond = this.sampleRate / 1000;
     this.playing = false;
 
     this.standing_waves = standing_waves;
@@ -34,7 +34,7 @@ soundWave.prototype.process = function(e) {
         for (var j = 0; j < this.standing_waves.length; j++) {
             wave = this.standing_waves[j];
 
-            var envelope_amplitude = wave.getCurrentEnvelopeValue(this.counter / (this.sampleRateCentisecond * wave.duration));
+            var envelope_amplitude = wave.getCurrentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration));
             
             current_amplitude = wave.audio_amplitude * envelope_amplitude;
             y = current_amplitude * Math.sin(this.x * wave.freq);
