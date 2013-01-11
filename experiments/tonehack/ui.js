@@ -41,6 +41,7 @@ function waveCanvas(jq_elem, freqs) {
         this.initControls();
         this.initWaves();
         this.initADSR();
+        this.drawFrame();
 
         var wave_data = [];
         for(var j=0; j<waves.length; j++) {
@@ -80,7 +81,6 @@ function waveCanvas(jq_elem, freqs) {
         superposed = [new superposedWave(waves_context, 1, 1, waves)];
         soundwave = new soundWave(audio_context, waves);
 
-        this.drawFrame();
         overtones = waves;
     }
 
@@ -97,9 +97,10 @@ function waveCanvas(jq_elem, freqs) {
 
     this.drawFrame = function() {
         context = waves_context;
-        context.fillRect(0, 0, context.width, context.height    );
+        context.fillRect(0, 0, context.width, context.height);
         for(i = 0; i < waves.length; i++) {
             waves[i].draw(time_diff);
+            waves[i].markProgress(time_diff);
         }
         time_diff = new Date().getTime() - start_time;
     }
@@ -182,11 +183,18 @@ function waveCanvas(jq_elem, freqs) {
                 .data('wave_index', i);
             $('<div>').addClass('freq').html(waves[i].freq + " Hz").appendTo(box);
             var adsr_canvas = new Canvas(box);
+            
+            var progress_canvas = new Canvas(box)
+                .css('position', 'absolute')
+                .css('top', 0)
+                .css('left', 0);
+                
             box.on('click', function(e) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
             that.drawADSR(adsr_canvas, waves[i].envelope);
+            waves[i].setProgressElem(progress_canvas);
         }
 
         var add_tone = $('<a>')

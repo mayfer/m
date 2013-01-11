@@ -30,6 +30,16 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     this.duration = duration;
     this.envelope = envelope;
     
+    this.jq_progress = null;
+    var progress_canvas = null;
+    var progress_context = null;
+
+    this.setProgressElem = function(jq_elem) {
+        this.jq_progress = jq_elem;
+        progress_canvas = this.jq_progress.get(0);
+        progress_context = progress_canvas.getContext("2d");
+        progress_context.strokeStyle = '#00ff00';
+    };
     this.changeSpeed = function(change) {
         if(change > 0) {
             speed *= 2;
@@ -83,6 +93,17 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         }
         context.stroke();
     };
+    this.markProgress = function(time_diff) {
+
+        var percent_progress = (time_diff % this.duration) / this.duration;
+
+        progress_context.clearRect(0, 0, progress_context.width, progress_context.height);
+        progress_context.beginPath();
+        progress_context.moveTo(percent_progress*progress_context.width, 0);
+        progress_context.lineTo(percent_progress*progress_context.width, progress_context.height);
+        progress_context.stroke();
+    }
+
 }
                     
 function superposedWave(context, index, num_waves, standing_waves) {
