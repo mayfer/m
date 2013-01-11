@@ -40,6 +40,7 @@
                     }
                     presets_form.on('change', function(e){
                         var preset = $(this).val();
+                        canvas_overtones.stop();
                         canvas_overtones.loadPreset(presets[preset]);
                     });
                 });

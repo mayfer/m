@@ -18,7 +18,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var current_plot_coordinates = null;
     var position = index * wave_height;
     var phase = 0;
-    var duration = 400;
+    var duration = 100;
     if(envelope === undefined) {
         envelope = [];
         for(var i=0; i<512; i++) envelope[i] =  0.5;
@@ -45,7 +45,8 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     };
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * freq_diff % Math.PI*2;
-        current_amplitude = Math.sin(step + phase) * amplitude;
+        var envelope_amplitude = this.getCurrentEnvelopeValue(time_diff / (this.duration * 10));
+        current_amplitude = Math.sin(step + phase) * amplitude * envelope_amplitude * 2;
         var x = 0, y = this.sin(x, freq_diff, current_amplitude);
         var points = [];
         while(x < context.width) {
@@ -63,16 +64,14 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         }
         return points;
     };
-    this.getCurrentEnvelopeValue = function(time_diff) {
-        // this code is currently unused and actually lives in sound.js
-        
-        var amp_point_length = (duration / 100) / envelope.length;
-        var index;
-        if(true) { //wave.envelope_options.repeat) {
-            index = Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)) % wave.envelope.length;
+    this.getCurrentEnvelopeValue = function(percent_progress) {
+        var index = Math.floor(this.envelope.length * percent_progress);
+        if(true) { // this.envelope_options.repeat) {
+            index = index % this.envelope.length;
         } else {
-            index = Math.min(wave.envelope.length-1, Math.floor((this.counter/this.sampleRate) * (amp_point_length / sample_length)));
+            index = Math.min(this.envelope.length-1, index);
         }
+        return this.envelope[index];
     };
     this.draw = function(time_diff) {
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
