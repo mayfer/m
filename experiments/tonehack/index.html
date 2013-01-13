@@ -31,7 +31,13 @@
                 var canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
 
                 // load the other presets asynchronously
-                var preset_paths = ["presets/01.js", "presets/jm.js"];
+                var preset_paths = [
+                    "presets/01.js",
+                    "presets/jm.js",
+                    "presets/guitar.js",
+                    "presets/violin.js",
+                    "presets/clarinet.js",
+                ];
                 require(preset_paths, function() {
                     var presets_form = $('<select>').appendTo($('#presets'));
                     var preset_names = Object.keys(presets);
