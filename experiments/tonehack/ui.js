@@ -205,7 +205,10 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(adsr_container)
             .on('click', function(e){
                 e.preventDefault();
-                freqs.push({freq: 220, audio_amplitude: 1, duration: 1000});
+                var duration = 1000;
+                // use the duration of the first wave if possible
+                if(freqs.length) duration = freqs[0].duration;
+                freqs.push({freq: 220, audio_amplitude: 1, duration: duration});
                 that.reSetup();
             });
 
