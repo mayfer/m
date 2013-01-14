@@ -1,6 +1,6 @@
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
-    var superposed = [];
+    var superposed = null;
     var overtones = [];
     var start_time = new Date().getTime();
     var time_diff = 0;
@@ -11,6 +11,9 @@ function waveCanvas(jq_elem, freqs) {
     var parent;
     var waves_canvas;
     var soundwave;
+    var drawMode = 'overtones';
+
+    this.drawMode = drawMode;
 
     this.init = function() {
         audio_context = new webkitAudioContext();
@@ -79,7 +82,7 @@ function waveCanvas(jq_elem, freqs) {
             waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope, duration));
             index++;
         });
-        superposed = [new superposedWave(waves_context, 1, 1, waves)];
+        superposed = new superposedWave(waves_context, 1, 1, waves);
         soundwave = new soundWave(audio_context, waves);
 
         overtones = waves;
@@ -99,9 +102,16 @@ function waveCanvas(jq_elem, freqs) {
     this.drawFrame = function() {
         context = waves_context;
         context.fillRect(0, 0, context.width, context.height);
-        for(i = 0; i < waves.length; i++) {
-            waves[i].draw(time_diff);
-            waves[i].markProgress(time_diff);
+        if(this.drawMode == 'overtones') {
+            for(i = 0; i < waves.length; i++) {
+                waves[i].draw(time_diff);
+                waves[i].markProgress(time_diff);
+            }
+        } else if (this.drawMode == 'superposed') {
+            superposed.draw(time_diff);
+            for(i = 0; i < waves.length; i++) {
+                waves[i].markProgress(time_diff);
+            }
         }
         time_diff = new Date().getTime() - start_time;
     }
@@ -323,6 +333,21 @@ function waveCanvas(jq_elem, freqs) {
         context.stroke();
     }
 
+    this.setMode = function(mode) {
+        if(mode == 'overtones') {
+            jq_elem.find('.superpose').removeClass('selected');
+            jq_elem.find('.split').addClass('selected');
+            this.drawMode = mode;
+        } else if(mode == 'superposed') {
+            jq_elem.find('.split').removeClass('selected');
+            jq_elem.find('.superpose').addClass('selected');
+            this.drawMode = mode;
+        } else {
+            alert('unsupported mode');
+        }
+        this.reset();
+    };
+
     this.initControls = function(){
         var that = this;
         var controls = $('<div>').addClass('controls');
@@ -377,19 +402,11 @@ function waveCanvas(jq_elem, freqs) {
         });
         controls.on('click', '.split', function(e) {
             e.preventDefault();
-            $('.superpose').removeClass('selected');
-            $('.split').addClass('selected');
-            that.clear();
-            that.setWaves(overtones);
-            that.drawFrame();
+            that.setMode('overtones');
         });
         controls.on('click', '.superpose', function(e) {
             e.preventDefault();
-            $('.split').removeClass('selected');
-            $('.superpose').addClass('selected');
-            that.clear();
-            that.setWaves(superposed);
-            that.drawFrame();
+            that.setMode('superposed');
         });
     };
 }
