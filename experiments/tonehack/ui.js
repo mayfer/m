@@ -1,7 +1,6 @@
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
     var superposed = null;
-    var overtones = [];
     var start_time = new Date().getTime();
     var time_diff = 0;
     var pause_time_diff = 0;
@@ -12,8 +11,6 @@ function waveCanvas(jq_elem, freqs) {
     var waves_canvas;
     var soundwave;
     var drawMode = 'overtones';
-
-    this.drawMode = drawMode;
 
     this.init = function() {
         audio_context = new webkitAudioContext();
@@ -85,7 +82,6 @@ function waveCanvas(jq_elem, freqs) {
         superposed = new superposedWave(waves_context, 1, 1, waves);
         soundwave = new soundWave(audio_context, waves);
 
-        overtones = waves;
     }
 
     this.setWaves = function(input_waves) {
@@ -102,12 +98,12 @@ function waveCanvas(jq_elem, freqs) {
     this.drawFrame = function() {
         context = waves_context;
         context.fillRect(0, 0, context.width, context.height);
-        if(this.drawMode == 'overtones') {
+        if(drawMode == 'overtones') {
             for(i = 0; i < waves.length; i++) {
                 waves[i].draw(time_diff);
                 waves[i].markProgress(time_diff);
             }
-        } else if (this.drawMode == 'superposed') {
+        } else if (drawMode == 'superposed') {
             superposed.draw(time_diff);
             for(i = 0; i < waves.length; i++) {
                 waves[i].markProgress(time_diff);
@@ -337,11 +333,11 @@ function waveCanvas(jq_elem, freqs) {
         if(mode == 'overtones') {
             jq_elem.find('.superpose').removeClass('selected');
             jq_elem.find('.split').addClass('selected');
-            this.drawMode = mode;
+            drawMode = mode;
         } else if(mode == 'superposed') {
             jq_elem.find('.split').removeClass('selected');
             jq_elem.find('.superpose').addClass('selected');
-            this.drawMode = mode;
+            drawMode = mode;
         } else {
             alert('unsupported mode');
         }

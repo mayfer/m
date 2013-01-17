@@ -27,11 +27,17 @@ soundWave.prototype.process = function(e) {
     var current_amplitude;
     var y;
 
-    for (var i = 0; i < channels[0].length; i++) {
-        for(var k = 0; k < channels.length; k++) {
+    var buffer_size = channels[0].length;
+    var num_channels = channels.length;
+    var num_standing_waves = this.standing_waves.length;
+
+    var prev_amplitude = 0;
+
+    for (var i = 0; i < buffer_size; i++) {
+        for(var k = 0; k < num_channels; k++) {
             channels[k][i] = 0;
         }
-        for (var j = 0; j < this.standing_waves.length; j++) {
+        for (var j = 0; j < num_standing_waves; j++) {
             wave = this.standing_waves[j];
 
             var envelope_amplitude = wave.getCurrentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration));
@@ -40,10 +46,11 @@ soundWave.prototype.process = function(e) {
             current_amplitude = wave.audio_amplitude * envelope_amplitude * envelope_amplitude;
             y = current_amplitude * Math.sin(this.x * wave.freq);
             
-            for(var k = 0; k < channels.length; k++) {
-                channels[k][i] += y / this.standing_waves.length;
+            for(var k = 0; k < num_channels; k++) {
+                channels[k][i] += y / num_standing_waves;
             }
         }
+        prev_amplitude = channels[0][i];
         this.counter += 1;
         this.x += Math.PI * 2 / this.sampleRate;
     }
