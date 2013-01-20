@@ -31,12 +31,11 @@ soundWave.prototype.process = function(e) {
     var num_channels = channels.length;
     var num_standing_waves = this.standing_waves.length;
 
-    var prev_amplitude = 0;
+    var cumulative_amplitude = 0;
 
     for (var i = 0; i < buffer_size; i++) {
-        for(var k = 0; k < num_channels; k++) {
-            channels[k][i] = 0;
-        }
+        cumulative_amplitude = 0;
+
         for (var j = 0; j < num_standing_waves; j++) {
             wave = this.standing_waves[j];
 
@@ -46,14 +45,34 @@ soundWave.prototype.process = function(e) {
             current_amplitude = wave.audio_amplitude * envelope_amplitude * envelope_amplitude;
             y = current_amplitude * Math.sin(this.x * wave.freq);
             
-            for(var k = 0; k < num_channels; k++) {
-                channels[k][i] += y / num_standing_waves;
-            }
+            cumulative_amplitude += y / num_standing_waves;
         }
-        prev_amplitude = channels[0][i];
+        for(var k = 0; k < num_channels; k++) {
+            channels[k][i] = cumulative_amplitude;
+        }
+
         this.counter += 1;
         this.x += Math.PI * 2 / this.sampleRate;
     }
+    /*
+    var jump_duration = 150;
+    var i = 0;
+    while(i < (buffer_size-jump_duration)) {
+        var jump = channels[0][i+jump_duration] - channels[0][i];
+        if(jump > 0.3) {
+            console.log('Jumped at '+i+' out of '+buffer_size);
+            for(var j = 0; j < jump_duration; j++) {
+                for(var k = 0; k < num_channels; k++) {
+                    channels[k][i+j] = channels[k][i] + (jump/jump_duration) * j;
+                }
+            }
+            i += jump_duration;
+        } else {
+            i++;
+        }
+    }
+    console.log('End of buffer at '+buffer_size);
+    */
 }
 
 soundWave.prototype.play = function() {
