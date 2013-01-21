@@ -242,7 +242,7 @@ function waveCanvas(jq_elem, freqs) {
             .addClass('title')
             .appendTo(modal)
             .append($('<a>').addClass('close').html('x').attr('href', '#').click(function(e){
-                e.preventDefault;
+                e.preventDefault();
                 that.closeEnvelopeEditor();
             }))
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));

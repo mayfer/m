@@ -17,13 +17,12 @@
         <!-- default waves to load -->
         <script type='text/javascript'>
             presets = {};
-            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'audio_amplitude': 1,}];
+            presets['---'] = [{'freq': 220, 'duration': 1000, 'audio_amplitude': 1,}];
         </script>
         <script type='text/javascript' src='presets/guitar.js'></script>
 
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="style.css" rel="stylesheet" type="text/css" />
-        <link href="article.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
 
             $(document).ready(function() {
@@ -31,7 +30,7 @@
                 if(window.localStorage['waves']) {
                     overtones = JSON.parse(window.localStorage['waves']);
                 } else {
-                    overtones = presets['Pure tone'];
+                    overtones = presets['---'];
                 }
                 var canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
 
@@ -58,21 +57,9 @@
     </head>
     <body>
         <div class='container'>
+            <div id='presets'>Load preset: </div>
             <h1>tonehack<span> &lt;</span></h1>
             <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
-
-            <div id='article'>
-                <p>
-                    This <strong>interactive</strong> article will explain and demonstrate:
-                    <ul>
-                        <li>What timbre really is (a.k.a texture of a sound; the thing that makes you distinguish between a violin and a guitar).</li>
-                        <li>Why certain timbres sound nicer than others.</li>
-                        <li>How the basis of timbre is also the basis of chords (i.e. major, minor, etc.).</li>
-                        <li>Why certain chords sound nicer than others.</li>
-                        <li>Creating timbres from scratch. Make your very own instrument on tonehack.</li>
-                    </il>
-                </p>
-            </div>
             <div id='overtones' class='wave-canvas'> </div>
         </div>
     </body>
