@@ -43,7 +43,7 @@ soundWave.prototype.process = function(e) {
             
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = wave.audio_amplitude * envelope_amplitude * envelope_amplitude;
-            y = current_amplitude * Math.sin(this.x * wave.freq);
+            y = current_amplitude * Math.sin(this.x * wave.freq + wave.phase);
             
             cumulative_amplitude += y / num_standing_waves;
         }

@@ -76,7 +76,8 @@ function waveCanvas(jq_elem, freqs) {
             var duration = freqobj['duration'];
             var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
             var audio_amplitude = 1 * amplitude_ratio;
-            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope, duration));
+            var phase = 0; //Math.random() * Math.PI * 2;
+            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope, duration, phase));
             index++;
         });
         superposed = new superposedWave(waves_context, 1, 1, waves);
@@ -200,7 +201,7 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
-            that.drawADSR(adsr_canvas, waves[i].envelope);
+            that.drawEnvelope(adsr_canvas, waves[i].envelope);
             waves[i].setProgressElem(progress_canvas);
         }
 
@@ -295,7 +296,7 @@ function waveCanvas(jq_elem, freqs) {
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
         draw_canvas.setPoints(wave.envelope);
-        this.drawADSR(draw_canvas.getCanvasElement(), wave.envelope);
+        this.drawEnvelope(draw_canvas.getCanvasElement(), wave.envelope);
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
@@ -310,7 +311,7 @@ function waveCanvas(jq_elem, freqs) {
         modal.remove();
     }
 
-    this.drawADSR = function(canvas_jq, envelope) {
+    this.drawEnvelope = function(canvas_jq, envelope) {
         // fills the given canvas elem with the adsr drawing
         var canvas = canvas_jq.get(0);
         var context = canvas.getContext("2d");
@@ -322,9 +323,15 @@ function waveCanvas(jq_elem, freqs) {
         
         context.beginPath();
         context.moveTo(0, (1-envelope[0])*context.height);
-        for(var i=1; i<envelope.length; i++) {
-            // the 1-envelope[i] is to inverse y axis for the canvas
-            context.lineTo(i*(context.width/envelope.length), (1-envelope[i])*context.height);
+        
+        if(envelope.length == 1) {
+            // special case for when envelope is a single value
+            context.lineTo(context.width, (1-envelope[0])*context.height);
+        } else {
+            for(var i=1; i<envelope.length; i++) {
+                // the 1-envelope[i] is to inverse y axis for the canvas
+                context.lineTo(i*(context.width/envelope.length), (1-envelope[i])*context.height);
+            }
         }
         context.stroke();
     }
