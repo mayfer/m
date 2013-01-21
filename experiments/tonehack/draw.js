@@ -1,3 +1,4 @@
+
 function Canvas(jq_elem) {
     // create a canvas inside another element
     // and set the height&width to fill the element
@@ -19,9 +20,10 @@ function drawingCanvas(jq_elem) {
     var jq_elem = jq_elem;
     var canvas_jq = new Canvas(jq_elem);
     var canvas = canvas_jq.get(0);
+    var resolution = canvas_jq.innerWidth();
     var ctx = canvas.getContext("2d");
     var that = this;
-    var points = new Float32Array(512);
+    var points = new Float32Array(resolution);
     var draw = false;
     var prev_position = null;
     
@@ -93,8 +95,8 @@ function drawingCanvas(jq_elem) {
             prev_position.y = current_position.y;
         }
             
-        var adjusted_px = parseInt((prev_position.x / ctx.width) * 512);
-        var adjusted_cx = parseInt((current_position.x / ctx.width) * 512);
+        var adjusted_px = parseInt((prev_position.x / ctx.width) * resolution);
+        var adjusted_cx = parseInt((current_position.x / ctx.width) * resolution);
         ctx.clearRect(0, 0, ctx.width, ctx.height);
         var from, to;
         if(adjusted_px < adjusted_cx) {
@@ -113,7 +115,7 @@ function drawingCanvas(jq_elem) {
         }
         ctx.beginPath();
         for(var i=0; i<points.length; i++) {
-            ctx.lineTo(i*(ctx.width/512), points[i]*ctx.height);
+            ctx.lineTo(i*(ctx.width/resolution), points[i]*ctx.height);
         }
         ctx.stroke();
     }
