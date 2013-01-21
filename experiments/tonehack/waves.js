@@ -75,13 +75,27 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         return points;
     };
     this.getCurrentEnvelopeValue = function(percent_progress) {
-        var index = Math.floor(this.envelope.length * percent_progress) - 1;
+        var decimal_index = this.envelope.length * percent_progress;
+        var index = Math.floor(decimal_index);
         if(true) { // this.envelope_options.repeat) {
             index = index % this.envelope.length;
+            decimal_index = decimal_index % this.envelope.length;
         } else {
             index = Math.min(this.envelope.length-1, index);
+            decimal_index = Math.min(this.envelope.length-1, decimal_index);
         }
-        return this.envelope[index];
+        var value;
+        
+        // if possible, pick the envelope value from a linear interpolation between indeces.
+        // this should prevent popping/crackling
+        if(index < this.envelope.length-1) {
+            value = this.envelope[index] + (decimal_index - index) * (this.envelope[index+1] - this.envelope[index]);
+        } else if(index >= this.envelope.length-1) {
+            value = this.envelope[this.envelope.length-1];
+        } else {
+            value = this.envelope[index];
+        }
+        return value;
     };
     this.draw = function(time_diff) {
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
