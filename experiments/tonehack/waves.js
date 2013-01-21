@@ -6,7 +6,7 @@ var BASE_FREQ = 220;
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope, duration) {
+function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope, duration, phase) {
     var amplitude = amplitude;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
@@ -17,11 +17,10 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var current_amplitude = 0;
     var current_plot_coordinates = null;
     var position = index * wave_height;
-    var phase = 0;
+    var phase = phase;
     var duration = duration;
     if(envelope === undefined) {
-        envelope = [];
-        for(var i=0; i<512; i++) envelope[i] =  0.5;
+        envelope = [0.5];
     }
 
     this.freq = freq;
@@ -29,6 +28,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     this.position = position;
     this.duration = duration;
     this.envelope = envelope;
+    this.phase = phase;
     
     this.jq_progress = null;
     var progress_canvas = null;
@@ -75,7 +75,7 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         return points;
     };
     this.getCurrentEnvelopeValue = function(percent_progress) {
-        var index = Math.floor(this.envelope.length * percent_progress);
+        var index = Math.floor(this.envelope.length * percent_progress) - 1;
         if(true) { // this.envelope_options.repeat) {
             index = index % this.envelope.length;
         } else {
