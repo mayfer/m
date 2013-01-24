@@ -6,21 +6,45 @@ var BASE_FREQ = 220;
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude, volume_envelope, duration, phase) {
-    var amplitude = amplitude;
+function standingWave(options) {
+    default_options = {
+        context: null,
+        index: 1,
+        num_waves: 1,
+        freq: 220,
+        amplitude: 1,
+        volume_envelope: [0.5],
+        freq_envelope: [0.5],
+        duration: 1000,
+        phase: 0,
+    }
+    var options = $.extend({}, default_options, options); 
+    
+    var context = options.context;
+    var index = options.index;
+    var num_waves = options.num_waves;
+    var freq = options.freq;
+    var amplitude = options.amplitude;
+    var volume_envelope = options.volume_envelope;
+    var freq_envelope = options.freq_envelope;
+    var duration = options.duration;
+    var phase = options.phase;
+    
+
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
-    var freq = freq;
+    var freq = options.freq;
     var freq_diff = freq * standing / BASE_FREQ; // calculate relative wavelength
     var speed = DEFAULT_SPEED;
     var wave_height = (context.height / (num_waves+1));
     var current_amplitude = 0;
     var current_plot_coordinates = null;
     var position = index * wave_height;
-    var phase = phase;
-    var duration = duration;
     if(volume_envelope === undefined) {
         volume_envelope = [0.5];
+    }
+    if(freq_envelope === undefined) {
+        freq_envelope = [0.5];
     }
 
     this.freq = freq;

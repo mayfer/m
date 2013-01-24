@@ -69,12 +69,15 @@ function waveCanvas(jq_elem, freqs) {
         waves = [];
         var index = 1;
         $.each(freqs, function(i, freqobj) {
-            var frequency = freqobj['freq'];
-            var volume_envelope = freqobj['volume_envelope'];
-            var duration = freqobj['duration'];
-            var amplitude = ((waves_context.height / freqs.length) / 3);
-            var phase = 0; //Math.random() * Math.PI * 2;
-            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, volume_envelope, duration, phase));
+            waves.push(new standingWave({
+                    context: waves_context,
+                    index: index,
+                    num_waves: freqs.length,
+                    freq: freqobj['freq'],
+                    amplitude: ((waves_context.height / freqs.length) / 3),
+                    volume_envelope: freqobj['volume_envelope'],
+                    duration: freqobj['duration'],
+            }));
             index++;
         });
         superposed = new superposedWave(waves_context, 1, 1, waves);
