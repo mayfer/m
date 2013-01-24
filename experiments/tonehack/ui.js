@@ -294,8 +294,8 @@ function waveCanvas(jq_elem, freqs) {
 
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
-        draw_canvas.setPoints(wave.envelope);
-        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.envelope);
+        draw_canvas.setPoints(wave.volume_envelope);
+        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.volume_envelope);
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
