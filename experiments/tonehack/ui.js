@@ -40,15 +40,14 @@ function waveCanvas(jq_elem, freqs) {
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
-        this.initADSR();
+        this.initEnvelopes();
         this.reset();
 
         var wave_data = [];
         for(var j=0; j<waves.length; j++) {
             wave_struct = {
                 freq: waves[j].freq,
-                audio_amplitude: waves[j].audio_amplitude,
-                envelope: waves[j].envelope,
+                volume_envelope: waves[j].volume_envelope,
                 duration: waves[j].duration,
             };
             wave_data.push(wave_struct);
@@ -70,14 +69,12 @@ function waveCanvas(jq_elem, freqs) {
         waves = [];
         var index = 1;
         $.each(freqs, function(i, freqobj) {
-            var amplitude_ratio = freqobj['audio_amplitude'];
             var frequency = freqobj['freq'];
-            var envelope = freqobj['envelope'];
+            var volume_envelope = freqobj['volume_envelope'];
             var duration = freqobj['duration'];
-            var amplitude = ((waves_context.height / freqs.length) / 3) * amplitude_ratio;
-            var audio_amplitude = 1 * amplitude_ratio;
+            var amplitude = ((waves_context.height / freqs.length) / 3);
             var phase = 0; //Math.random() * Math.PI * 2;
-            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, audio_amplitude, envelope, duration, phase));
+            waves.push(new standingWave(waves_context, index, freqs.length, frequency, amplitude, volume_envelope, duration, phase));
             index++;
         });
         superposed = new superposedWave(waves_context, 1, 1, waves);
@@ -168,13 +165,13 @@ function waveCanvas(jq_elem, freqs) {
         this.drawFrame();
     };
 
-    this.initADSR = function() {
+    this.initEnvelopes = function() {
         var adsr_container = $('<div>').addClass('adsr').appendTo(parent);
         var box_height = adsr_container.height() / (waves.length + 1) - 10;
         var box_width = adsr_container.width() - 40;
         var that = this;
         $.each([
-            $('<div>').addClass('adsr-title').html('ADSR envelopes<br /><span class="tip">(click to edit)</span>'),
+            $('<div>').addClass('adsr-title').html('Envelopes<br /><span class="tip">(click to edit)</span>'),
         ], function() {
             $(this).appendTo(adsr_container);
         });
@@ -201,7 +198,7 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
-            that.drawEnvelope(adsr_canvas, waves[i].envelope);
+            that.drawEnvelopes(adsr_canvas, waves[i].volume_envelope);
             waves[i].setProgressElem(progress_canvas);
         }
 
@@ -215,7 +212,7 @@ function waveCanvas(jq_elem, freqs) {
                 var duration = 1000;
                 // use the duration of the first wave if possible
                 if(freqs.length) duration = freqs[0].duration;
-                freqs.push({freq: 220, audio_amplitude: 1, duration: duration});
+                freqs.push({freq: 220, duration: duration});
                 that.reSetup();
             });
 
@@ -296,7 +293,7 @@ function waveCanvas(jq_elem, freqs) {
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
         draw_canvas.setPoints(wave.envelope);
-        this.drawEnvelope(draw_canvas.getCanvasElement(), wave.envelope);
+        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.envelope);
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
@@ -311,7 +308,7 @@ function waveCanvas(jq_elem, freqs) {
         modal.remove();
     }
 
-    this.drawEnvelope = function(canvas_jq, envelope) {
+    this.drawEnvelopes = function(canvas_jq, envelope) {
         // fills the given canvas elem with the adsr drawing
         var canvas = canvas_jq.get(0);
         var context = canvas.getContext("2d");

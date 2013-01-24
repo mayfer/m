@@ -6,7 +6,7 @@ var BASE_FREQ = 220;
 var frames = 0;
 
 
-function standingWave(context, index, num_waves, freq, amplitude, audio_amplitude, envelope, duration, phase) {
+function standingWave(context, index, num_waves, freq, amplitude, volume_envelope, duration, phase) {
     var amplitude = amplitude;
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
@@ -19,15 +19,14 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     var position = index * wave_height;
     var phase = phase;
     var duration = duration;
-    if(envelope === undefined) {
-        envelope = [0.5];
+    if(volume_envelope === undefined) {
+        volume_envelope = [0.5];
     }
 
     this.freq = freq;
-    this.audio_amplitude = audio_amplitude;
     this.position = position;
     this.duration = duration;
-    this.envelope = envelope;
+    this.volume_envelope = volume_envelope;
     this.phase = phase;
     
     this.jq_progress = null;
@@ -55,8 +54,8 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
     };
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * freq_diff % Math.PI*2;
-        var envelope_amplitude = this.getCurrentEnvelopeValue(time_diff / (this.duration));
-        current_amplitude = Math.sin(step + phase) * amplitude * envelope_amplitude * 2;
+        var volume_envelope_amplitude = this.currentVolumeEnvelopeValue(time_diff / (this.duration));
+        current_amplitude = Math.sin(step + phase) * amplitude * volume_envelope_amplitude * 2;
         var x = 0, y = this.sin(x, freq_diff, current_amplitude);
         var points = [];
         while(x < context.width) {
@@ -74,26 +73,26 @@ function standingWave(context, index, num_waves, freq, amplitude, audio_amplitud
         }
         return points;
     };
-    this.getCurrentEnvelopeValue = function(percent_progress) {
-        var decimal_index = this.envelope.length * percent_progress;
+    this.currentVolumeEnvelopeValue = function(percent_progress) {
+        var decimal_index = this.volume_envelope.length * percent_progress;
         var index = Math.floor(decimal_index);
-        if(true) { // this.envelope_options.repeat) {
-            index = index % this.envelope.length;
-            decimal_index = decimal_index % this.envelope.length;
+        if(true) { // this.volume_envelope_options.repeat) {
+            index = index % this.volume_envelope.length;
+            decimal_index = decimal_index % this.volume_envelope.length;
         } else {
-            index = Math.min(this.envelope.length-1, index);
-            decimal_index = Math.min(this.envelope.length-1, decimal_index);
+            index = Math.min(this.volume_envelope.length-1, index);
+            decimal_index = Math.min(this.volume_envelope.length-1, decimal_index);
         }
         var value;
         
-        // if possible, pick the envelope value from a linear interpolation between indeces.
+        // if possible, pick the volume_envelope value from a linear interpolation between indeces.
         // this should prevent popping/crackling
-        if(index < this.envelope.length-1) {
-            value = this.envelope[index] + (decimal_index - index) * (this.envelope[index+1] - this.envelope[index]);
-        } else if(index >= this.envelope.length-1) {
-            value = this.envelope[this.envelope.length-1];
+        if(index < this.volume_envelope.length-1) {
+            value = this.volume_envelope[index] + (decimal_index - index) * (this.volume_envelope[index+1] - this.volume_envelope[index]);
+        } else if(index >= this.volume_envelope.length-1) {
+            value = this.volume_envelope[this.volume_envelope.length-1];
         } else {
-            value = this.envelope[index];
+            value = this.volume_envelope[index];
         }
         return value;
     };
