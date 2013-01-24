@@ -38,17 +38,12 @@ function standingWave(context, options) {
     var current_amplitude = 0;
     var current_plot_coordinates = null;
     var position = index * wave_height;
-    if(volume_envelope === undefined) {
-        volume_envelope = [0.5];
-    }
-    if(freq_envelope === undefined) {
-        freq_envelope = [0.5];
-    }
 
     this.freq = freq;
     this.position = position;
     this.duration = duration;
     this.volume_envelope = volume_envelope;
+    this.freq_envelope = freq_envelope;
     this.phase = phase;
     
     this.jq_progress = null;

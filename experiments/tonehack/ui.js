@@ -47,6 +47,7 @@ function waveCanvas(jq_elem, freqs) {
         for(var j=0; j<waves.length; j++) {
             wave_struct = {
                 freq: waves[j].freq,
+                freq_envelope: waves[j].freq_envelope,
                 volume_envelope: waves[j].volume_envelope,
                 duration: waves[j].duration,
             };
@@ -75,6 +76,7 @@ function waveCanvas(jq_elem, freqs) {
                     freq: freqobj['freq'],
                     amplitude: ((waves_context.height / freqs.length) / 3),
                     volume_envelope: freqobj['volume_envelope'],
+                    //freq_envelope: freqobj['freq_envelope'],
                     duration: freqobj['duration'],
             }));
             index++;
@@ -200,7 +202,7 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
-            that.drawEnvelopes(adsr_canvas, waves[i].volume_envelope);
+            that.drawEnvelopes(adsr_canvas, waves[i].volume_envelope, waves[i].freq_envelope);
             waves[i].setProgressElem(progress_canvas);
         }
 
@@ -269,7 +271,7 @@ function waveCanvas(jq_elem, freqs) {
                     autostart = true;
                 }
                 freqs[wave_index].freq = parseInt(freq.val());
-                freqs[wave_index].envelope = draw_canvas.getPoints();
+                freqs[wave_index].volume_envelope = draw_canvas.getVolumePoints();
                 freqs[wave_index].duration = modal.find('.duration').val();
                 that.closeEnvelopeEditor();
                 that.reSetup();
@@ -294,8 +296,8 @@ function waveCanvas(jq_elem, freqs) {
 
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
-        draw_canvas.setPoints(wave.volume_envelope);
-        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.volume_envelope);
+        draw_canvas.setPoints(wave.volume_envelope, wave.freq_envelope);
+        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.volume_envelope, wave.freq_envelope);
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
