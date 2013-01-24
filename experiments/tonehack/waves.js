@@ -6,9 +6,8 @@ var BASE_FREQ = 220;
 var frames = 0;
 
 
-function standingWave(options) {
+function standingWave(context, options) {
     default_options = {
-        context: null,
         index: 1,
         num_waves: 1,
         freq: 220,
@@ -20,7 +19,7 @@ function standingWave(options) {
     }
     var options = $.extend({}, default_options, options); 
     
-    var context = options.context;
+    var context = context;
     var index = options.index;
     var num_waves = options.num_waves;
     var freq = options.freq;
@@ -33,7 +32,6 @@ function standingWave(options) {
 
     var step = 0.0;
     var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
-    var freq = options.freq;
     var freq_diff = freq * standing / BASE_FREQ; // calculate relative wavelength
     var speed = DEFAULT_SPEED;
     var wave_height = (context.height / (num_waves+1));

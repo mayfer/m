@@ -69,8 +69,7 @@ function waveCanvas(jq_elem, freqs) {
         waves = [];
         var index = 1;
         $.each(freqs, function(i, freqobj) {
-            waves.push(new standingWave({
-                    context: waves_context,
+            waves.push(new standingWave(waves_context, {
                     index: index,
                     num_waves: freqs.length,
                     freq: freqobj['freq'],
