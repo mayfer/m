@@ -28,7 +28,7 @@ function drawingCanvas(jq_elem) {
     var prev_position = null;
     
     for(var j=0; j<resolution; j++) {
-        points[j] = 0;
+        points[j] = 0.5;
     }
 
     this.getCanvasElement = function() {
@@ -37,7 +37,7 @@ function drawingCanvas(jq_elem) {
 
     this.setPoints = function(envelope) {
         for(var j=0; j<resolution; j++) {
-            points[j] = 1 - envelope[j];
+            points[j] = 1 - envelope[j%envelope.length];
         }
     }
 
