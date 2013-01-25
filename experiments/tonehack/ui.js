@@ -1,3 +1,6 @@
+var VOLUME_ENV_COLOR = '#aa6000';
+var FREQ_ENV_COLOR = '#00aa00';
+
 function waveCanvas(jq_elem, freqs) {
     var jq_elem = jq_elem;
     var superposed = null;
@@ -191,7 +194,8 @@ function waveCanvas(jq_elem, freqs) {
                 .appendTo(adsr_container)
                 .data('wave_index', i);
             $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+waves[i].duration+"ms").appendTo(box);
-            var adsr_canvas = new Canvas(box);
+            var volume_env_canvas = new Canvas(box);
+            var freq_env_canvas = new Canvas(box);
             
             var progress_canvas = new Canvas(box)
                 .css('position', 'absolute')
@@ -202,7 +206,8 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
-            that.drawEnvelope(adsr_canvas, waves[i].volume_envelope);
+            that.drawEnvelope(volume_env_canvas, waves[i].volume_envelope, VOLUME_ENV_COLOR);
+            that.drawEnvelope(freq_env_canvas, waves[i].freq_envelope, FREQ_ENV_COLOR);
             waves[i].setProgressElem(progress_canvas);
         }
 
@@ -231,7 +236,8 @@ function waveCanvas(jq_elem, freqs) {
     this.editEnvelope = function(wave_index) {
         var wave = waves[wave_index];
         var that = this;
-        var draw_canvas;
+        var volume_envelope_canvas;
+        var freq_envelope_canvas;
         
         var modal = $('<div>')
             .addClass('modal-adsr')
@@ -271,7 +277,8 @@ function waveCanvas(jq_elem, freqs) {
                     autostart = true;
                 }
                 freqs[wave_index].freq = parseInt(freq.val());
-                freqs[wave_index].volume_envelope = draw_canvas.getPoints();
+                freqs[wave_index].volume_envelope = volume_envelope_canvas.getPoints();
+                freqs[wave_index].freq_envelope = freq_envelope_canvas.getPoints();
                 freqs[wave_index].duration = modal.find('.duration').val();
                 that.closeEnvelopeEditor();
                 that.reSetup();
@@ -294,10 +301,16 @@ function waveCanvas(jq_elem, freqs) {
                 }
             }));
 
-        draw_canvas = new drawingCanvas(draw_area);
-        draw_canvas.init();
-        draw_canvas.setPoints(wave.volume_envelope);
-        this.drawEnvelope(draw_canvas.getCanvasElement(), wave.volume_envelope, wave.freq_envelope);
+        freq_envelope_canvas = new drawingCanvas(draw_area);
+        freq_envelope_canvas.init('#00aa60');
+        freq_envelope_canvas.setPoints(wave.freq_envelope);
+        this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
+
+        volume_envelope_canvas = new drawingCanvas(draw_area);
+        volume_envelope_canvas.init('#aa6000');
+        volume_envelope_canvas.setPoints(wave.volume_envelope);
+        this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
+        
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
@@ -312,12 +325,16 @@ function waveCanvas(jq_elem, freqs) {
         modal.remove();
     }
 
-    this.drawEnvelope = function(canvas_jq, envelope) {
+    this.drawEnvelope = function(canvas_jq, envelope, color) {
         // fills the given canvas elem with the adsr drawing
         var canvas = canvas_jq.get(0);
         var context = canvas.getContext("2d");
 
-        context.strokeStyle = '#aa6000';
+        if(color) {
+            context.strokeStyle = color;
+        } else {
+            context.strokeStyle = VOLUME_ENV_COLOR;
+        }
         context.lineWidth = 2;
         context.lineCap = "round";
         context.clearRect(0, 0, context.width, context.height);

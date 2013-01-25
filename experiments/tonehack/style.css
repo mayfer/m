@@ -19,9 +19,11 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
 
 .adsr-title { position: absolute; top: 10px; left: 20px; color: #000; font-size: 12px; line-height: 12px; }
 .adsr-title .tip { font-size: 10px; color: #444; }
-.adsr-link, .adsr-link:hover { display: block; background: #eee; position: absolute; border-bottom: 2px solid #555; border-left: 2px solid #555; }
+.adsr-link, .adsr-link:hover { display: block; position: absolute; border-bottom: 2px solid #555; border-left: 2px solid #555; background: #eee; }
 .adsr-link:hover { background: #fff; }
 .adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; }
+
+.adsr-link canvas { position: absolute; top: 0; left: 0; }
             
 .add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
 
@@ -40,7 +42,8 @@ input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8)
 .modal-adsr .delete { line-height: 37px; margin-left: 15px; font-size: 14px; }
 .modal-adsr .freq { font-size: 18px; }
 
-.draw-adsr{ margin: 15px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; }
+.drawing-canvas { position: absolute; top: 0; left: 0; }
+.draw-adsr{ margin: 15px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; position: relative; }
 
 .graph-label { color: #000; z-index: 10000; display: block; position: absolute; }
 .graph-label.y { -webkit-transform: rotate(-90deg); width: 100px; left: -35px; top: 45%; }

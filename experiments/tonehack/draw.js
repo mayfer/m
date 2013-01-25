@@ -18,7 +18,7 @@ function Canvas(jq_elem) {
 
 function drawingCanvas(jq_elem) {
     var jq_elem = jq_elem;
-    var canvas_jq = new Canvas(jq_elem);
+    var canvas_jq = new Canvas(jq_elem).addClass('drawing-canvas');
     var canvas = canvas_jq.get(0);
     var resolution = canvas_jq.innerWidth();
     var ctx = canvas.getContext("2d");
@@ -54,10 +54,16 @@ function drawingCanvas(jq_elem) {
         return amp_points;
     }
 
-    this.init = function() {
+    this.init = function(color) {
         this.resetLineHistory();
         ctx.lineWidth = 2;
         ctx.lineCap = "round";
+
+        if(color) {
+            ctx.strokeStyle = color;
+        } else {
+            ctx.strokeStyle = '#aa6000';
+        }
 
         $("*").on("mousemove", function(e) {
             if(draw == true) {
@@ -88,9 +94,6 @@ function drawingCanvas(jq_elem) {
     this.resetLineHistory = function() {
         prev_position = { x: null, y: null };
     }
-    this.setLineColor = function(color) {
-        ctx.strokeStyle = color;
-    }
     this.drawLine = function(prev_position, current_position) {
         if(prev_position == null || prev_position.x==null || prev_position.y==null) {
             prev_position.x = current_position.x;
@@ -115,7 +118,6 @@ function drawingCanvas(jq_elem) {
                 points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
             }
         }
-        ctx.strokeStyle = '#aa6000';
         ctx.beginPath();
         this.drawPoints(points);
         ctx.stroke();
