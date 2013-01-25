@@ -37,6 +37,8 @@ function drawingCanvas(jq_elem) {
 
     this.setPoints = function(envelope) {
         for(var j=0; j<resolution; j++) {
+            // this needs to be revised.
+            // should be stretching nicely according to the provided envelope length
             points[j] = 1 - envelope[j%envelope.length];
         }
     }
