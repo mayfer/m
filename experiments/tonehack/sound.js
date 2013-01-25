@@ -40,11 +40,11 @@ soundWave.prototype.process = function(e) {
             wave = this.standing_waves[j];
 
             var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.volume_envelope);
-            var current_freq = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope);
+            var current_freq = (wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5) * wave.freq;
             
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude;
-            y = current_amplitude * Math.sin(this.x * wave.freq + wave.phase);
+            y = current_amplitude * Math.sin(this.x * current_freq + wave.phase);
             
             cumulative_amplitude += y / num_standing_waves;
         }
