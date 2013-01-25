@@ -42,8 +42,15 @@ input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8)
 .modal-adsr .delete { line-height: 37px; margin-left: 15px; font-size: 14px; }
 .modal-adsr .freq { font-size: 18px; }
 
-.drawing-canvas { position: absolute; top: 0; left: 0; }
 .draw-adsr{ margin: 15px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; position: relative; }
+
+.drawing-canvas { position: absolute; top: 0; left: 0; }
+.drawing-canvas.active { z-index: 100; }
+
+.draw-mode { z-index: 200; position: absolute; top: 30px; left: 50%; width: 300px; margin-left: -150px; border-radius: 5px; line-height: 30px; text-align: center; box-shadow: 0 0 5px 0 rgba(0,0,0,0.5); }
+.draw-mode a { background: #fff; color: #aaa; display: inline-block; width: 150px; border-radius: 5px; border-bottom: 2px solid #aaa; }
+.draw-mode a.volume.selected { color: #aa6000; border-bottom: 2px solid #aa6000; }
+.draw-mode a.freq.selected { color: #00aa00; border-bottom: 2px solid #00aa00; }
 
 .graph-label { color: #000; z-index: 10000; display: block; position: absolute; }
 .graph-label.y { -webkit-transform: rotate(-90deg); width: 100px; left: -35px; top: 45%; }

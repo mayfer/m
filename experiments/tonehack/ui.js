@@ -79,7 +79,7 @@ function waveCanvas(jq_elem, freqs) {
                     freq: freqobj['freq'],
                     amplitude: ((waves_context.height / freqs.length) / 3),
                     volume_envelope: freqobj['volume_envelope'],
-                    //freq_envelope: freqobj['freq_envelope'],
+                    freq_envelope: freqobj['freq_envelope'],
                     duration: freqobj['duration'],
             }));
             index++;
@@ -300,15 +300,36 @@ function waveCanvas(jq_elem, freqs) {
                     that.start();
                 }
             }));
+        
+        var mode_switch = $('<div>').addClass('draw-mode').html('').appendTo(modal);
+        var vol_mode = $('<a>').attr('href', '#').html('Volume').addClass('volume selected').appendTo(mode_switch);
+        var freq_mode = $('<a>').attr('href', '#').html('Pitch').addClass('freq').appendTo(mode_switch);
+
+        vol_mode.click(function(e){
+            e.preventDefault();
+            vol_mode.addClass('selected');
+            freq_mode.removeClass('selected');
+            volume_envelope_canvas.getCanvasElement().addClass('active');
+            freq_envelope_canvas.getCanvasElement().removeClass('active');
+        });
+        freq_mode.click(function(e){
+            e.preventDefault();
+            freq_mode.addClass('selected');
+            vol_mode.removeClass('selected');
+            freq_envelope_canvas.getCanvasElement().addClass('active');
+            volume_envelope_canvas.getCanvasElement().removeClass('active');
+        });
 
         freq_envelope_canvas = new drawingCanvas(draw_area);
         freq_envelope_canvas.init('#00aa60');
         freq_envelope_canvas.setPoints(wave.freq_envelope);
+        freq_envelope_canvas.getCanvasElement().addClass('volume');
         this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
 
         volume_envelope_canvas = new drawingCanvas(draw_area);
         volume_envelope_canvas.init('#aa6000');
         volume_envelope_canvas.setPoints(wave.volume_envelope);
+        freq_envelope_canvas.getCanvasElement().addClass('freq');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
         
         freq.focus();
