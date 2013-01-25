@@ -23,37 +23,27 @@ function drawingCanvas(jq_elem) {
     var resolution = canvas_jq.innerWidth();
     var ctx = canvas.getContext("2d");
     var that = this;
-    var volume_points = new Float32Array(resolution);
-    var freq_points = new Float32Array(resolution);
+    var points = new Float32Array(resolution);
     var draw = false;
     var prev_position = null;
     
     for(var j=0; j<resolution; j++) {
-        volume_points[j] = 0;
-        freq_points[j] = 0;
+        points[j] = 0;
     }
 
     this.getCanvasElement = function() {
         return canvas_jq;
     }
 
-    this.setPoints = function(volume_envelope, freq_envelope) {
+    this.setPoints = function(envelope) {
         for(var j=0; j<resolution; j++) {
-            volume_points[j] = 1 - volume_envelope[j];
-            freq_points[j] = 1 - freq_envelope[j];
+            points[j] = 1 - envelope[j];
         }
     }
 
-    this.getVolumePoints = function() {
-        return this.getPoints(volume_points);
-    }
-    this.getFreqPoints = function() {
-        return this.getPoints(freq_points);
-    }
-
-    this.getPoints = function(points) {
+    this.getPoints = function() {
         var amp_points = [];
-        for(var i=0; i<points.length; i++) {
+        for(var i=0; i<resolution; i++) {
             // y is inverted on the canvas, so 1 - val.
             // also, limit to between 0 and 1
             amp_points[i] = Math.min(1, Math.max(0, 1 - points[i]));
@@ -72,7 +62,7 @@ function drawingCanvas(jq_elem) {
         $("*").on("mousemove", function(e) {
             if(draw == true) {
                 var current_position = that.getCursorPosition(e);
-                that.drawLine(ctx, prev_position, current_position);
+                that.drawLine(prev_position, current_position);
                 prev_position = current_position;
             }
         });
@@ -98,7 +88,10 @@ function drawingCanvas(jq_elem) {
     this.resetLineHistory = function() {
         prev_position = { x: null, y: null };
     }
-    this.drawLine = function(ctx, prev_position, current_position) {
+    this.setLineColor = function(color) {
+        ctx.strokeStyle = color;
+    }
+    this.drawLine = function(prev_position, current_position) {
         if(prev_position == null || prev_position.x==null || prev_position.y==null) {
             prev_position.x = current_position.x;
             prev_position.y = current_position.y;
@@ -119,17 +112,12 @@ function drawingCanvas(jq_elem) {
         for(var i = from; i <= to; i++) {
             if(from != to) {
                 // linear values between from and to coordinates
-                volume_points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
+                points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
             }
         }
         ctx.strokeStyle = '#aa6000';
         ctx.beginPath();
-        this.drawPoints(volume_points);
-        ctx.stroke();
-        
-        ctx.strokeStyle = '#0006aa';
-        ctx.beginPath();
-        this.drawPoints(freq_points);
+        this.drawPoints(points);
         ctx.stroke();
     }
     this.drawPoints = function(points) {

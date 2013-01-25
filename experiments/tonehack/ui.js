@@ -202,7 +202,7 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 that.editEnvelope($(this).data('wave_index'));
             });
-            that.drawEnvelopes(adsr_canvas, waves[i].volume_envelope, waves[i].freq_envelope);
+            that.drawEnvelope(adsr_canvas, waves[i].volume_envelope);
             waves[i].setProgressElem(progress_canvas);
         }
 
@@ -271,7 +271,7 @@ function waveCanvas(jq_elem, freqs) {
                     autostart = true;
                 }
                 freqs[wave_index].freq = parseInt(freq.val());
-                freqs[wave_index].volume_envelope = draw_canvas.getVolumePoints();
+                freqs[wave_index].volume_envelope = draw_canvas.getPoints();
                 freqs[wave_index].duration = modal.find('.duration').val();
                 that.closeEnvelopeEditor();
                 that.reSetup();
@@ -296,8 +296,8 @@ function waveCanvas(jq_elem, freqs) {
 
         draw_canvas = new drawingCanvas(draw_area);
         draw_canvas.init();
-        draw_canvas.setPoints(wave.volume_envelope, wave.freq_envelope);
-        this.drawEnvelopes(draw_canvas.getCanvasElement(), wave.volume_envelope, wave.freq_envelope);
+        draw_canvas.setPoints(wave.volume_envelope);
+        this.drawEnvelope(draw_canvas.getCanvasElement(), wave.volume_envelope, wave.freq_envelope);
         freq.focus();
         modal.on('keypress', function(e){
             if(e.keyCode==13) {
@@ -312,7 +312,7 @@ function waveCanvas(jq_elem, freqs) {
         modal.remove();
     }
 
-    this.drawEnvelopes = function(canvas_jq, envelope) {
+    this.drawEnvelope = function(canvas_jq, envelope) {
         // fills the given canvas elem with the adsr drawing
         var canvas = canvas_jq.get(0);
         var context = canvas.getContext("2d");
