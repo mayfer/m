@@ -56,7 +56,7 @@ soundWave.prototype.process = function(e) {
                 do {
                     trial = Math.sin((x_correction + this.x) * prev_freqs[j] + wave.phase);
                     x_correction += x_increment;
-                } while(Math.abs(trial - y) > 0.01);
+                } while(Math.abs(trial - y) > 0.001);
                 y = trial;
             }
             

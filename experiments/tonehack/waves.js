@@ -31,8 +31,8 @@ function standingWave(context, options) {
     
 
     var step = 0.0;
-    var standing = Math.PI / context.width; // resonant wavelength for canvases['waves'] width
-    var freq_diff = freq * standing / BASE_FREQ; // calculate relative wavelength
+    var standing = Math.PI / context.width; // resonant wavelength for canvas width
+    var relative_freq = freq * standing / BASE_FREQ; // calculate relative wavelength
     var speed = DEFAULT_SPEED;
     var wave_height = (context.height / (num_waves+1));
     var current_amplitude = 0;
@@ -70,12 +70,12 @@ function standingWave(context, options) {
         return -amplitude * Math.sin(rad_diff * x);
     };
     this.getPlotCoordinates = function(time_diff) {
-        step = speed * time_diff * (Math.PI/20) * freq_diff % Math.PI*2;
+        step = speed * time_diff * (Math.PI/20) * relative_freq % Math.PI*2;
         var volume_envelope_amplitude = this.currentEnvelopeValue(time_diff / this.duration, this.volume_envelope);
-        var current_freq_diff = (this.currentEnvelopeValue(time_diff / this.duration, this.freq_envelope) + 0.5) * freq_diff;
+        var current_relative_freq = (this.currentEnvelopeValue(time_diff / this.duration, this.freq_envelope) + 0.5) * relative_freq;
         
         current_amplitude = Math.sin(step + phase) * amplitude * volume_envelope_amplitude * 2;
-        var x = 0, y = this.sin(x, current_freq_diff, current_amplitude);
+        var x = 0, y = this.sin(x, current_relative_freq, current_amplitude);
         var points = [];
         while(x < context.width) {
             var from = {
@@ -83,7 +83,7 @@ function standingWave(context, options) {
                 y: y,
             };
             x += X_INCREMENT;
-            y = this.sin(x, current_freq_diff, current_amplitude);
+            y = this.sin(x, current_relative_freq, current_amplitude);
             var to = {
                 x: x,
                 y: y,
