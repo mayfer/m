@@ -3,6 +3,7 @@
 
 soundWave = function(context, standing_waves) {
     this.x = 0;
+    this.x_corrections = [];
     this.counter = 0;
     this.context = context;
     this.sampleRate = this.context.sampleRate; // 44100 by default
@@ -10,6 +11,10 @@ soundWave = function(context, standing_waves) {
     this.playing = false;
 
     this.standing_waves = standing_waves;
+
+    for (var j = 0; j < this.standing_waves.length; j++) {
+        this.x_corrections[j] = 0;
+    }
 
     this.node = context.createJavaScriptNode(4096, 0, 2);
 
@@ -48,15 +53,19 @@ soundWave.prototype.process = function(e) {
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude;
-            y = Math.sin(this.x * current_freq + wave.phase);
 
+            // buffer value for given wave
+            y = Math.sin((this.x + this.x_corrections[j]) * current_freq + wave.phase);
+
+            // phase shifting to prevent popping
             if(prev_freqs[j] && prev_freqs[j] != current_freq) {
-                var x_correction = 0;
-                var trial;
-                do {
-                    trial = Math.sin((x_correction + this.x) * prev_freqs[j] + wave.phase);
-                    x_correction += x_increment;
-                } while(Math.abs(trial - y) > 0.001);
+                var prev = Math.sin((this.x_corrections[j] + this.x) * prev_freqs[j] + wave.phase);
+
+                var trial = y;
+                while(Math.abs(trial - prev) > 0.001) {
+                    trial = Math.sin((this.x_corrections[j] + this.x) * current_freq + wave.phase);
+                    this.x_corrections[j] += x_increment;
+                } 
                 y = trial;
             }
             
