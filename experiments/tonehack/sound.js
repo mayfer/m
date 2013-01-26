@@ -2,9 +2,10 @@
 // Modified by Murat Ayfer - http://muratayfer.com
 
 soundWave = function(context, standing_waves) {
-    this.x = 0;
-    this.x_corrections = [];
-    this.counter = 0;
+    // xs is a list of x (time) values, one per wave.
+    // time is not represented as synchronized clicks or milliseconds, its passing is freq dependent
+    // so that's why we keep a value per each wave.
+    this.xs = [];
     this.context = context;
     this.sampleRate = this.context.sampleRate; // 44100 by default
     this.sampleRateMillisecond = this.sampleRate / 1000;
@@ -13,7 +14,7 @@ soundWave = function(context, standing_waves) {
     this.standing_waves = standing_waves;
 
     for (var j = 0; j < this.standing_waves.length; j++) {
-        this.x_corrections[j] = 0;
+        this.xs[j] = 0;
     }
 
     this.node = context.createJavaScriptNode(4096, 0, 2);
@@ -48,29 +49,21 @@ soundWave.prototype.process = function(e) {
             wave = this.standing_waves[j];
 
             var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.volume_envelope);
-            var current_freq = (wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5) * wave.freq;
+            var pitch_bend = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5;
+            var current_freq = pitch_bend * wave.freq;
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude;
-            
-            // phase shifting to prevent popping
-            if(prev_freqs[j] && prev_freqs[j] != current_freq) {
-                this.x_corrections[j] = Math.asin(prev_ys[j]) / prev_freqs[j] - wave.phase;
-            }
 
             // buffer value for given wave
-            y = Math.sin((this.x + this.x_corrections[j]) * current_freq + wave.phase);
-            prev_freqs[j] = current_freq;
-            prev_ys[j] = y;
-
+            y = Math.sin(this.xs[j] + wave.phase);
+            this.xs[j] += Math.PI * 2 * current_freq / this.sampleRate;
+            
             cumulative_amplitude += (current_amplitude * y) / num_standing_waves;
         }
         for(var k = 0; k < num_channels; k++) {
             channels[k][i] = cumulative_amplitude;
         }
-
-        this.counter += 1;
-        this.x += x_increment;
     }
 }
 
