@@ -177,14 +177,9 @@ function waveCanvas(jq_elem, freqs) {
         var box_height = adsr_container.height() / (waves.length + 1) - 10;
         var box_width = adsr_container.width() - 40;
         var that = this;
-        $.each([
-            $('<div>').addClass('adsr-title').html('Envelopes<br /><span class="tip">(click to edit)</span>'),
-        ], function() {
-            $(this).appendTo(adsr_container);
-        });
+        $('<div>').addClass('adsr-title').html('Envelopes<br /><span class="tip">(click to edit)</span>').appendTo(adsr_container);
 
         for(var i = 0; i < waves.length; i++) {
-            //context.fillRect(20, waves[i].position - (box_height/2), box_width, box_height);
             var box = $('<a>').addClass('adsr-link')
                 .attr('href', '#')
                 .width(box_width)

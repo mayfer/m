@@ -55,25 +55,6 @@ soundWave.prototype.process = function(e) {
         this.counter += 1;
         this.x += Math.PI * 2 / this.sampleRate;
     }
-    /*
-    var jump_duration = 150;
-    var i = 0;
-    while(i < (buffer_size-jump_duration)) {
-        var jump = channels[0][i+jump_duration] - channels[0][i];
-        if(jump > 0.3) {
-            console.log('Jumped at '+i+' out of '+buffer_size);
-            for(var j = 0; j < jump_duration; j++) {
-                for(var k = 0; k < num_channels; k++) {
-                    channels[k][i+j] = channels[k][i] + (jump/jump_duration) * j;
-                }
-            }
-            i += jump_duration;
-        } else {
-            i++;
-        }
-    }
-    console.log('End of buffer at '+buffer_size);
-    */
 }
 
 soundWave.prototype.play = function() {
