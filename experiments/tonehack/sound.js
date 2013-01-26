@@ -32,6 +32,10 @@ soundWave.prototype.process = function(e) {
     var num_standing_waves = this.standing_waves.length;
 
     var cumulative_amplitude = 0;
+    var prev_freqs = [];
+    var prev_amplitude = 0;
+
+    var x_increment = Math.PI * 2 / this.sampleRate;
 
     for (var i = 0; i < buffer_size; i++) {
         cumulative_amplitude = 0;
@@ -41,19 +45,31 @@ soundWave.prototype.process = function(e) {
 
             var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.volume_envelope);
             var current_freq = (wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5) * wave.freq;
-            
+
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude;
-            y = current_amplitude * Math.sin(this.x * current_freq + wave.phase);
+            y = Math.sin(this.x * current_freq + wave.phase);
+
+            if(prev_freqs[j] && prev_freqs[j] != current_freq) {
+                var x_correction = 0;
+                var trial;
+                do {
+                    trial = Math.sin((x_correction + this.x) * prev_freqs[j] + wave.phase);
+                    x_correction += x_increment;
+                } while(Math.abs(trial - y) > 0.01);
+                y = trial;
+            }
             
-            cumulative_amplitude += y / num_standing_waves;
+            cumulative_amplitude += (current_amplitude * y) / num_standing_waves;
+
+            prev_freqs[j] = wave.freq;
         }
         for(var k = 0; k < num_channels; k++) {
             channels[k][i] = cumulative_amplitude;
         }
 
         this.counter += 1;
-        this.x += Math.PI * 2 / this.sampleRate;
+        this.x += x_increment;
     }
 }
 
