@@ -105,7 +105,6 @@ function drawingCanvas(jq_elem) {
             
         var adjusted_px = parseInt((prev_position.x / ctx.width) * resolution);
         var adjusted_cx = parseInt((current_position.x / ctx.width) * resolution);
-        ctx.clearRect(0, 0, ctx.width, ctx.height);
         var from, to;
         if(adjusted_px < adjusted_cx) {
             from = adjusted_px;
@@ -121,14 +120,15 @@ function drawingCanvas(jq_elem) {
                 points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
             }
         }
-        ctx.beginPath();
-        this.drawPoints(points);
-        ctx.stroke();
+        this.drawPoints();
     }
-    this.drawPoints = function(points) {
+    this.drawPoints = function() {
+        ctx.clearRect(0, 0, ctx.width, ctx.height);
+        ctx.beginPath();
         for(var i=0; i<resolution; i++) {
             ctx.lineTo(i*(ctx.width/resolution), points[i]*ctx.height);
         }
+        ctx.stroke();
     }
     this.getCursorPosition = function(e) {
         var x = e.pageX - canvas_jq.offset().left

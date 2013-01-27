@@ -236,8 +236,6 @@ function waveCanvas(jq_elem, freqs) {
         
         var modal = $('<div>')
             .addClass('modal-adsr')
-            .width((parent.innerWidth() - 44) + 'px')
-            .height((400) + 'px')
             .appendTo(parent);
         var freq = $('<input type="text" />').val(wave.freq);
         $('<div>')
@@ -249,17 +247,8 @@ function waveCanvas(jq_elem, freqs) {
             }))
             .append($('<h3>').html('ADSR envelope for ').append(freq).append(' Hz'));
 
-        $('<div>').addClass('graph-label x').html('Time').appendTo(modal);
-        $('<div>').addClass('graph-label x-min').html('0').appendTo(modal);
-        $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(modal);
-        $('<div>').addClass('graph-label y').html('Amplitude').appendTo(modal);
-        $('<div>').addClass('graph-label y-min').html('0%').appendTo(modal);
-        $('<div>').addClass('graph-label y-max').html('100%').appendTo(modal);
-        
         var draw_area = $('<div>')
             .addClass('draw-adsr')
-            .css('height', (modal.innerHeight() - 116) + "px")
-            .css('width', (modal.innerWidth() - 30 - 15) + "px")
             .appendTo(modal);
         $('<div>')
             .addClass('actions')
@@ -294,7 +283,24 @@ function waveCanvas(jq_elem, freqs) {
                 if(autostart) {
                     that.start();
                 }
+            }))
+            .append($('<a>').addClass('reset-freq-envelope').attr('href', '#').html('Reset pitch envelope').click(function(e) {
+                e.preventDefault();
+                freq_envelope_canvas.setPoints([0.5]);
+                freq_envelope_canvas.drawPoints();
+            }))
+            .append($('<a>').addClass('reset-volume-envelope').attr('href', '#').html('Reset volume envelope').click(function(e) {
+                e.preventDefault();
+                volume_envelope_canvas.setPoints([0.5]);
+                volume_envelope_canvas.drawPoints();
             }));
+
+        $('<div>').addClass('graph-label x').html('Time').appendTo(draw_area);
+        $('<div>').addClass('graph-label x-min').html('0').appendTo(draw_area);
+        $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(draw_area);
+        $('<div>').addClass('graph-label y').html('Amplitude').appendTo(draw_area);
+        $('<div>').addClass('graph-label y-min').html('0%').appendTo(draw_area);
+        $('<div>').addClass('graph-label y-max').html('100%').appendTo(draw_area);
         
         var mode_switch = $('<div>').addClass('draw-mode').html('').appendTo(modal);
         var vol_mode = $('<a>').attr('href', '#').html('Volume').addClass('volume selected').appendTo(mode_switch);
@@ -320,13 +326,13 @@ function waveCanvas(jq_elem, freqs) {
         freq_envelope_canvas = new drawingCanvas(draw_area);
         freq_envelope_canvas.init(FREQ_ENV_COLOR);
         freq_envelope_canvas.setPoints(wave.freq_envelope);
-        freq_envelope_canvas.getCanvasElement().addClass('volume');
+        freq_envelope_canvas.getCanvasElement().addClass('freq');
         this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
 
         volume_envelope_canvas = new drawingCanvas(draw_area);
         volume_envelope_canvas.init(VOLUME_ENV_COLOR);
         volume_envelope_canvas.setPoints(wave.volume_envelope);
-        freq_envelope_canvas.getCanvasElement().addClass('freq');
+        volume_envelope_canvas.getCanvasElement().addClass('volume active');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
         
         freq.focus();
