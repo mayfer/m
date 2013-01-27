@@ -6,6 +6,7 @@ soundWave = function(context, standing_waves) {
     // time is not represented as synchronized clicks or milliseconds, its passing is freq dependent
     // so that's why we keep a value per each wave.
     this.xs = [];
+    this.counter = 0;
     this.context = context;
     this.sampleRate = this.context.sampleRate; // 44100 by default
     this.sampleRateMillisecond = this.sampleRate / 1000;
@@ -37,8 +38,6 @@ soundWave.prototype.process = function(e) {
     var num_standing_waves = this.standing_waves.length;
 
     var cumulative_amplitude = 0;
-    var prev_freqs = [];
-    var prev_ys = [];
 
     var x_increment = Math.PI * 2 / this.sampleRate;
 
@@ -64,6 +63,7 @@ soundWave.prototype.process = function(e) {
         for(var k = 0; k < num_channels; k++) {
             channels[k][i] = cumulative_amplitude;
         }
+        this.counter += 1;
     }
 }
 
