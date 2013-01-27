@@ -21,7 +21,7 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
 .adsr-title .tip { font-size: 10px; color: #444; }
 .adsr-link, .adsr-link:hover { display: block; position: absolute; border-bottom: 2px solid #555; border-left: 2px solid #555; background: #eee; }
 .adsr-link:hover { background: #fff; }
-.adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; }
+.adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; text-shadow: 1px 0 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; z-index: 20; }
 
 .adsr-link canvas { position: absolute; top: 0; left: 0; }
             

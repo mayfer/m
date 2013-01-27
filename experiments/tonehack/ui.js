@@ -177,7 +177,7 @@ function waveCanvas(jq_elem, freqs) {
         var box_height = adsr_container.height() / (waves.length + 1) - 10;
         var box_width = adsr_container.width() - 40;
         var that = this;
-        $('<div>').addClass('adsr-title').html('Envelopes<br /><span class="tip">(click to edit)</span>').appendTo(adsr_container);
+        $('<div>').addClass('adsr-title').html('Overtones<br /><span class="tip">(click to edit)</span>').appendTo(adsr_container);
 
         for(var i = 0; i < waves.length; i++) {
             var box = $('<a>').addClass('adsr-link')
@@ -188,7 +188,7 @@ function waveCanvas(jq_elem, freqs) {
                 .css('left', 20)
                 .appendTo(adsr_container)
                 .data('wave_index', i);
-            $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+waves[i].duration+"ms").appendTo(box);
+            $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+(waves[i].duration/1000)+"s").appendTo(box);
             var volume_env_canvas = new Canvas(box);
             var freq_env_canvas = new Canvas(box);
             
