@@ -1,4 +1,4 @@
-var VOLUME_ENV_COLOR = '#aa6000';
+var VOLUME_ENV_COLOR = '#aa6600';
 var FREQ_ENV_COLOR = '#00aa00';
 
 function waveCanvas(jq_elem, freqs) {
@@ -306,6 +306,7 @@ function waveCanvas(jq_elem, freqs) {
             freq_mode.removeClass('selected');
             volume_envelope_canvas.getCanvasElement().addClass('active');
             freq_envelope_canvas.getCanvasElement().removeClass('active');
+            freq.focus();
         });
         freq_mode.click(function(e){
             e.preventDefault();
@@ -313,16 +314,17 @@ function waveCanvas(jq_elem, freqs) {
             vol_mode.removeClass('selected');
             freq_envelope_canvas.getCanvasElement().addClass('active');
             volume_envelope_canvas.getCanvasElement().removeClass('active');
+            freq.focus();
         });
 
         freq_envelope_canvas = new drawingCanvas(draw_area);
-        freq_envelope_canvas.init('#00aa60');
+        freq_envelope_canvas.init(FREQ_ENV_COLOR);
         freq_envelope_canvas.setPoints(wave.freq_envelope);
         freq_envelope_canvas.getCanvasElement().addClass('volume');
         this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
 
         volume_envelope_canvas = new drawingCanvas(draw_area);
-        volume_envelope_canvas.init('#aa6000');
+        volume_envelope_canvas.init(VOLUME_ENV_COLOR);
         volume_envelope_canvas.setPoints(wave.volume_envelope);
         freq_envelope_canvas.getCanvasElement().addClass('freq');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
