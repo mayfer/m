@@ -48,7 +48,8 @@ soundWave.prototype.process = function(e) {
             wave = this.standing_waves[j];
 
             var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.volume_envelope);
-            var pitch_bend = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5;
+            var pitch_bend = Math.pow(wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration), wave.freq_envelope) + 0.5, 2);
+            var pitch_bend = wave.currentPitchBend(this.counter / (this.sampleRateMillisecond * wave.duration));
             var current_freq = pitch_bend * wave.freq;
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception

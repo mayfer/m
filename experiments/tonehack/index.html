@@ -6,6 +6,7 @@
         <!-- libs -->
         <script type='text/javascript' src='jquery.min.js'></script>
         <script type='text/javascript' src='require.min.js'></script>
+        <script type='text/javascript' src='piano.js'></script>
 
         <!-- hand-written js -->
         <script type='text/javascript' src='draw.js'></script>
@@ -23,6 +24,7 @@
 
         <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="style.css" rel="stylesheet" type="text/css" />
+        <link href="piano.css" rel="stylesheet" type="text/css" />
         <script type='text/javascript'>
 
             $(document).ready(function() {
@@ -51,6 +53,12 @@
                         canvas_overtones.loadPreset(presets[preset]);
                     });
                 });
+
+                /*
+                $('#piano').piano({
+                    number_of_keys: 50,
+                });
+                */
             });
 
         </script>
@@ -62,6 +70,7 @@
             <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
 
             <div id='overtones' class='wave-canvas'> </div>
+            <div id='piano'></div>
             <div id='article'>
                 <p>
                     <strong>Usage:</strong>

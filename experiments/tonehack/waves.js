@@ -72,7 +72,7 @@ function standingWave(context, options) {
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * relative_freq % Math.PI*2;
         var volume_envelope_amplitude = this.currentEnvelopeValue(time_diff / this.duration, this.volume_envelope);
-        var current_relative_freq = (this.currentEnvelopeValue(time_diff / this.duration, this.freq_envelope) + 0.5) * relative_freq;
+        var current_relative_freq = this.currentPitchBend(time_diff / this.duration) * relative_freq;
         
         current_amplitude = Math.sin(step + phase) * amplitude * volume_envelope_amplitude * 2;
         var x = 0, y = this.sin(x, current_relative_freq, current_amplitude);
@@ -115,6 +115,10 @@ function standingWave(context, options) {
         }
         return value;
     };
+    this.currentPitchBend = function(percent_progress) {
+        var pitch_bend = (this.currentEnvelopeValue(percent_progress, this.freq_envelope)*2);
+        return pitch_bend;
+    }
     this.draw = function(time_diff) {
         this.current_plot_coordinates = this.getPlotCoordinates(time_diff);
         context.beginPath();
