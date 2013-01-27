@@ -42,15 +42,13 @@
                     "presets/clarinet.js",
                 ];
                 require(preset_paths, function() {
-                    var presets_form = $('<select>').appendTo($('#presets'));
-                    var preset_names = Object.keys(presets);
-                    for(var i=0; i<preset_names.length; i++) {
-                        $('<option>').html(preset_names[i]).appendTo(presets_form);
-                    }
-                    presets_form.on('change', function(e){
-                        var preset = $(this).val();
-                        canvas_overtones.stop();
-                        canvas_overtones.loadPreset(presets[preset]);
+                    var presets_div = $('#presets');
+                    $.each(presets, function(key, preset){
+                        $('<a>').attr('href', '#').addClass('preset').html(key).appendTo(presets_div).on('click', function(e){
+                            e.preventDefault();
+                            canvas_overtones.stop();
+                            canvas_overtones.loadPreset(preset);
+                        });
                     });
                 });
 
@@ -59,18 +57,23 @@
                     number_of_keys: 50,
                 });
                 */
+
             });
 
         </script>
     </head>
     <body>
         <div class='container'>
-            <div id='presets'>Load preset: </div>
             <h1>tonehack<span> &lt;</span></h1>
             <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
 
-            <div id='overtones' class='wave-canvas'> </div>
-            <div id='piano'></div>
+            <div id='tonehack'>
+                <div id='presets'>
+                    <h3>Presets</h3>
+                </div>
+                <div id='overtones' class='wave-canvas'> </div>
+            </div>
+            
             <div id='article'>
                 <p>
                     <strong>Usage:</strong>

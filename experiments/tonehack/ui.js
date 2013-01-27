@@ -249,6 +249,7 @@ function waveCanvas(jq_elem, freqs) {
 
         var draw_area = $('<div>')
             .addClass('draw-adsr')
+            .css('width', (modal.innerWidth() - 30 - 15) + "px")
             .appendTo(modal);
         $('<div>')
             .addClass('actions')

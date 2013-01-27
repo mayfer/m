@@ -21,7 +21,7 @@ function drawingCanvas(jq_elem) {
     var jq_elem = jq_elem;
     var canvas_jq = new Canvas(jq_elem).addClass('drawing-canvas');
     var canvas = canvas_jq.get(0);
-    var resolution = canvas_jq.innerWidth();
+    var resolution = 512; //canvas_jq.innerWidth();
     var ctx = canvas.getContext("2d");
     var that = this;
     var points = new Float32Array(resolution);
