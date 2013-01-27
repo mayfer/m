@@ -188,7 +188,6 @@ function waveCanvas(jq_elem, freqs) {
                 .css('left', 20)
                 .appendTo(adsr_container)
                 .data('wave_index', i);
-            $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+(waves[i].duration/1000)+"s").appendTo(box);
             var volume_env_canvas = new Canvas(box);
             var freq_env_canvas = new Canvas(box);
             
@@ -204,6 +203,7 @@ function waveCanvas(jq_elem, freqs) {
             that.drawEnvelope(volume_env_canvas, waves[i].volume_envelope, VOLUME_ENV_COLOR);
             that.drawEnvelope(freq_env_canvas, waves[i].freq_envelope, FREQ_ENV_COLOR);
             waves[i].setProgressElem(progress_canvas);
+            $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+(waves[i].duration/1000)+"s").appendTo(box);
         }
 
         var add_tone = $('<a>')
