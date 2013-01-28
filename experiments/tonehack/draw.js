@@ -37,6 +37,11 @@ function drawingCanvas(jq_elem) {
     }
 
     this.setPoints = function(envelope) {
+        if(envelope.length > 2) {
+            // support for arbitrary sized envelopes
+            resolution = envelope.length;
+            points = [];
+        }
         for(var j=0; j<resolution; j++) {
             // this needs to be revised.
             // should be stretching nicely according to the provided envelope length
@@ -68,14 +73,14 @@ function drawingCanvas(jq_elem) {
             ctx.strokeStyle = '#aa6000';
         }
 
-        $("*").on("mousemove", function(e) {
+        $(document).on("mousemove", function(e) {
             if(draw == true) {
                 var current_position = that.getCursorPosition(e);
                 that.drawLine(prev_position, current_position);
                 prev_position = current_position;
             }
         });
-        $("*").on("mouseup", function() {
+        $(document).on("mouseup", function() {
             that.stopDrawing();
         });
 

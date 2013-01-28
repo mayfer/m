@@ -236,7 +236,10 @@ function waveCanvas(jq_elem, freqs) {
         
         var modal = $('<div>')
             .addClass('modal-adsr')
-            .appendTo(parent);
+            .appendTo($('body'))
+            .css({
+                top: $(document).scrollTop(),
+            });
         var freq = $('<input type="text" />').val(wave.freq);
         $('<div>')
             .addClass('title')
