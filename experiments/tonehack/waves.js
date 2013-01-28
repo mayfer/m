@@ -131,13 +131,15 @@ function standingWave(context, options) {
     };
     this.markProgress = function(time_diff) {
 
-        var percent_progress = (time_diff % this.duration) / this.duration;
+        if(progress_context !== null) {
+            var percent_progress = (time_diff % this.duration) / this.duration;
 
-        progress_context.clearRect(0, 0, progress_context.width, progress_context.height);
-        progress_context.beginPath();
-        progress_context.moveTo(percent_progress*progress_context.width, 0);
-        progress_context.lineTo(percent_progress*progress_context.width, progress_context.height);
-        progress_context.stroke();
+            progress_context.clearRect(0, 0, progress_context.width, progress_context.height);
+            progress_context.beginPath();
+            progress_context.moveTo(percent_progress*progress_context.width, 0);
+            progress_context.lineTo(percent_progress*progress_context.width, progress_context.height);
+            progress_context.stroke();
+        }
     }
 
 }

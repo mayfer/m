@@ -12,10 +12,18 @@ function waveCanvas(jq_elem, freqs) {
     var waves = [];
     var parent;
     var waves_canvas;
+    var waves_canvas_jq;
     var soundwave;
     var drawMode = 'overtones';
+    var options;
 
-    this.init = function() {
+    this.init = function(options_input) {
+        default_options = {
+            details: true,
+            scale: 1,
+        }
+        options = $.extend({}, default_options, options_input); 
+
         audio_context = new webkitAudioContext();
 
         this.setup();
@@ -23,10 +31,17 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.setup = function() {
-        parent = $('<div class="parent-canvas">').css('height', (freqs.length*75 + 80) + "px");
+        parent = $('<div class="parent-canvas">').css('height', (freqs.length*75*options.scale + 80*options.scale) + "px");
         $(jq_elem).append(parent);
 
-        waves_canvas = new Canvas(parent).addClass('waves').get(0);
+        waves_canvas_jq = new Canvas(parent).addClass('waves');
+        if(!options.details) {
+            waves_canvas_jq.css({
+                width: '100%',
+                margin: 0,
+            });
+        }
+        waves_canvas = waves_canvas_jq.get(0);
         waves_context = waves_canvas.getContext("2d");
 
         function compare(a, b) {
@@ -43,7 +58,9 @@ function waveCanvas(jq_elem, freqs) {
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
-        this.initEnvelopes();
+        if(options.details) {
+            this.initEnvelopes();
+        }
         this.reset();
 
         var wave_data = [];
@@ -77,7 +94,7 @@ function waveCanvas(jq_elem, freqs) {
                     index: index,
                     num_waves: freqs.length,
                     freq: freqobj['freq'],
-                    amplitude: ((waves_context.height / freqs.length) / 3),
+                    amplitude: ((waves_context.height / freqs.length) / 3) * options.scale,
                     volume_envelope: freqobj['volume_envelope'],
                     freq_envelope: freqobj['freq_envelope'],
                     duration: freqobj['duration'],
@@ -400,18 +417,20 @@ function waveCanvas(jq_elem, freqs) {
     this.initControls = function(){
         var that = this;
         var controls = $('<div>').addClass('controls');
-        $.each([
-            $('<a>').addClass('start icon-play'),
-            //$('<a>').addClass('stop icon-stop'),
-            //$('<a>').addClass('faster').html('faster'),
-            //$('<a>').addClass('slower').html('slower'),
-            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>'),
-            $('<a>').addClass('superpose tab').html('resulting vibration'),
-            $('<a>').addClass('split tab selected').html('breakdown of overtones'),
-        ], function() {
-            $(this).attr('href', '#');
-            $(this).appendTo(controls);
-        });
+        $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
+        if(options.details) {
+            $.each([
+                //$('<a>').addClass('stop icon-stop'),
+                //$('<a>').addClass('faster').html('faster'),
+                //$('<a>').addClass('slower').html('slower'),
+                $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>'),
+                $('<a>').addClass('superpose tab').html('resulting vibration'),
+                $('<a>').addClass('split tab selected').html('breakdown of overtones'),
+            ], function() {
+                $(this).attr('href', '#');
+                $(this).appendTo(controls);
+            });
+        }
         controls.prependTo(jq_elem);
 
         controls.find('.durations').keypress(function(e) {

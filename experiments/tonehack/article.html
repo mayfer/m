@@ -17,7 +17,7 @@
         <!-- default waves to load -->
         <script type='text/javascript'>
             presets = {};
-            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'audio_amplitude': 1,}];
+            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'volume_envelope': [1]}];
         </script>
         <script type='text/javascript' src='presets/guitar.js'></script>
 
@@ -27,42 +27,17 @@
         <script type='text/javascript'>
 
             $(document).ready(function() {
-                var overtones;
-                if(window.localStorage['waves']) {
-                    overtones = JSON.parse(window.localStorage['waves']);
-                } else {
-                    overtones = presets['Pure tone'];
-                }
-                var canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
-
-                // load the other presets asynchronously
-                var preset_paths = [
-                    "presets/violin.js",
-                    "presets/clarinet.js",
-                ];
-                require(preset_paths, function() {
-                    var presets_form = $('<select>').appendTo($('#presets'));
-                    var preset_names = Object.keys(presets);
-                    for(var i=0; i<preset_names.length; i++) {
-                        $('<option>').html(preset_names[i]).appendTo(presets_form);
-                    }
-                    presets_form.on('change', function(e){
-                        var preset = $(this).val();
-                        canvas_overtones.stop();
-                        canvas_overtones.loadPreset(presets[preset]);
-                    });
-                });
+                var options = {details: false, scale: 0.5};
+                var simple_string = new waveCanvas($('#simple-string'), presets['Pure tone']).init(options);
             });
 
         </script>
     </head>
     <body>
         <div class='container'>
-            <div id='presets'>Load preset: </div>
             <h1>tonehack<span> &lt;</span></h1>
             <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
 
-            <div id='overtones' class='wave-canvas'> </div>
             <div id='article'>
                 <p>
                     This <strong>interactive</strong> article will explain and demonstrate:
@@ -76,8 +51,12 @@
                 </p>
                 <span class='box-title'>Part 1: Plucking a string</span>
                 <div class='box'>
-                    A tight string that is fixed at both ends vibrates quite nicely when plucked.<br />
-                    Here is a string right here:
+                    <h3>Creating a pure tone with a simplified string model</h3>
+                    <p>A tight string that is fixed at both ends vibrates when plucked.</p>
+                    
+                    <p>Below is a simplified, imaginary string. Let's assume that our simplified string wobbles up and down continuously when plucked, at a constant rate.</p>
+                    <div id='simple-string'></div>
+                    <p>The resulting sound wave that this string produces is a pure sine wave. For this particular example, the frequency of the sound is set to 220Hz. Therefore what you hear is a pure 220Hz sine wave, in sound form.</p>
                 </div>
             </div>
         </div>

@@ -1,5 +1,13 @@
-#article { font-size: 15px; text-shadow: 0 1px 0 #000; }
+#article { font-size: 15px; text-shadow: 0 1px 0 #000; margin-bottom: 50px; }
 #article ul li { margin-bottom: 5px; }
 
-#article .box-title, #article .box { background: #F6D59C; margin: 0; }
-#article .box-title { margin: 0; padding: 0; }
+#article .box-title, #article .box { background: #F6D59C; margin: 0; color: #000; text-shadow: 0 1px 0 #fff; padding: 20px; }
+#article .box-title { margin: 0; padding: 0 20px; display: inline-block; line-height: 40px; font-size: 25px; border-top-left-radius: 5px; border-top-right-radius: 5px; font-weight: bold; }
+#article .box { border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; }
+
+
+#article .controls a { color: #a50; border: none; }
+#article .controls a.start:after { content: " Pluck"; }
+#article .controls a.pause:after { content: " Stop"; }
+
+#simple-string { width: 400px; position: relative; }
