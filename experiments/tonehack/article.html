@@ -18,6 +18,12 @@
         <script type='text/javascript'>
             presets = {};
             presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'volume_envelope': [1]}];
+            presets['Resonant'] = [
+                {'freq': 220, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 440, 'duration': 1000, 'volume_envelope': [0.8]},
+                {'freq': 660, 'duration': 1000, 'volume_envelope': [0.6]},
+                {'freq': 880, 'duration': 1000, 'volume_envelope': [0.4]},
+            ];
         </script>
         <script type='text/javascript' src='presets/guitar.js'></script>
 
@@ -29,6 +35,7 @@
             $(document).ready(function() {
                 var options = {details: false, scale: 0.5};
                 var simple_string = new waveCanvas($('#simple-string'), presets['Pure tone']).init(options);
+                var resonant_string = new waveCanvas($('#resonant-string'), presets['Resonant']).init(options);
             });
 
         </script>
@@ -55,8 +62,21 @@
                     <p>A tight string that is fixed at both ends vibrates when plucked.</p>
                     
                     <p>Below is a simplified, imaginary string. Let's assume that our simplified string wobbles up and down continuously when plucked, at a constant rate.</p>
-                    <div id='simple-string'></div>
-                    <p>The resulting sound wave that this string produces is a pure sine wave. For this particular example, the frequency of the sound is set to 220Hz. Therefore what you hear is a pure 220Hz sine wave, in sound form.</p>
+                    <div id='simple-string' class='string' style='float: left;'></div>
+                    <div style='float: left; width: 500px; margin-left: 20px;'>
+                        <p>The resulting vibration that this up-down motion produces is a sine wave. For this particular example, the frequency of the sound is set to 220Hz.</p>
+                        <p>If such a string could exist in the physical world, this is what you would actually hear. A pure 220Hz sine wave, in sound form.</p>
+                    </div>
+                    <div class='clear'></div>
+                    <p>Let's add one layer of realism.</p>
+                    
+                    <h3>Overtones (or <a href='http://en.wikipedia.org/wiki/Resonance'>resonant frequencies</a>)</h3>
+                    <p>One way to think of a vibrating string is to think of it as having energy trapped in it. Similar to a capacitor that fills up with electric charge which slowly gets relased, a string stores the kinetic energy that is transferred into it by a pluck.</p>
+                    <p>With the tension built up on the string by pulling it up or down, a quick release of the string puts all sorts of random movement pattenrs into the string. Most of these movements quickly dissipate, except for the movements that have self-propagating properties. For some speeds, the result of a move in the string, as it is releasing the built up tension, ends up re-creating the same tension in the opposite direction. This causes a cycle in which the string keeps going back and forth. This is called a vibration. It is also called a resonant frequency. Resonance is when energy is trapped in an object in the form of a continuous vibration.</p>
+                    <p>A string can have many resonant frequencies. </p>
+                    <div id='resonant-string' class='string' style='width: 500px; float: left;'></div>
+                    <div class='clear'></div>
+                    
                 </div>
             </div>
         </div>

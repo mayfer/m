@@ -12,6 +12,7 @@ function waveCanvas(jq_elem, freqs) {
     var waves = [];
     var parent;
     var waves_canvas;
+    var waves_context;
     var waves_canvas_jq;
     var soundwave;
     var drawMode = 'overtones';
@@ -419,18 +420,16 @@ function waveCanvas(jq_elem, freqs) {
         var controls = $('<div>').addClass('controls');
         $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
         if(options.details) {
-            $.each([
-                //$('<a>').addClass('stop icon-stop'),
-                //$('<a>').addClass('faster').html('faster'),
-                //$('<a>').addClass('slower').html('slower'),
-                $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>'),
-                $('<a>').addClass('superpose tab').html('resulting vibration'),
-                $('<a>').addClass('split tab selected').html('breakdown of overtones'),
-            ], function() {
-                $(this).attr('href', '#');
-                $(this).appendTo(controls);
-            });
+            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(controls);
+            //$('<a>').addClass('stop icon-stop'),
+            //$('<a>').addClass('faster').html('faster'),
+            //$('<a>').addClass('slower').html('slower'),
         }
+        if(options.details || freqs.length > 1) {
+            $('<a>').addClass('superpose tab').html('resulting vibration').attr('href', '#').appendTo(controls);
+            $('<a>').addClass('split tab selected').html('breakdown of overtones').attr('href', '#').appendTo(controls);
+        }
+        
         controls.prependTo(jq_elem);
 
         controls.find('.durations').keypress(function(e) {
