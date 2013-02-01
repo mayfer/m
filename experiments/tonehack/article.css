@@ -13,7 +13,7 @@
 
 #article .parent-canvas { border: 1px solid #aaa; }
 
-.label { text-align: center; color: rgba(0,0,0,0.7); font-size: 0.9em; font-style: italic; }
+.label { text-align: center; color: rgba(0,0,0,0.7); font-size: 0.9em; line-height: 1em; font-style: italic; margin-top: 5px; }
 
 .string { width: 400px; position: relative; }
 .clear { clear: both; }
