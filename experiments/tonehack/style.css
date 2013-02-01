@@ -10,6 +10,7 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 .container { width: 1000px; margin: 0 auto; position: relative; }
 .wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
 .parent-canvas { display: block; width: 100%; margin: 0 auto; border: 1px solid #fff; background: #fff; border-radius: 2px; z-index: 10; position: relative; }
+.parent-canvas > canvas { position: absolute; top: 0; left: 0; }
 .waves { height: 100%; width: 75%; margin-left: 25%; }
 .adsr { height: 100%; width: 25%; margin-right: 80%; background: #ddd; position: relative; }
             

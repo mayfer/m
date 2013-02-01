@@ -25,7 +25,7 @@ function waveCanvas(jq_elem, freqs) {
         }
         options = $.extend({}, default_options, options_input); 
 
-        if(options_input.audio_context) {
+        if(options.audio_context) {
             audio_context = options.audio_context;
         } else {
             audio_context = new webkitAudioContext();
