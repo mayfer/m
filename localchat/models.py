@@ -9,7 +9,8 @@ class Message(models.Model):
 	
 	class Meta:
 		db_table = 'messages'
-		ordering = ['-date']
+		ordering = ['date']
 
 	def __unicode__(self):
 		return "[{ip}] {message}".format(ip=self.ip, message=self.message)
+

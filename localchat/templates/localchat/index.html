@@ -4,17 +4,45 @@
 		<title>local chat</title>
 		<script type='text/javascript' src='{{ STATIC_URL }}scripts/jquery.min.js'></script>
 		<script type='text/javascript'>
+            var timestamp = '{{ timestamp }}';
+
+            function scroll() {
+                $(document).scrollTop($(document).height());
+            }
+
+            function get_messages() {
+                $.get(
+                    "{% url chat:messages %}",
+                    function(response) {
+                        var chat = $('#chat .inner');
+                        chat.html('');
+                        for(var i=0; i<response.messages.length; i++) {
+                            var row = $('<div>').addClass('row');
+                            row.append( $('<div>').addClass('date').html(response.messages[i].date) );
+                            row.append( $('<div>').addClass('message').html(response.messages[i].message) );
+                            chat.append(row);
+                        }
+                        scroll();
+                    },
+                    'json'
+                );
+            }
+            
 			$(document).ready(function(){
+                get_messages();
+                $('#chat .inner').css('margin', $('#header').outerHeight()+'px 0 '+$('#post').outerHeight()+'px 0');
                 $('#post input').focus();
-                
+
                 $('#post form').on('submit', function(e){
                     e.preventDefault();
+                    var formdata = $(this).serialize();
                     $(this).find('input').val('');
                     $.post(
                         "{% url chat:post %}",
-                        $(this).serialize(),
+                        formdata,
                         function(response) {
                             if(response.status == 'ok') {
+                                get_messages();
                             } else {
                                 alert('error');
                             }
@@ -38,9 +66,12 @@
             #post { position: fixed; bottom: 0; left: 0; background: #000; width: 100%; }
             #post .inner { margin: 20px; position: relative; }
             #post input { background: #444; border: 1px solid #aaa; line-height: 20px; color: #fff; width: 100%; border-radius: 2px; text-indent: 5px; }
-            #chat { height: 100%; overflow-y: scroll; }
-            #chat .inner { margin: 50px 0 100px 0; padding: 30px; }
+            
+            #chat { }
+            #chat .inner { padding: 30px; }
             #chat .message { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 3px; display: inline-block; margin: 2px 0; }
+            #chat .date { display: inline-block; width: 100px; color: #444; font-size: 12px; text-align: right; margin-right: 5px; }
+            #chat .row:hover .date { color: #aaa; }
         </style>
 	</head>
 	<body>
@@ -51,9 +82,7 @@
 			</div>
 			<div id='chat'>
 				<div class='inner'>
-                    {% for message in messages %}
-                        <div class='message'>{{ message.message }}</div><br />
-                    {% endfor %}
+                    loading...
                 </div>
 			</div>
             <div id='post'>
@@ -64,6 +93,7 @@
                 </div>
             </div>
         </div>
+        <!--
 		<script type="text/javascript">
 		
 		  var _gaq = _gaq || [];
@@ -78,5 +108,6 @@
 		  })();
 		
 		</script>
+        -->
 	</body>
 </html>
