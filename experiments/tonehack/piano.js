@@ -1,3 +1,44 @@
+function toneMath() {
+    this.FUNDAMENTAL = 27.5;
+    this.HALFTONE_LOG: 0.05776226504666212;
+    this.OCTAVE_HALFTONES = 12;
+    
+    this.relative_note = function(freq, halftones) {
+        if (halftones === null) {
+            halftones = 1;
+        }
+        return Math.exp(Math.log(freq) + this.HALFTONE_LOG * halftones);
+    };
+    this.note_to_freq = function(note) {
+        return this.relative_note(this.FUNDAMENTAL, this.note_to_halftone(note))
+    };
+    this.note_to_halftone = function(note) {
+        var note_shift = this.NOTE_TO_HALFTONE[note.substr(0,1).toUpperCase()]
+
+        var flat_sharp_shift = 0
+        var flat_sharp_present = 0
+        if (note.length > 1) {
+            var last_char = note.substr(note.length-1, 1)
+            if (last_char.toLowerCase() == 'b' || last_char == '♭') {
+                flat_sharp_shift = -1;
+                flat_sharp_present = 1;
+            } else if (last_char == '#' || last_char == '♯') {
+                flat_sharp_shift = 1;
+                flat_sharp_present = 1;
+            }
+        }
+
+        octave_shift = 2*this.OCTAVE_HALFTONES;
+        if (note.length > 1 + flat_sharp_present) {
+            octave = parseInt(note.substring(1,note.length - flat_sharp_present), 10);
+            octave_shift = (-this.BASE_OCTAVE + octave)*this.OCTAVE_HALFTONES
+        }
+
+        return (note_shift + octave_shift + flat_sharp_shift)
+    };
+}
+
+
 (function( $ ) {
   $.fn.piano = function(options) {
 	var containing_div = this;
@@ -29,7 +70,7 @@
 		
 		var white_key_position = 0;   // current white key position
 		
-		var key_notes = new Array('C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B','C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B','C','C#','D');
+		var key_notes = new Array('C','Csharp','D','Eflat','E','F','Fsharp','G','Gsharp','A','Bflat','B','C','Csharp','D','Eflat','E','F','Fsharp','G','Gsharp','A','Bflat','B','C','Csharp','D');
 		var root = ''; // root key, initially unassigned
 		var key_step = 0; // how many steps to take from one note to the next
 		
@@ -56,16 +97,31 @@
 		$(containing_div).append('<div id="vpcf_container"></div>');
 		
 		// Print the keys to screen
-		for(key=0;key<=number_of_keys;key++){
+		for(var key=0;key<=number_of_keys;key++){
+            var key_jq = $('<div>')
+                .addClass('note note-'+key_notes[(key)%12]+' octave-'+Math.floor(key/12))
 			// if key is a black key
 			if($.inArray(key, black_key_array) != -1){
 			    black_key_position = (key_width * white_key_counter) - black_key_offset;
-		    	$('#vpcf_container').append('<div class="vpcf_black_key" id="vpcf_key_'+key+'" style="margin-left:'+black_key_position+'px;width:'+black_key_width+'px;height:'+black_key_height+'px;"></div>');
+		    	key_jq.addClass('vpcf_black_key')
+                    .attr('id', 'vpcf_key_'+key)
+                    .css({
+                        'margin-left': black_key_position+'px',
+                        width: black_key_width+'px',
+                        height: black_key_height+'px',
+                    });
 			}else{
-		    	$('#vpcf_container').append('<div class="vpcf_white_key" id="vpcf_key_'+key+'" style="margin-left:'+white_key_position+'px;width:'+key_width+'px;height:'+key_height+'px"></div>');
+		    	key_jq.addClass('vpcf_white_key')
+                    .attr('id', 'vpcf_key_'+key)
+                    .css({
+                        'margin-left': white_key_position+'px',
+                        width: key_width+'px',
+                        height: key_height+'px',
+                    });
 		    	white_key_position = white_key_position + key_width;
 		    	white_key_counter++;
 		    }
+            $('#vpcf_container').append(key_jq);
 		}
 		
 		// assign width for container
