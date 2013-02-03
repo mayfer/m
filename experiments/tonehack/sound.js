@@ -52,7 +52,7 @@ soundWave.prototype.process = function(e) {
             var current_freq = pitch_bend * wave.freq;
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
-            current_amplitude = envelope_amplitude * envelope_amplitude;
+            current_amplitude = envelope_amplitude * envelope_amplitude * wave.gain;
 
             // buffer value for given wave
             y = Math.sin(this.xs[j] + wave.phase);

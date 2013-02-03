@@ -22,6 +22,7 @@ function waveCanvas(jq_elem, freqs) {
         default_options = {
             details: true,
             scale: 1,
+            
         }
         options = $.extend({}, default_options, options_input); 
 
@@ -250,6 +251,10 @@ function waveCanvas(jq_elem, freqs) {
         });
     }
 
+    this.adjustGainLevels = function() {
+        
+    }
+
     this.editEnvelope = function(wave_index) {
         var wave = waves[wave_index];
         var that = this;
@@ -290,6 +295,7 @@ function waveCanvas(jq_elem, freqs) {
                 freqs[wave_index].volume_envelope = volume_envelope_canvas.getPoints();
                 freqs[wave_index].freq_envelope = freq_envelope_canvas.getPoints();
                 freqs[wave_index].duration = modal.find('.duration').val();
+                that.adjustGainLevels();
                 that.closeEnvelopeEditor();
                 that.reSetup();
                 if(autostart) {

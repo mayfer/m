@@ -16,6 +16,7 @@ function standingWave(context, options) {
         freq_envelope: [0.5],
         duration: 1000,
         phase: 0,
+        gain: 1,
     }
     var options = $.extend({}, default_options, options); 
     
@@ -28,6 +29,7 @@ function standingWave(context, options) {
     var freq_envelope = options.freq_envelope;
     var duration = options.duration;
     var phase = options.phase;
+    var gain = options.gain;
     
 
     var step = 0.0;
@@ -45,6 +47,7 @@ function standingWave(context, options) {
     this.volume_envelope = volume_envelope;
     this.freq_envelope = freq_envelope;
     this.phase = phase;
+    this.gain = gain;
     
     this.jq_progress = null;
     var progress_canvas = null;

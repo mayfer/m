@@ -1,6 +1,6 @@
 function toneMath() {
     this.FUNDAMENTAL = 27.5;
-    this.HALFTONE_LOG: 0.05776226504666212;
+    this.HALFTONE_LOG = 0.05776226504666212;
     this.OCTAVE_HALFTONES = 12;
     
     this.relative_note = function(freq, halftones) {
