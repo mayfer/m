@@ -21,5 +21,5 @@ urlpatterns = patterns('',
     url(r'^make/?$', 'm.views.make', name='make'),
     
     url(r'^morphin/', include('m.morphin.urls', namespace='morphin')),
-    url(r'^chat/', include('localchat.urls', namespace='chat')),
+    url(r'^chat/', include('m.localchat.urls', namespace='chat')),
 )
