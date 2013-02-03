@@ -13,12 +13,18 @@ def index(request):
 
 def post(request):
     message = Message(
-        message=request.POST['message'],
+        message=request.POST['message'].strip(),
         ip=request.META['REMOTE_ADDR'],
         date=datetime.now()
     )
-    message.save()
-    response = {
-        'status': 'ok',
-    }
+    if len(message.message) > 0:
+        message.save()
+        response = {
+            'status': 'ok',
+        }
+    else:
+        response = {
+            'status': 'fail',
+            'reason': 'no message provided',
+        }
     return json_response(response)

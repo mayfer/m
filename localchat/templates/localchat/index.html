@@ -5,8 +5,11 @@
 		<script type='text/javascript' src='{{ STATIC_URL }}scripts/jquery.min.js'></script>
 		<script type='text/javascript'>
 			$(document).ready(function(){
+                $('#post input').focus();
+                
                 $('#post form').on('submit', function(e){
                     e.preventDefault();
+                    $(this).find('input').val('');
                     $.post(
                         "{% url chat:post %}",
                         $(this).serialize(),
@@ -25,26 +28,31 @@
 		</script>
         <style type='text/css'>
             body, html { background: #333; margin: 0; padding: 0; color: #aaa; font-family: Arial; }
-            a, a:visited { color: #fff; }
+            a, a:visited { color: #fff; text-decoration: none; }
+            a:hover { border-bottom: 1px solid #666; }
 
-            #header { position: fixed; top: 0; left: 0; width: 100%; line-height: 50px; background: #000; }
-            #header h1 { margin: 0; padding: 0 30px; }
+            #header { position: fixed; top: 0; left: 0; width: 100%; background: #000;  font-family: monospace; }
+            #header h1 { margin: 0; padding: 0 30px; line-height: 50px;}
+            #header .about { float: right; line-height: 50px; padding-right: 20px; }
+
             #post { position: fixed; bottom: 0; left: 0; background: #000; width: 100%; }
             #post .inner { margin: 20px; position: relative; }
             #post input { background: #444; border: 1px solid #aaa; line-height: 20px; color: #fff; width: 100%; border-radius: 2px; text-indent: 5px; }
             #chat { height: 100%; overflow-y: scroll; }
             #chat .inner { margin: 50px 0 100px 0; padding: 30px; }
+            #chat .message { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 3px; display: inline-block; margin: 2px 0; }
         </style>
 	</head>
 	<body>
 		<div id='container'>
             <div id='header'>
-                <h1><a href='{% url chat:index %}'>local chat</a></h1>
+                <div class='about'>you are seeing anonymous posts from a radius of 500 meters.</div>
+                <h1><a href='{% url chat:index %}'>tea orbit</a></h1>
 			</div>
 			<div id='chat'>
 				<div class='inner'>
                     {% for message in messages %}
-                        <div class='message'>{{ message.message }}</div>
+                        <div class='message'>{{ message.message }}</div><br />
                     {% endfor %}
                 </div>
 			</div>
