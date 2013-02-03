@@ -43,8 +43,8 @@ def post(request):
             'timestamp': time.time(),
         }
     else:
+        # do nothing
         response = {
-            'status': 'fail',
-            'reason': 'no message provided',
+            'status': 'ok',
         }
     return json_response(response)
