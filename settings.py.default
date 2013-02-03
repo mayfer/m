@@ -81,6 +81,7 @@ TEMPLATE_DIRS = (
     '/usr/share/pyshared/django/contrib/admin/templates/',
 	os.path.join(FILE_ROOT, 'templates/'),
 	os.path.join(FILE_ROOT, 'morphin/templates/'),
+	os.path.join(FILE_ROOT, 'localchat/templates/'),
 )
 
 INSTALLED_APPS = (
@@ -93,4 +94,5 @@ INSTALLED_APPS = (
     'm.mlog',
     'm.mtracker',
     'm.morphin',
+    'm.localchat',
 )

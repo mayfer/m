@@ -252,7 +252,10 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.adjustGainLevels = function() {
-        
+        max_vol = 0;
+        for(var i=0; i<waves.length; i++) {
+            
+        }
     }
 
     this.editEnvelope = function(wave_index) {
