@@ -3,54 +3,74 @@
 	<head>
 		<title>local chat</title>
 		<script type='text/javascript' src='{{ STATIC_URL }}scripts/jquery.min.js'></script>
+		<script type='text/javascript' src='{{ STATIC_URL }}scripts/modernizr.min.js'></script>
 		<script type='text/javascript'>
             var timestamp = '{{ timestamp }}';
+            var latitude = null;
+            var longitude = null;
+            var accuracy = null;
 
             function scroll() {
                 $(document).scrollTop($(document).height());
             }
 
-            function get_messages() {
-                $.get(
-                    "{% url chat:messages %}",
-                    function(response) {
-                        var chat = $('#chat .inner');
-                        chat.html('');
-                        for(var i=0; i<response.messages.length; i++) {
-                            var row = $('<div>').addClass('row');
-                            row.append( $('<div>').addClass('date').html(response.messages[i].date) );
-                            row.append( $('<div>').addClass('message').html(response.messages[i].message) );
-                            chat.append(row);
-                        }
-                        scroll();
-                    },
-                    'json'
-                );
+            function init() {
+                navigator.geolocation.getCurrentPosition(function(position){
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    accuracy = position.coords.accuracy;
+                    
+                    $.get(
+                        "{% url chat:messages %}",
+                        function(response) {
+                            var chat = $('#chat .inner');
+                            chat.html('');
+                            for(var i=0; i<response.messages.length; i++) {
+                                var row = $('<div>').addClass('row');
+                                row.append( $('<div>').addClass('message').html(response.messages[i].message) );
+                                row.append( $('<div>').addClass('date').html(response.messages[i].date) );
+                                chat.append(row);
+                            }
+                            scroll();
+                        },
+                        'json'
+                    );
+                });
             }
             
 			$(document).ready(function(){
-                get_messages();
+                init();
                 $('#chat .inner').css('margin', $('#header').outerHeight()+'px 0 '+$('#post').outerHeight()+'px 0');
                 $('#post input').focus();
 
                 $('#post form').on('submit', function(e){
                     e.preventDefault();
-                    var formdata = $(this).serialize();
-                    $(this).find('input').val('');
-                    $.post(
-                        "{% url chat:post %}",
-                        formdata,
-                        function(response) {
-                            if(response.status == 'ok') {
-                                get_messages();
-                            } else {
-                                alert('error');
-                            }
-                        },
-                        'json'
-                    ).fail(function(){
-                        alert('error');
-                    });
+                    if(!latitude || !longitude) {
+                        alert("No location data.");
+                    } else if(accuracy > 200) {
+                        alert("Location data not accurate enough.");
+                    } else {
+                        $(this).find('input[name="latitude"]').val(latitude);
+                        $(this).find('input[name="longitude"]').val(longitude);
+                        var formdata = $(this).serialize();
+
+                        $(this).find('input').val('');
+                        
+                        $.post(
+                            "{% url chat:post %}",
+                            formdata,
+                            function(response) {
+                                if(response.status == 'ok') {
+                                    get_messages();
+                                } else {
+                                    alert('error');
+                                }
+                            },
+                            'json'
+                        ).fail(function(){
+                            alert('error');
+                        });
+                    }
                 });
 			});
 		</script>
@@ -70,7 +90,7 @@
             #chat { }
             #chat .inner { padding: 30px; }
             #chat .message { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 3px; display: inline-block; margin: 2px 0; }
-            #chat .date { display: inline-block; width: 100px; color: #444; font-size: 12px; text-align: right; margin-right: 5px; }
+            #chat .date { display: inline-block; color: #444; font-size: 12px; margin-left: 5px; }
             #chat .row:hover .date { color: #aaa; }
         </style>
 	</head>
@@ -87,7 +107,10 @@
 			</div>
             <div id='post'>
                 <div class='inner'>
+                    optional: <a href='#'>Pick a name</a>
                     <form action=''>
+                        <input type='hidden' name='latitude' value='0' />
+                        <input type='hidden' name='longitude' value='0' />
                         <input type='text' name='message' placeholder='Type your message' />
                     </form>
                 </div>

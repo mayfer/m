@@ -4,8 +4,8 @@
     <title>murat &raquo; make</title>
     <script type='text/javascript'>
     $(document).ready(function(e){
-        $('.painting').click(function(e){
-            window.location = $(this).find('img').attr('src');
+        $('.painting').each(function(e){
+            $(this).attr('href', $(this).find('img').attr('src'));
         });
     });
     </script>
@@ -90,22 +90,22 @@
                     <br />Don't use it, the data is out of date.
                 </div>
             </div>
-            <h3 class='section-title'>Assorted amateur things</h2>
-            <div class='painting'>
+            <h3 class='section-title'>Assorted amateur acrylic</h2>
+            <a class='painting'>
                 <img src='{{ STATIC_URL }}images/paintings/snail.jpg' />
-            </div>
-            <div class='painting'>
+            </a>
+            <a class='painting'>
                 <img src='{{ STATIC_URL }}images/paintings/cat.jpg' />
-            </div>
-            <div class='painting'>
+            </a>
+            <a class='painting'>
                 <img src='{{ STATIC_URL }}images/paintings/horse.jpg' />
-            </div>
-            <div class='painting'>
+            </a>
+            <a class='painting'>
                 <img src='{{ STATIC_URL }}images/paintings/bird.jpg' />
-            </div>
-            <div class='painting last'>
+            </a>
+            <a class='painting last'>
                 <img src='{{ STATIC_URL }}images/paintings/panda.jpg' />
-            </div>
+            </a>
         </div>
     </div>
 {% endblock %}

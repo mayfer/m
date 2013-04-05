@@ -6,12 +6,12 @@ import time
 from datetime import datetime
 
 def index(request):
-	messages = Message.objects.filter()
-	response = {
-		'messages': messages,
+    messages = Message.objects.filter()
+    response = {
+        'messages': messages,
         'timestamp': time.time(),
-	}
-	return template_response('localchat/index.html', response, request)
+    }
+    return template_response('localchat/index.html', response, request)
 
 def messages(request, timestamp=None):
     if timestamp:
@@ -25,22 +25,29 @@ def messages(request, timestamp=None):
         'timestamp': time.time(),
     }
     return json_response(response)
+
+def poll(request):
+    latitude = request.POST['latitude']
+    longitude = request.POST['longitude']
+    messages = Message.objects.filter()
     
 
 def post(request):
+    date = datetime.now()
+
     message = Message(
         message=request.POST['message'].strip(),
+        latitude=float(request.POST['latitude']),
+        longitude=float(request.POST['longitude']),
         ip=request.META['REMOTE_ADDR'],
-        date=datetime.now()
+        date=date,
     )
-    print request.POST['message']
-    print request.POST['message'].strip()
 
     if len(message.message) > 0:
         message.save()
         response = {
             'status': 'ok',
-            'timestamp': time.time(),
+            'timestamp': time.mktime(date.timetuple()),
         }
     else:
         # do nothing

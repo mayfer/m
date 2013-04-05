@@ -85,8 +85,8 @@ a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .entry .full { display: none; }
 
 .make #make-content { overflow: auto; margin-bottom: 150px; }
-.make .project { margin-bottom: 10px; height: 100px; border-radius: 5px; background: #333; box-shadow: 0 0 4px #aaa; }
-.make .project h3 { margin: 5px 0; padding: 0; }
+.make .project { margin-bottom: 10px; height: 100px; border-radius: 5px; background: #333; border: 1px solid #777; }
+.make .project h3 { margin: 7px 0; padding: 0; }
 .make .project .thumb, .make .project .description { display: inline-block; height: 100px; vertical-align: top; }
 .make .project .description { max-width: 550px; }
 .make .project .thumb img { border-top-left-radius: 5px; border-bottom-left-radius: 5px; margin-right: 15px; border-right: 5px solid #a88; }
@@ -94,9 +94,9 @@ a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .make .project a:hover { text-shadow: #a00 0 0 10px, #f00 0 0 5px, #fff 0 0 20px; }
 
 #make-content h3.section-title { text-align: center; margin-top: 35px; }
-#make-content .painting { margin: 0 10px 10px 0; padding: 10px; border-radius: 5px; background: rgba(255,255,255,0.2); float: left; }
+#make-content .painting { display: block; border: none; margin: 0 10px 10px 0; padding: 10px; border-radius: 5px; background: rgba(255,255,255,0.2); float: left; }
 #make-content .painting.last { margin: 0 0 10px 0; }
-#make-content .painting:hover { background: rgba(255,255,255,0.6); cursor: pointer; }
+#make-content .painting:hover { background: rgba(255,220,220,0.3); cursor: pointer; box-shadow: 0 0 5px 0 #fff; }
 #make-content .painting img { height: 175px; display: block; }
 
 .source, .center { text-align: center; }
