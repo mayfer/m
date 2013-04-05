@@ -2,6 +2,13 @@
 
 {% block head_tags %}
     <title>murat &raquo; make</title>
+    <script type='text/javascript'>
+    $(document).ready(function(e){
+        $('.painting').click(function(e){
+            window.location = $(this).find('img').attr('src');
+        });
+    });
+    </script>
 {% endblock %}
 
 {% block page %}make{% endblock %}
@@ -16,15 +23,16 @@
     
     <div class='wrapper'>
         <div id='make-content'>
+            <h3 class='section-title'>Coding projects</h2>
             <div class='project'>
                 <div class='thumb'>
-                    <a href='http://takethebus.in/vancouver'><img src='{{ STATIC_URL }}images/projects/transit.png' /></a>
+                    <a href='http://tonehack.com/'><img src='{{ STATIC_URL }}images/projects/tonehack.png' /></a>
                 </div>
                 <div class='description'>
-                    <h3><a href='http://takethebus.in/vancouver'>Transit</a></h3>
-                    Shows bus stops, bus schedules, and bus routes.
-                    <br />Uses GTFS data. Built on Django.
-                    <br />Don't use it, the data is out of date.
+                    <h3><a href='http://tonehack.com/'>Tonehack</a></h3>
+                    A unique take on sound synthesis.
+                    <br />Not sure if it's a toy, an invention, or an educational tool.
+                    <br />Works best on Chrome/Safari. My favorite project so far.
                 </div>
             </div>
             <div class='project'>
@@ -70,6 +78,33 @@
                     <br />Moving the cursor closer increases the heart rate.
                     <br />It also makes use of CSS animation javascript events. (I believe WebKit-only.)
                 </div>
+            </div>
+            <div class='project'>
+                <div class='thumb'>
+                    <a href='http://takethebus.in/vancouver'><img src='{{ STATIC_URL }}images/projects/transit.png' /></a>
+                </div>
+                <div class='description'>
+                    <h3><a href='http://takethebus.in/vancouver'>Transit</a></h3>
+                    Shows bus stops, bus schedules, and bus routes.
+                    <br />Uses GTFS data. Built on Django.
+                    <br />Don't use it, the data is out of date.
+                </div>
+            </div>
+            <h3 class='section-title'>Assorted amateur things</h2>
+            <div class='painting'>
+                <img src='{{ STATIC_URL }}images/paintings/snail.jpg' />
+            </div>
+            <div class='painting'>
+                <img src='{{ STATIC_URL }}images/paintings/cat.jpg' />
+            </div>
+            <div class='painting'>
+                <img src='{{ STATIC_URL }}images/paintings/horse.jpg' />
+            </div>
+            <div class='painting'>
+                <img src='{{ STATIC_URL }}images/paintings/bird.jpg' />
+            </div>
+            <div class='painting last'>
+                <img src='{{ STATIC_URL }}images/paintings/panda.jpg' />
             </div>
         </div>
     </div>
