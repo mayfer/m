@@ -124,3 +124,7 @@ td { vertical-align: center; text-align: center; }
 
 #ayfer { display: block; color: transparent; padding-left: 30px; line-height: 25px; opacity: 0.25; background: url('../images/ay.png') center left no-repeat; float: right; position: relative; top: -25px; right: -30px; width: 100px; }
 #ayfer:hover { color: #fff; opacity: 0.5; }
+
+#footer { position: fixed; bottom: 0; padding: 0 0 10px 0; text-align: center; color: #777; width: 100%; font-family: 'Averia Libre', Arial; font-size: 14px; font-weight: normal; line-height: 19px; }
+#footer a { color: #aaa; }
+#footer a:hover { color: #fff; }

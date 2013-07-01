@@ -1,5 +1,5 @@
 html { padding: 0; margin: 0; }
-body { color: #fff; padding: 20px 0; margin: 0; background: url('../images/background.gif'); font-family: 'Averia Libre', Arial; font-size: 14px; font-weight: normal; line-height: 19px; }
+body { color: #fff; padding: 20px 0 0 0; margin: 0; background: url('../images/background.gif'); font-family: 'Averia Libre', Arial; font-size: 14px; font-weight: normal; line-height: 19px; }
 
 a { color: #fff; text-decoration: none; }
 
@@ -102,3 +102,5 @@ a.expand-story:hover:after { content: "⇶"; padding-left: 5px; }
 .source, .center { text-align: center; }
 .float-left { float: left; margin: 0 15px 15px 0; }
 .float-right { float: right; margin: 0  0 15px 15px; }
+
+#footer { padding: 10px 0 10px 0; margin-top: 20px; text-align: center; color: #999; width: 100%; background: #333; }
