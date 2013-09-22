@@ -30,6 +30,13 @@ def entry(request, title):
 def entry_body(request, id):
 	return html_response(Entry.objects.get(id=id).content)
 
+def entry_body(request, title):
+	return html_response(Entry.objects.get(url_title=title).content)
+
 def make(request):
 	response = {}
 	return template_response('make.html', response, request)
+
+def confuscate(request):
+    response = {}
+    return template_response('confuscate.html', response, request)
