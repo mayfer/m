@@ -23,4 +23,5 @@ urlpatterns = patterns('',
 
     url(r'^morphin/', include('m.morphin.urls', namespace='morphin')),
     url(r'^chat/', include('m.localchat.urls', namespace='chat')),
+    url(r'^confuscate/', include('m.confuscate.urls', namespace='confuscate')),
 )

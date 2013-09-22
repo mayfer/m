@@ -36,7 +36,3 @@ def entry_body(request, title):
 def make(request):
 	response = {}
 	return template_response('make.html', response, request)
-
-def confuscate(request):
-    response = {}
-    return template_response('confuscate.html', response, request)
