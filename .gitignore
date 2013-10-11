@@ -4,3 +4,4 @@ settings.py
 tmp/*
 static/uploads
 static/media/uploads
+.DS_Store
