@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Harmony</title>
+        <link rel="stylesheet/less" href="design/style.less">
+        <link rel="stylesheet" tyle="text/css" href="design/fret.css">
+        <script src="js/libs/jquery.min.js"></script>
+        <script src="js/libs/jquery.dataSelector.js"></script>
+        <script src="js/libs/less.min.js"></script>
+        <script src="js/chords.js"></script>
+        <script src="js/fret.js"></script>
+        <script src="js/playsound.js"></script>
+        <script>
+
+            $(document).ready(function() {
+                $('.frets').fretify();
+                $('.chords').on('click', '.new-chord', function(e){
+                    e.preventDefault();
+                });
+            });
+
+        </script>
+    </head>
+
+    <body>
+        <div id='wrapper'>
+            <div id='header'>
+                <div id='titles'>
+                    <h1>Harmony</h1>
+                    <h2>Lazy music theory</h2>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class='frets'>
+            </div>
+
+            <div class='chords'>
+                <h3>Chords</h3>
+                <a href='#' class='new-chord'>+</a>
+            </div>
+
+
+
+        </div>
+    </body>
+</html>
