@@ -44,7 +44,8 @@ Chords = {
   NOTE_NAMES: "A B♭ B C C♯ D E♭ E F F♯ G A♭".split(' '),
 
   halftone_to_note: function(halftone) {
-    return Chords.NOTE_NAMES[halftone%12];
+    var octave = Math.floor(halftone/12);
+    return Chords.NOTE_NAMES[halftone%12] + octave;
   },
 
   chord_to_name: function(chord) {
@@ -158,6 +159,10 @@ Chords = {
 
   note_to_freq: function(note) {
     return Chords.relative_note(Chords.FUNDAMENTAL, Chords.note_to_halftone(note))
+  },
+
+  halftone_to_freq: function(halftone) {
+    return Chords.relative_note(Chords.FUNDAMENTAL, halftone)
   },
 
   relative_note: function(freq, halftones) {

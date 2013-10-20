@@ -1,14 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html>
     <head>
         <meta charset="utf-8">
         <title>Harmony</title>
         <link rel="stylesheet/less" href="design/style.less">
         <link rel="stylesheet" tyle="text/css" href="design/fret.css">
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script> -->
         <script src="js/libs/jquery.min.js"></script>
         <script src="js/libs/jquery.dataSelector.js"></script>
         <script src="js/libs/less.min.js"></script>
         <script src="js/chords.js"></script>
+        <script src="js/harmony.js"></script>
         <script src="js/fret.js"></script>
         <script src="js/playsound.js"></script>
         <script>
@@ -18,9 +20,34 @@
                 $('.chords').on('click', '.new-chord', function(e){
                     e.preventDefault();
                 });
+
+                var chord = Chords.get_chord('A', 'Major');
+
+
+                for(var c=0; c<Chords.CHORDS.length; c++) {
+                    
+                }
+
+                $('.new-chord').on('click', function(e){
+                    e.preventDefault();
+                    var note = $('#note-input').val();
+                    var chord_type = JSON.parse($('#chord-input').val());
+                    var chord = chord_type.map(function(i){ return i + Chords.note_to_halftone(note); });
+                    answer = Harmony.find_harmony(chord);
+                    console.log(answer);
+                    //$('.suggestions').html(answer);
+                });
             });
 
         </script>
+        <style type='text/css'>
+            a, a:visited { color: #3F638A; }
+            .chords { overflow: auto; }
+            .new-chord, .chord { display: block; height: 50px; line-height: 25px; min-width: 50px; background: rgba(200,222,255,0.5); text-align: center; text-decoration: none; border: 1px solid #3F638A; float: left; margin-right: 5px; padding: 0 5px; }
+            .new-chord { line-height: 50px; }
+            .new-chord:hover { background: #fff; }
+            .chord label { display: inline-block; width: 40px; text-align: right; }
+        </style>
     </head>
 
     <body>
@@ -39,7 +66,14 @@
 
             <div class='chords'>
                 <h3>Chords</h3>
+                <div class='chord'>
+                    <label>Note:</label> <input type='text' id='note-input' placeholder='e.g. A#' value='A' /><br />
+                    <label>Chord:</label> <input type='text' id='chord-input' placeholder='e.g. [1, 3, 5]' value="[0, 4, 7]" />
+                </div>
                 <a href='#' class='new-chord'>+</a>
+            </div>
+            <div class='suggestions'>
+                
             </div>
 
 

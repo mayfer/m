@@ -58,6 +58,6 @@
 }
 .string-label { position: relative; top: -0.5em; left: -40px; height: 0; overflow: visible; }
 .string-label .string-name { width: 2em; float: left; position: relative; top: -0.2em; }
-.string-label .string-toggle { float: left; pointer-events: all; position: relative; left: -5px; top: -2px; }
+.string-label .string-toggle { float: left; pointer-events: all; position: relative; left: -5px; top: -2px;}
 .string.G3, .string.B4, .string.E4 { background: rgba(200,200,200,0.6); }
  
