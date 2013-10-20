@@ -23,7 +23,7 @@ Harmony = {
                 for(var y=0; y < note_overtones.length; y++) {
                     var x_freq = chord_overtones[x];
                     var y_freq = note_overtones[y];
-                    var score = 1 - (Math.abs(x_freq - y_freq) / (x_freq + y_freq));
+                    var score = (1 - (Math.abs(x_freq - y_freq) / (x_freq + y_freq))) / ((x+y+2)/2);
                     scores.push(score);
                 }
             }
