@@ -9,6 +9,7 @@
         <script src="js/libs/jquery.min.js"></script>
         <script src="js/libs/jquery.dataSelector.js"></script>
         <script src="js/libs/less.min.js"></script>
+        <script src="js/libs/audiolet.min.js"></script>
         <script src="js/chords.js"></script>
         <script src="js/harmony.js"></script>
         <script src="js/fret.js"></script>
@@ -33,9 +34,14 @@
                     var note = $('#note-input').val();
                     var chord_type = JSON.parse($('#chord-input').val());
                     var chord = chord_type.map(function(i){ return i + Chords.note_to_halftone(note); });
-                    answer = Harmony.find_harmony(chord);
-                    console.log(answer);
+                    //answer = Harmony.find_harmony(chord);
+                    //console.log(answer);
                     //$('.suggestions').html(answer);
+                    for(var i=0; i<chord.length; i++){
+                        setTimeout(function(){
+                            Sound.play_freq(Chords.halftone_to_freq(chord[i]));
+                        }, i*200);
+                    }
                 });
             });
 
