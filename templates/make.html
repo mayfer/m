@@ -2,11 +2,10 @@
 
 {% block head_tags %}
     <title>murat &raquo; make</title>
+    <script type='text/javascript' src='{{STATIC_URL}}scripts/jquery.museum.js'></script>
     <script type='text/javascript'>
     $(document).ready(function(e){
-        $('.painting').each(function(e){
-            $(this).attr('href', $(this).find('img').attr('src'));
-        });
+        $.museum($('.painting img'));
     });
     </script>
 {% endblock %}
