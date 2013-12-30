@@ -1,18 +1,7 @@
-/**
- * Generate TV static in a canvas element
- *
- * Author: Dave Eddy <dave@daveeddy.com>
- * Date: 2/9/2013
- * License: MIT
- */
 
 function get_random_color(steps, range_min, range_max) {
     numOfSteps = steps;
     step = Math.floor(Math.random()*(range_max-range_min+1)+range_min);
-
-    // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
-    // Adam Cole, 2011-Sept-14
-    // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
 
     var r, g, b;
     var h = step / numOfSteps;
@@ -81,11 +70,7 @@ function tvstatic(canvas, ctx) {
     var h = canvas.height;
     var w = canvas.width;
 
-    //ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    //ctx.fillStyle = '#aaa';
     ctx.fillStyle = '#000';
-    //ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // draw the static on the  canvas
 
     this.draw = function() {
         for (var x = 0; x < canvas.width; x+=scale) {
