@@ -30,11 +30,11 @@ function tvstatic(canvas, ctx) {
     var that = this;
 
     this.grid = {};
-    this.paint = {}
+    this.paint = {};
     this.paint_mode = false;
     this.scale = 25;
 
-    $(document).bind('mousemove', function(e){
+    function draw(e){
         var grid_x = Math.floor(e.offsetX / scale);
         var grid_y = Math.floor(e.offsetY / scale);
         if(that.paint_mode === true) {
@@ -49,6 +49,16 @@ function tvstatic(canvas, ctx) {
             that.paint[grid_x-1 + "," + (grid_y+1)] = timeout;
             that.paint[grid_x-1 + "," + (grid_y-1)] = timeout;
             
+            timeout = 0;
+            that.grid[grid_x + "," + grid_y] = timeout;
+            that.grid[grid_x-1 + "," + grid_y] = timeout;
+            that.grid[grid_x + "," + (grid_y-1)] = timeout;
+            that.grid[grid_x + "," + (grid_y+1)] = timeout;
+            that.grid[grid_x+1 + "," + grid_y] = timeout;
+            that.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
+            that.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
+            that.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
+            that.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
         } else {
             var timeout = new Date().getTime() + 3000;
             that.grid[grid_x + "," + grid_y] = timeout;
@@ -61,9 +71,12 @@ function tvstatic(canvas, ctx) {
             that.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
             that.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
         }
-    });
+    }
+
+    $(document).bind('mousemove', draw);
     $(document).mousedown(function(e){
         that.paint_mode = true;
+        draw(e);
     }).mouseup(function(e){
         that.paint_mode = false;
     });
