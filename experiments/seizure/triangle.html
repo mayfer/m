@@ -3,7 +3,7 @@
 	<head>
 		<title>seizure</title>
         <script src='jquery-1.10.2.min.js'></script>
-		<script src="seizure.js"></script>
+		<script src="triangle.js"></script>
 		<script>
 		window.requestAnimFrame = window.requestAnimationFrame       ||
 					  window.webkitRequestAnimationFrame ||
@@ -23,7 +23,7 @@
 			ctx.fillStyle = '#000';
 			resize();
             frame = 0;
-            window.animation = seizure(canvas, ctx);
+            window.animation = triangle(canvas, ctx);
 			window.requestAnimFrame(render);
 		}
 

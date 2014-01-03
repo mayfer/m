@@ -26,19 +26,30 @@ function rand(num) {
 }
 
 
-function tvstatic(canvas, ctx) {
+function seizure(canvas, ctx) {
     var that = this;
 
     this.grid = {};
     this.paint = {};
     this.paint_mode = false;
-    this.scale = 25;
+    this.scale = 15;
 
-    function draw(e){
-        var grid_x = Math.floor(e.offsetX / scale);
-        var grid_y = Math.floor(e.offsetY / scale);
+    this.prev_mouse = null;
+
+    function userdraw(e){
+        e.preventDefault();
+
+        if(e.originalEvent.touches || e.originalEvent.changedTouches) {
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            var grid_x = Math.floor(touch.pageX / scale);
+            var grid_y = Math.floor(touch.pageY / scale);
+        } else {
+            var grid_x = Math.floor(e.offsetX / scale);
+            var grid_y = Math.floor(e.offsetY / scale);
+        }
+
         if(that.paint_mode === true) {
-            var timeout = new Date().getTime() + 5000;
+            var timeout = new Date().getTime() + 38000;
             that.paint[grid_x + "," + grid_y] = timeout;
             that.paint[grid_x-1 + "," + grid_y] = timeout;
             that.paint[grid_x + "," + (grid_y-1)] = timeout;
@@ -60,7 +71,7 @@ function tvstatic(canvas, ctx) {
             that.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
             that.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
         } else {
-            var timeout = new Date().getTime() + 3000;
+            var timeout = new Date().getTime() + 34000;
             that.grid[grid_x + "," + grid_y] = timeout;
             that.grid[grid_x-1 + "," + grid_y] = timeout;
             that.grid[grid_x + "," + (grid_y-1)] = timeout;
@@ -73,11 +84,11 @@ function tvstatic(canvas, ctx) {
         }
     }
 
-    $(document).bind('mousemove', draw);
-    $(document).mousedown(function(e){
+    $(document).bind('mousemove touchmove', userdraw);
+    $(document).bind('mousedown touchstart', function(e){
         that.paint_mode = true;
-        draw(e);
-    }).mouseup(function(e){
+        userdraw(e);
+    }).bind('mouseup touchend', function(e){
         that.paint_mode = false;
     });
     var h = canvas.height;
