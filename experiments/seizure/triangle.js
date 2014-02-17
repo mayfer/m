@@ -62,6 +62,9 @@ function triangle(canvas, ctx) {
     this.draw = function() {
         var num_points = Object.keys(this.points).length;
 
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 3;
+
         if(num_points < 95) {
             var h = canvas.height - this.random(canvas.height, 0, canvas.height) + this.random(canvas.height, 0, canvas.height);
             var w = canvas.width - this.random(canvas.width, 0, canvas.width) + this.random(canvas.width, 0, canvas.width);;
@@ -79,6 +82,8 @@ function triangle(canvas, ctx) {
             ctx.lineTo((w/2) - (triangle.width/2), (h/2) + (triangle.height/2) );
             ctx.closePath();
             ctx.fill();
+
+            ctx.stroke();
         }
 
         
@@ -100,18 +105,22 @@ function triangle(canvas, ctx) {
                 ctx.beginPath();
                 ctx.arc(point * this.w, point * this.h, radius, 0, 2 * Math.PI, false);
                 ctx.fill();
+                ctx.stroke();
             } else if(rand < 0.05) {
                 ctx.beginPath();
                 ctx.arc(point * this.w, point * this.h, radius, 0, 2 * Math.PI, false);
                 ctx.fill();
+                ctx.stroke();
             }
 
             ctx.beginPath();
             ctx.arc((point + rand) * this.w, (point - rand) * this.h, radius, 0, 2 * Math.PI, false);
+                ctx.stroke();
             ctx.fill();
 
             ctx.beginPath();
             ctx.arc((point - rand) * this.w, (point + rand) * this.h, radius, 0, 2 * Math.PI, false);
+                ctx.stroke();
             ctx.fill();
         }
 
