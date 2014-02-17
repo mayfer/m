@@ -27,7 +27,7 @@ function rand(num) {
 
 
 function seizure(canvas, ctx) {
-    var that = this;
+    var seizure = this;
 
     this.grid = {};
     this.paint = {};
@@ -36,60 +36,67 @@ function seizure(canvas, ctx) {
 
     this.prev_mouse = null;
 
+    this.draw_point = function(x, y) {
+        var grid_x = Math.floor(x/scale);
+        var grid_y = Math.floor(y/scale);
+
+        if(seizure.paint_mode === true) {
+            var timeout = new Date().getTime() + 38000;
+            seizure.paint[grid_x + "," + grid_y] = timeout;
+            seizure.paint[grid_x-1 + "," + grid_y] = timeout;
+            seizure.paint[grid_x + "," + (grid_y-1)] = timeout;
+            seizure.paint[grid_x + "," + (grid_y+1)] = timeout;
+            seizure.paint[grid_x+1 + "," + grid_y] = timeout;
+            seizure.paint[grid_x+1 + "," + (grid_y+1)] = timeout;
+            seizure.paint[grid_x+1 + "," + (grid_y-1)] = timeout;
+            seizure.paint[grid_x-1 + "," + (grid_y+1)] = timeout;
+            seizure.paint[grid_x-1 + "," + (grid_y-1)] = timeout;
+            
+            timeout = 0;
+            seizure.grid[grid_x + "," + grid_y] = timeout;
+            seizure.grid[grid_x-1 + "," + grid_y] = timeout;
+            seizure.grid[grid_x + "," + (grid_y-1)] = timeout;
+            seizure.grid[grid_x + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x+1 + "," + grid_y] = timeout;
+            seizure.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
+            seizure.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
+        } else {
+            var timeout = new Date().getTime() + 34000;
+            seizure.grid[grid_x + "," + grid_y] = timeout;
+            seizure.grid[grid_x-1 + "," + grid_y] = timeout;
+            seizure.grid[grid_x + "," + (grid_y-1)] = timeout;
+            seizure.grid[grid_x + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x+1 + "," + grid_y] = timeout;
+            seizure.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
+            seizure.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
+            seizure.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
+        }
+    }
+
     function userdraw(e){
         e.preventDefault();
 
         if(e.originalEvent.touches || e.originalEvent.changedTouches) {
             var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-            var grid_x = Math.floor(touch.pageX / scale);
-            var grid_y = Math.floor(touch.pageY / scale);
+            var x = touch.pageX;
+            var y = touch.pageY;
         } else {
-            var grid_x = Math.floor(e.offsetX / scale);
-            var grid_y = Math.floor(e.offsetY / scale);
+            var x = e.offsetX;
+            var y = e.offsetY;
         }
 
-        if(that.paint_mode === true) {
-            var timeout = new Date().getTime() + 38000;
-            that.paint[grid_x + "," + grid_y] = timeout;
-            that.paint[grid_x-1 + "," + grid_y] = timeout;
-            that.paint[grid_x + "," + (grid_y-1)] = timeout;
-            that.paint[grid_x + "," + (grid_y+1)] = timeout;
-            that.paint[grid_x+1 + "," + grid_y] = timeout;
-            that.paint[grid_x+1 + "," + (grid_y+1)] = timeout;
-            that.paint[grid_x+1 + "," + (grid_y-1)] = timeout;
-            that.paint[grid_x-1 + "," + (grid_y+1)] = timeout;
-            that.paint[grid_x-1 + "," + (grid_y-1)] = timeout;
-            
-            timeout = 0;
-            that.grid[grid_x + "," + grid_y] = timeout;
-            that.grid[grid_x-1 + "," + grid_y] = timeout;
-            that.grid[grid_x + "," + (grid_y-1)] = timeout;
-            that.grid[grid_x + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x+1 + "," + grid_y] = timeout;
-            that.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
-            that.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
-        } else {
-            var timeout = new Date().getTime() + 34000;
-            that.grid[grid_x + "," + grid_y] = timeout;
-            that.grid[grid_x-1 + "," + grid_y] = timeout;
-            that.grid[grid_x + "," + (grid_y-1)] = timeout;
-            that.grid[grid_x + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x+1 + "," + grid_y] = timeout;
-            that.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
-            that.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
-            that.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
-        }
+        seizure.draw_point(x, y);
     }
 
     $(document).bind('mousemove touchmove', userdraw);
     $(document).bind('mousedown touchstart', function(e){
-        that.paint_mode = true;
+        seizure.paint_mode = true;
         userdraw(e);
     }).bind('mouseup touchend', function(e){
-        that.paint_mode = false;
+        seizure.paint_mode = false;
     });
     var h = canvas.height;
     var w = canvas.width;
@@ -97,6 +104,7 @@ function seizure(canvas, ctx) {
     ctx.fillStyle = '#000';
 
     this.draw = function() {
+        var num_squares = 0;
         for (var x = 0; x < canvas.width; x+=scale) {
             for (var y = 0; y < canvas.height; y+=scale) {
                 var now = new Date().getTime();
@@ -119,8 +127,10 @@ function seizure(canvas, ctx) {
                     //ctx.fillStyle = '#fff';
                     //ctx.fillRect(x, y, scale, scale);
                 }
+                num_squares++;
             }
         }
+
     }
     return this;
 
