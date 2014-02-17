@@ -28,11 +28,14 @@ function rand(num) {
 
 function seizure(canvas, ctx) {
     var seizure = this;
+    
+    this.level = 1;
 
     this.grid = {};
     this.paint = {};
+    this.burned = {};
     this.paint_mode = false;
-    this.scale = 15;
+    this.scale = 30;
 
     this.prev_mouse = null;
 
@@ -40,39 +43,31 @@ function seizure(canvas, ctx) {
         var grid_x = Math.floor(x/scale);
         var grid_y = Math.floor(y/scale);
 
-        if(seizure.paint_mode === true) {
-            var timeout = new Date().getTime() + 38000;
-            seizure.paint[grid_x + "," + grid_y] = timeout;
-            seizure.paint[grid_x-1 + "," + grid_y] = timeout;
-            seizure.paint[grid_x + "," + (grid_y-1)] = timeout;
-            seizure.paint[grid_x + "," + (grid_y+1)] = timeout;
-            seizure.paint[grid_x+1 + "," + grid_y] = timeout;
-            seizure.paint[grid_x+1 + "," + (grid_y+1)] = timeout;
-            seizure.paint[grid_x+1 + "," + (grid_y-1)] = timeout;
-            seizure.paint[grid_x-1 + "," + (grid_y+1)] = timeout;
-            seizure.paint[grid_x-1 + "," + (grid_y-1)] = timeout;
-            
-            timeout = 0;
-            seizure.grid[grid_x + "," + grid_y] = timeout;
-            seizure.grid[grid_x-1 + "," + grid_y] = timeout;
-            seizure.grid[grid_x + "," + (grid_y-1)] = timeout;
-            seizure.grid[grid_x + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x+1 + "," + grid_y] = timeout;
-            seizure.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
-            seizure.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
+        var timeout = new Date().getTime();
+        var area = [-1, 0, 1];
+
+        if(seizure.paint_mode === true && seizure.level == 2) {
+            for(var i=0; i<area.length; i++) {
+                for(var j=0; j<area.length; j++) {
+                    var x = grid_x + area[i];
+                    var y = grid_y + area[j];
+                    if(x >= 0 && y >= 0) {
+                        if(this.burned[x + "," + y] === undefined) {
+                            seizure.paint[x + "," + y] = timeout;
+                        }
+                    }
+                }
+            }
         } else {
-            var timeout = new Date().getTime() + 34000;
-            seizure.grid[grid_x + "," + grid_y] = timeout;
-            seizure.grid[grid_x-1 + "," + grid_y] = timeout;
-            seizure.grid[grid_x + "," + (grid_y-1)] = timeout;
-            seizure.grid[grid_x + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x+1 + "," + grid_y] = timeout;
-            seizure.grid[grid_x+1 + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x+1 + "," + (grid_y-1)] = timeout;
-            seizure.grid[grid_x-1 + "," + (grid_y+1)] = timeout;
-            seizure.grid[grid_x-1 + "," + (grid_y-1)] = timeout;
+            for(var i=0; i<area.length; i++) {
+                for(var j=0; j<area.length; j++) {
+                    var x = grid_x + area[i];
+                    var y = grid_y + area[j];
+                    if(x >= 0 && y >= 0) {
+                        seizure.grid[x + "," + y] = timeout;
+                    }
+                }
+            }
         }
     }
 
@@ -101,34 +96,67 @@ function seizure(canvas, ctx) {
     var h = canvas.height;
     var w = canvas.width;
 
+    var grid_total = Math.ceil(canvas.height/this.scale) * Math.ceil(canvas.width/this.scale);
+
     ctx.fillStyle = '#000';
 
-    this.draw = function() {
-        var num_squares = 0;
+    this.draw01 = function() {
         for (var x = 0; x < canvas.width; x+=scale) {
             for (var y = 0; y < canvas.height; y+=scale) {
                 var now = new Date().getTime();
-                var grid_x = x/scale;
-                var grid_y = y/scale;
-                if(this.grid[grid_x+","+grid_y] === undefined || this.grid[grid_x+","+grid_y] < now) {
-                    if(this.paint[grid_x+","+grid_y] !== undefined && this.paint[grid_x+","+grid_y] > now) {
-                        ctx.fillStyle = get_random_color(30, 0, 15);
+                var grid_x = Math.floor(x/scale);
+                var grid_y = Math.floor(y/scale);
+                if(this.grid[grid_x+","+grid_y] === undefined || this.grid[grid_x+","+grid_y] + 34000 < now) {
+                    if (Math.random() > 0.2) {
+                        ctx.fillStyle = get_random_color(30, 15, 20);
                         ctx.fillRect(x, y, scale, scale);
                     } else {
-                        if (Math.random() > 0.2) {
-                            ctx.fillStyle = get_random_color(30, 15, 20);
-                            ctx.fillRect(x, y, scale, scale);
-                        } else {
-                            ctx.fillStyle = '#000';
-                            ctx.fillRect(x, y, scale, scale);
-                        }
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(x, y, scale, scale);
                     }
                 } else {
                     //ctx.fillStyle = '#fff';
                     //ctx.fillRect(x, y, scale, scale);
                 }
-                num_squares++;
             }
+        }
+    }
+
+    this.draw02 = function() {
+        this.level = 2;
+        for (var x = 0; x < canvas.width; x+=scale) {
+            for (var y = 0; y < canvas.height; y+=scale) {
+                var now = new Date().getTime();
+                var grid_x = Math.floor(x/scale);
+                var grid_y = Math.floor(y/scale);
+
+                if(this.paint[grid_x+","+grid_y] !== undefined) {
+                    if(this.paint[grid_x+","+grid_y] + 1000 > now) {
+                        ctx.fillStyle = get_random_color(30, 0, 15);
+                        if(Math.random() < 0.1 && this.burned[grid_x+","+(grid_y-1)] == undefined) {
+                            this.paint[grid_x+","+(grid_y-1)] = new Date().getTime() - 500;
+                        }
+
+                    } else {
+                        ctx.fillStyle = '#000';
+                        this.burned[grid_x+","+grid_y] = new Date().getTime();
+                    }
+                    ctx.fillRect(x, y, scale, scale);
+                }
+            }
+        }
+    }
+
+    this.draw = function() {
+
+        if(Object.keys(seizure.burned).length >= grid_total) {
+            setTimeout(function() {
+                window.animation = triangle(canvas, ctx);
+            }, 2000);
+        } else if (Object.keys(seizure.grid).length >= grid_total) {
+            this.draw02();
+        } else {
+            this.draw01();
         }
 
     }

@@ -4,6 +4,7 @@
 		<title>seizure</title>
         <script src='jquery-1.10.2.min.js'></script>
 		<script src="seizure.js"></script>
+		<script src="triangle.js"></script>
 		<script>
 		window.requestAnimFrame = window.requestAnimationFrame       ||
 					  window.webkitRequestAnimationFrame ||
@@ -16,7 +17,7 @@
 
 		var canvas, ctx, frame;
 		window.addEventListener('load', load, false);
-		window.addEventListener('resize', resize, false);
+		//window.addEventListener('resize', resize, false);
 		function load() {
 			canvas = document.getElementById('canvas');
 			ctx = canvas.getContext('2d');
