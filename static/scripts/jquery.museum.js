@@ -1,8 +1,10 @@
 /*
 
+jquery-museum v1
 by Murat Ayfer
-http://muratayfer.com
-http://github.com/mayfer/jquery-museum
+
+Project page: http://muratayfer.com/jquery-museum
+Git repo:     http://github.com/mayfer/jquery-museum
 
 */
 ;(function($) {
@@ -19,6 +21,7 @@ http://github.com/mayfer/jquery-museum
         plugin.settings = {}
         plugin.current_image = null;
         plugin.loaded = false;
+        plugin.original_url = document.URL;
 
         var init = function() {
             plugin.settings = $.extend({}, defaults, options);
@@ -41,12 +44,13 @@ http://github.com/mayfer/jquery-museum
             });
             $(document).keydown(function(e) {
                 if (e.keyCode == 27) {
+                    // escape key
                     plugin.close();
                 } else if(e.keyCode == 39) {
-                    // right
+                    // right key
                     plugin.next_image()
                 } else if(e.keyCode == 37) {
-                    // left
+                    // left key
                     plugin.prev_image()
                 }
             });
@@ -72,8 +76,6 @@ http://github.com/mayfer/jquery-museum
 
         plugin.show_image = function(i) {
             if(plugin.loaded === false) {
-                // setup gallery in the dom
-
                 plugin.container = $('<div>')
                     .addClass(plugin.settings.namespace + '-gallery')
                     .appendTo($('body'))
@@ -87,6 +89,7 @@ http://github.com/mayfer/jquery-museum
                         'text-align': 'center',
                     })
                     .bind('click', function(e){
+                        e.preventDefault();
                         plugin.close();
                     });
 
@@ -164,7 +167,11 @@ http://github.com/mayfer/jquery-museum
             plugin.loaded = false;
             plugin.current_image = null;
             if(plugin.settings.disable_url_hash !== true) {
-                window.location.hash = '';
+                if (history && history.pushState) {
+                    history.pushState({}, document.title, plugin.original_url);
+                } else {
+                    window.location.hash = '';
+                }
             }
             plugin.container.remove();
         }
