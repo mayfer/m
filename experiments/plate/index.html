@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>standing plates</title>
+        <meta charset='utf-8' />
+        <!-- libs -->
+        <script type='text/javascript' src='jquery.min.js'></script>
+
+        <!-- hand-written js -->
+        <script type='text/javascript' src='animframe.js'></script>
+        <script type='text/javascript' src='waves.js'></script>
+        <script type='text/javascript' src='canvas.js'></script>
+
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <script type='text/javascript'>
+
+            $(document).ready(function() {
+
+                var plate_canvas = new Canvas($('#plate')).get(0);
+                var plate_context = plate_canvas.getContext("2d");
+
+                var waves = [
+                    new standingWave(plate_context, {freq: 220}),
+                ];
+
+
+                var c = plate_context;
+                var x_amplitude = c.width;
+                var y_amplitude = c.height;
+
+                var start_time = new Date().getTime();
+
+                var get_cumulative_amplitude = function(waves, wavedelta) {
+                    var amplitude = waves.map(function(wave){
+                        return wave.sin(wave.freq / 220, wavedelta, 1);
+                    }).reduce(function(a, b){
+                        return a + b;
+                    }) / waves.length;
+
+                    return amplitude;
+                };
+
+                var draw = function() {
+                    var time_diff = (new Date().getTime() - start_time) / 100;
+                    c.clearRect(0, 0, c.width, c.height);
+                    c.fillStyle = "#000000";
+
+                    var scale = 5;
+                    for (var x = 0; x < c.width; x+=scale) {
+                        for (var y = 0; y < c.height; y+=scale) {
+                            var x_amp = get_cumulative_amplitude(waves, x/c.width * 2 * Math.PI);
+                            var y_amp = get_cumulative_amplitude(waves, y/c.height * 2 * Math.PI);
+
+                            var x_current = get_cumulative_amplitude(waves, time_diff);
+                            var y_current = get_cumulative_amplitude(waves, time_diff);
+
+                            c.globalAlpha = (x_amp * x_current + y_amp * x_current) / 4 + 1;
+                            //c.globalAlpha = (x_amp + y_amp) / 4 + 1;
+
+                            c.fillRect(x, y, scale, scale);
+
+                        }
+                    }
+
+                    window.requestAnimationFrame(draw);
+                }
+
+                window.requestAnimationFrame(draw);
+                
+
+                
+            });
+
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>standing plates<span> &lt;</span></h1>
+            <h2>digital salt fun<span class='lt'> &lt;</span></h2>
+
+            <div id='standing-plates'>
+                <div id='plate' class='plate-canvas'> </div>
+            </div>
+        </div>
+    </body>
+</html>
